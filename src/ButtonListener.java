@@ -12,13 +12,19 @@ public class ButtonListener implements MouseListener {
             label.getParent().setVisible(false);
         }
         if (label.getName().equals("Instructions")){
+            WindowFrame.instructionsRun = true;
             label.getParent().setFocusable(false);
             label.getParent().setVisible(false);
+            WindowFrame.gameRuns = false;
+
+
+
 
         }
         if (label.getName().equals("Quit")){
             System.exit(0);
         }
+
     }
 
     @Override

@@ -29,10 +29,10 @@ public class MenuPanel extends JPanel {
         this.backgroundImage = new ImageIcon("src\\Images\\"+MENU_BG_FILE_NAME).getImage();
 
         // Create labels for each menu option with icons
-        this.playLabel = createMenuLabel("Play");
-        this.instructionsLabel = createMenuLabel("Instructions");
-        this.settingsLabel = createMenuLabel("Settings");
-        this.quitLabel = createMenuLabel("Quit");
+        this.playLabel = WindowFrame.createPhotoLabel("Play",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
+        this.instructionsLabel = WindowFrame.createPhotoLabel("Instructions",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
+        this.settingsLabel = WindowFrame.createPhotoLabel("Settings",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
+        this.quitLabel = WindowFrame.createPhotoLabel("Quit",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
 
         // Add labels to the panel with some spacing
         int buttonWidthMargin = (width / 4) + 30;
@@ -47,19 +47,7 @@ public class MenuPanel extends JPanel {
 
     }
 
-    private JLabel createMenuLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setIcon(new ImageIcon("src\\Images\\"+ BUTTON_BG_FILE_NAME)); // Set the icon for the label
-        label.setHorizontalTextPosition(JLabel.CENTER);
-        label.setVerticalTextPosition(JLabel.CENTER);
-        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, BUTTON_FONT_SIZE));
-        label.setForeground(Color.ORANGE);
-        label.setName(text);
 
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        label.addMouseListener(new ButtonListener());
-        return label;
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
