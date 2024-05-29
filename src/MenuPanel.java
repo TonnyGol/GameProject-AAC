@@ -4,9 +4,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MenuPanel extends JPanel {
+
     private final int DEFAULT_POSITION = 0;
-    private final int BUTTON_MARGIN = 50;
-    private final int BUTTON_FONT_SIZE = 30;
+    private final int BUTTON_MARGIN = 80;
+    private final int BUTTON_FONT_SIZE = 40;
     private final String BUTTON_BG_FILE_NAME = "Button_BG.png";
     private final String MENU_BG_FILE_NAME = "Menu_background.png";
 
@@ -29,10 +30,10 @@ public class MenuPanel extends JPanel {
         this.backgroundImage = new ImageIcon("src\\Images\\"+MENU_BG_FILE_NAME).getImage();
 
         // Create labels for each menu option with icons
-        this.playLabel = WindowFrame.createPhotoLabel("Play",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
-        this.instructionsLabel = WindowFrame.createPhotoLabel("Instructions",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
-        this.settingsLabel = WindowFrame.createPhotoLabel("Settings",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
-        this.quitLabel = WindowFrame.createPhotoLabel("Quit",BUTTON_BG_FILE_NAME,BUTTON_FONT_SIZE);
+        this.playLabel = WindowFrame.createPhotoLabel("Play", BUTTON_BG_FILE_NAME, BUTTON_FONT_SIZE);
+        this.instructionsLabel = WindowFrame.createPhotoLabel("Instructions", BUTTON_BG_FILE_NAME, BUTTON_FONT_SIZE);
+        this.settingsLabel = WindowFrame.createPhotoLabel("Settings", BUTTON_BG_FILE_NAME, BUTTON_FONT_SIZE);
+        this.quitLabel = WindowFrame.createPhotoLabel("Quit", BUTTON_BG_FILE_NAME, BUTTON_FONT_SIZE);
 
         // Add labels to the panel with some spacing
         int buttonWidthMargin = (width / 4) + 30;
@@ -46,8 +47,6 @@ public class MenuPanel extends JPanel {
         this.add(quitLabel);
 
     }
-
-
 
     @Override
     protected void paintComponent(Graphics g) {

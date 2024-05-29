@@ -1,43 +1,47 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WindowFrame extends JFrame {
     public static final int DEFAULT_POSITION = 0;
 
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
-    public static boolean gameRuns;
-    public static boolean instructionsRun;
+
+    public static int panelShowNum;
 
     private GamePanel gamePanel;
     private MenuPanel menu;
     private InstructionsPanel instructionsPanel;
     private SettingsPanel settingsPanel;
     private PausePanel pausePanel;
+    private List<JPanel> panels;
 
     public WindowFrame(){
         this.setTitle("Soldier Survival Game");
         this.setSize(WIDTH, HEIGHT);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.panels = new ArrayList<>();
 
-
-        this.menu = new MenuPanel(WIDTH, HEIGHT);
+        this.menu = new MenuPanel(WIDTH, HEIGHT); // 0 index in the list
         this.add(this.menu);
+        this.panels.add(this.menu);
 
-
-
-        this.gamePanel = new GamePanel(WIDTH, HEIGHT);
+        this.gamePanel = new GamePanel(WIDTH, HEIGHT); // 1 index in the list
         this.add(gamePanel);
+        this.panels.add(this.gamePanel);
 
-        this.instructionsPanel = new InstructionsPanel(WIDTH, HEIGHT);
+        this.instructionsPanel = new InstructionsPanel(WIDTH, HEIGHT); // 2 index in the list
         this.add(this.instructionsPanel);
+        this.panels.add(this.instructionsPanel);
 
         this.mainGameLoop();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
-    public static JLabel createPhotoLabel(String text,String fileName,int fontSize) {
+    public static JLabel createPhotoLabel(String text, String fileName, int fontSize) {
         JLabel label = new JLabel(text);
         label.setIcon(new ImageIcon("src\\Images\\"+ fileName)); // Set the icon for the label
         label.setHorizontalTextPosition(JLabel.CENTER);
@@ -51,24 +55,33 @@ public class WindowFrame extends JFrame {
         return label;
     }
 
+    private void showOnlyOnePanel(int panelShowNum){
+        for (JPanel panel : this.panels){
+            if (panelShowNum == this.panels.indexOf(panel)){
+                panel.setVisible(true);
+                panel.setFocusable(true);
+            }else {
+                panel.setVisible(false);
+                panel.setFocusable(false);
+            }
+        }
+    }
+
     private void mainGameLoop (){
         new Thread(() -> {
             while(true){
-                if (WindowFrame.gameRuns){
-                    this.gamePanel.setFocusable(true);
-                    this.gamePanel.setVisible(true);
-                }
-                if(WindowFrame.instructionsRun){
-                    this.instructionsPanel.setFocusable(true);
-                    this.instructionsPanel.setVisible(true);
+                this.showOnlyOnePanel(WindowFrame.panelShowNum);
+                if (WindowFrame.panelShowNum == 2){
+                    InstructionsPanel.frameCount++;
+                    if (InstructionsPanel.frameCount % 8 == 0){
+                        InstructionsPanel.frameCount = 0;
+                    }
+                    this.repaint();
+                    Main.sleep(80);
                 }
             }
-
         }).start();
     }
-
-
-
-    }
+}
 
 

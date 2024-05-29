@@ -6,25 +6,22 @@ public class ButtonListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         Component label = e.getComponent();
-        if (label.getName().equals("Play")){
-            WindowFrame.gameRuns = true;
-            label.getParent().setFocusable(false);
-            label.getParent().setVisible(false);
+        String command = label.getName();
+        if(command.equals("BackLabel")){
+            WindowFrame.panelShowNum = 0;
         }
-        if (label.getName().equals("Instructions")){
-            WindowFrame.instructionsRun = true;
-            label.getParent().setFocusable(false);
-            label.getParent().setVisible(false);
-            WindowFrame.gameRuns = false;
-
-
-
+        if (command.equals("Play")){
+            WindowFrame.panelShowNum = 1;
+        }
+        if (command.equals("Instructions")){
+            WindowFrame.panelShowNum = 2;
+        }
+        if (label.getName().equals("Settings")){
 
         }
         if (label.getName().equals("Quit")){
             System.exit(0);
         }
-
     }
 
     @Override
