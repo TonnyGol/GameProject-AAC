@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MenuPanel extends JPanel {
     private final int DEFAULT_POSITION = 0;
@@ -8,6 +10,8 @@ public class MenuPanel extends JPanel {
     private final String BUTTON_BG_FILE_NAME = "Button_BG.png";
     private final String MENU_BG_FILE_NAME = "Menu_background.png";
 
+    private int width;
+    private int height;
     private JLabel playLabel;
     private JLabel instructionsLabel;
     private JLabel settingsLabel;
@@ -16,7 +20,9 @@ public class MenuPanel extends JPanel {
     private final Image backgroundImage;
 
     public MenuPanel(int width, int height){
-        this.setBounds(DEFAULT_POSITION, DEFAULT_POSITION, width, height);
+        this.width = width;
+        this.height = height;
+        this.setBounds(DEFAULT_POSITION, DEFAULT_POSITION, this.width, this.height);
         this.setFocusable(true);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -50,7 +56,8 @@ public class MenuPanel extends JPanel {
         label.setForeground(Color.ORANGE);
         label.setName(text);
 
-        //label.addMouseListener(new MouseListener());
+        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        label.addMouseListener(new ButtonListener());
         return label;
     }
 
