@@ -28,8 +28,10 @@ public class InstructionsPanel extends JPanel {
         this.loadMovementFrames();
         frameCount = 0;
         this.backLabel =  WindowFrame.createPhotoLabel("BackLabel",BACK_ARROW_FILE_NAME,0);
-        this.backLabel.setBounds(5,850,150,100);
+        this.backLabel.setBounds(5,850,150,150);
         this.add(backLabel);
+
+        this.mainInstructionPanelLoop();
 
     }
 
@@ -42,8 +44,23 @@ public class InstructionsPanel extends JPanel {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        InstructionsPanel.frameCount++;
+        if (InstructionsPanel.frameCount % 8 == 0){
+            InstructionsPanel.frameCount = 0;
+        }
+        Main.sleep(80);
         g.drawImage(this.backgroundImage, 0, 0, getWidth(), getHeight(), this);
         g.drawImage(this.instructions, this.width/4, this.height/5, getWidth()/2, getHeight()/2, this);
         g.drawImage(this.movmentFrames.get(frameCount), this.width/4 + 70,this.height/5 - 110, getWidth()/8, getHeight()/8, this);
+    }
+
+    private void mainInstructionPanelLoop(){
+        new Thread(() ->{
+            while (true){
+                if (WindowFrame.panelChoice == 2){
+                    repaint();
+                }
+            }
+        }).start();
     }
 }

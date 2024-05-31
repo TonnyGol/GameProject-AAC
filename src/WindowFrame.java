@@ -9,7 +9,8 @@ public class WindowFrame extends JFrame {
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
 
-    public static int panelShowNum;
+    public static boolean switchPanels;
+    public static int panelChoice;
 
     private GamePanel gamePanel;
     private MenuPanel menu;
@@ -37,7 +38,7 @@ public class WindowFrame extends JFrame {
         this.add(this.instructionsPanel);
         this.panels.add(this.instructionsPanel);
 
-        this.mainGameLoop();
+        this.mainWindowLoop();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
@@ -55,29 +56,20 @@ public class WindowFrame extends JFrame {
         return label;
     }
 
-    private void showOnlyOnePanel(int panelShowNum){
+    private void showOnlyOnePanel(){
         for (JPanel panel : this.panels){
-            if (panelShowNum == this.panels.indexOf(panel)){
-                panel.setVisible(true);
-                panel.setFocusable(true);
-            }else {
-                panel.setVisible(false);
-                panel.setFocusable(false);
-            }
+            panel.setVisible(WindowFrame.panelChoice == this.panels.indexOf(panel));
+            panel.setFocusable(WindowFrame.panelChoice == this.panels.indexOf(panel));
+            panel.requestFocus();
         }
+        WindowFrame.switchPanels = false;
     }
 
-    private void mainGameLoop (){
+    private void mainWindowLoop(){
         new Thread(() -> {
             while(true){
-                this.showOnlyOnePanel(WindowFrame.panelShowNum);
-                if (WindowFrame.panelShowNum == 2){
-                    InstructionsPanel.frameCount++;
-                    if (InstructionsPanel.frameCount % 8 == 0){
-                        InstructionsPanel.frameCount = 0;
-                    }
-                    this.repaint();
-                    Main.sleep(80);
+                if (WindowFrame.switchPanels){
+                    this.showOnlyOnePanel();
                 }
             }
         }).start();

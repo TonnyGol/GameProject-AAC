@@ -8,13 +8,16 @@ public class ButtonListener implements MouseListener {
         Component label = e.getComponent();
         String command = label.getName();
         if(command.equals("BackLabel")){
-            WindowFrame.panelShowNum = 0;
+            WindowFrame.switchPanels = true;
+            WindowFrame.panelChoice = 0;
         }
         if (command.equals("Play")){
-            WindowFrame.panelShowNum = 1;
+            WindowFrame.switchPanels = true;
+            WindowFrame.panelChoice = 1;
         }
         if (command.equals("Instructions")){
-            WindowFrame.panelShowNum = 2;
+            WindowFrame.switchPanels = true;
+            WindowFrame.panelChoice = 2;
         }
         if (label.getName().equals("Settings")){
 
