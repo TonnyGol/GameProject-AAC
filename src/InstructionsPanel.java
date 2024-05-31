@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstructionsPanel extends JPanel {
-    private final String MENU_BG_FILE_NAME = "Menu_background.png";
-    private final String INSTRUCTION_FILE_NAME = "Instructions.png";
-    private final String BACK_ARROW_FILE_NAME = "backarrow.png";
+    private final String MENU_BG_FILE_PATH = "src\\Images\\Menu_background.png";
+    private final String INSTRUCTION_FILE_PATH = "src\\Images\\Instruction.png";
+    private final String BACK_FILE_PATH = "src\\Images\\BackButton.png";
     private final Image backgroundImage;
     private final Image instructions;
 
@@ -22,13 +22,13 @@ public class InstructionsPanel extends JPanel {
         this.height = height;
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, this.width, this.height);
-        this.backgroundImage = new ImageIcon("src\\Images\\"+MENU_BG_FILE_NAME).getImage();
-        this.instructions= new ImageIcon("src\\Images\\"+INSTRUCTION_FILE_NAME).getImage();
+        this.backgroundImage = new ImageIcon(MENU_BG_FILE_PATH).getImage();
+        this.instructions= new ImageIcon(INSTRUCTION_FILE_PATH).getImage();
         this.movmentFrames = new ArrayList<>();
         this.loadMovementFrames();
         frameCount = 0;
-        this.backLabel =  WindowFrame.createPhotoLabel("BackLabel",BACK_ARROW_FILE_NAME,0);
-        this.backLabel.setBounds(5,850,150,150);
+        this.backLabel =  WindowFrame.createPhotoLabel("BACK",BACK_FILE_PATH);
+        this.backLabel.setBounds(50,850,450,150);
         this.add(backLabel);
 
         this.mainInstructionPanelLoop();
@@ -49,9 +49,9 @@ public class InstructionsPanel extends JPanel {
             InstructionsPanel.frameCount = 0;
         }
         Main.sleep(80);
-        g.drawImage(this.backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        g.drawImage(this.instructions, this.width/4, this.height/5, getWidth()/2, getHeight()/2, this);
-        g.drawImage(this.movmentFrames.get(frameCount), this.width/4 + 70,this.height/5 - 110, getWidth()/8, getHeight()/8, this);
+        g.drawImage(this.backgroundImage, 0, 0, this.width, this.height, this);
+        g.drawImage(this.instructions, this.width/5, this.height/5, getWidth()/2, getHeight()/2, this);
+        g.drawImage(this.movmentFrames.get(frameCount), this.width/4 + 10,this.height/5 - 150, getWidth()/7, getHeight()/7, this);
     }
 
     private void mainInstructionPanelLoop(){

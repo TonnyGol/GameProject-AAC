@@ -38,16 +38,20 @@ public class WindowFrame extends JFrame {
         this.add(this.instructionsPanel);
         this.panels.add(this.instructionsPanel);
 
+        this.settingsPanel = new SettingsPanel(WIDTH,HEIGHT);
+        this.add(this.settingsPanel);
+        this.panels.add(this.settingsPanel);
+
         this.mainWindowLoop();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
-    public static JLabel createPhotoLabel(String text, String fileName, int fontSize) {
+    public static JLabel createPhotoLabel(String text, String filePath) {
         JLabel label = new JLabel(text);
-        label.setIcon(new ImageIcon("src\\Images\\"+ fileName)); // Set the icon for the label
+        label.setFont(new Font(text,Font.PLAIN,0));
+        label.setIcon(new ImageIcon(filePath)); // Set the icon for the label
         label.setHorizontalTextPosition(JLabel.CENTER);
         label.setVerticalTextPosition(JLabel.CENTER);
-        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
         label.setForeground(Color.ORANGE);
         label.setName(text);
 
