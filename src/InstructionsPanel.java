@@ -5,8 +5,8 @@ import java.util.List;
 
 public class InstructionsPanel extends JPanel {
     private final String MENU_BG_FILE_PATH = "src\\Images\\Menu_background.png";
-    private final String INSTRUCTION_FILE_PATH = "src\\Images\\Instruction.png";
-    private final String BACK_FILE_PATH = "src\\Images\\BackButton.png";
+    private final String INSTRUCTION_FILE_PATH = "src\\Images\\Instruction2.png";
+    private final String BACK_FILE_PATH = "src\\Images\\BackButton2.png";
     private final Image backgroundImage;
     private final Image instructions;
 

@@ -2,44 +2,84 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SettingsPanel extends JPanel {
-    private final String MENU_BG_FILE_NAME = "Menu_background.png";
-    private final String BACK_FILE_PATH = "BackButton.png";
-    private final String EFFECTS_FILE_NAME = "Effects.png";
-    private final String checkedEFFECTS_FILE_NAME = "checkedEFFECTS.png";
-    private final String uncheckedEFFECTS_FILE_NAME = "uncheckedEFFECTS.png";
+    private final String MENU_BG_FILE_PATH = "src\\Images\\Menu_background.png";
+    private final String BACK_FILE_PATH = "src\\Images\\BackButton2.png";
+    private final String SOUND_FX_FILE_PATH = "src\\Images\\SoundFXButton2.png";
+    private final String VOLUME_FILE_PATH = "src\\Images\\MusicButton2.png";
     private final Image backgroundImage;
     private final Image effectsImage;
-    private final String VOLUME_UP_FILE_NAME = "Volume_up.png";
-    private final String VOLUME_MUTE_FILE_NAME = "Volume_mute.png";
-    private JLabel volumeMUTE_Label;
-    private JLabel volumeUP_Label;
-    private JLabel uncheckedEFFECTS_Label;
-    private JLabel checkedEFFECTS_Label;
+    private final Image volumeImage;
+    private final String VOLUME_ON_FILE_PATH = "src\\Images\\Volume_ON.png";
+    private final String VOLUME_OFF_FILE_PATH = "src\\Images\\Volume_OFF.png";
+
     private int width;
     private int height;
     private JLabel backLabel;
+    private JLabel volumeOffLabel;
+    private JLabel volumeOnLabel;
+    private JLabel effectsOffLabel;
+    private JLabel effectsOnLabel;
+    public static boolean switchMusicVolume;
+    public static boolean switchEffectsVolume;
+    private int volumeState = 1;
+    private int effectsState = 1;
 
 
     public SettingsPanel (int width, int height) {
         this.width = width;
         this.height = height;
+        SettingsPanel.switchMusicVolume = false;
+        SettingsPanel.switchEffectsVolume = false;
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, this.width, this.height);
-        this.backgroundImage = new ImageIcon("src\\Images\\" + MENU_BG_FILE_NAME).getImage();
-        this.effectsImage = new ImageIcon("src\\Images\\" + EFFECTS_FILE_NAME).getImage();
+        this.backgroundImage = new ImageIcon(MENU_BG_FILE_PATH).getImage();
+        this.effectsImage = new ImageIcon(SOUND_FX_FILE_PATH).getImage();
+        this.volumeImage = new ImageIcon(VOLUME_FILE_PATH).getImage();
         this.backLabel =  WindowFrame.createPhotoLabel("BACK",BACK_FILE_PATH);
         this.backLabel.setBounds(50,850,450,150);
         this.add(backLabel);
-        this.volumeMUTE_Label = WindowFrame.createPhotoLabel("volumeMUTE",VOLUME_MUTE_FILE_NAME);
-        this.volumeMUTE_Label.setBounds(100,500,300,150);
-        this.volumeUP_Label = WindowFrame.createPhotoLabel("Volume_up",VOLUME_UP_FILE_NAME);
+        this.effectsOffLabel = WindowFrame.createPhotoLabel("SoundFX_OFF", VOLUME_OFF_FILE_PATH);
+        this.effectsOffLabel.setBounds(180,185,175,125);
+        this.add(effectsOffLabel);
+        this.effectsOffLabel.setVisible(false);
+        this.effectsOnLabel = WindowFrame.createPhotoLabel("SoundFX_ON", VOLUME_ON_FILE_PATH);
+        this.effectsOnLabel.setBounds(200,185,200,125);
+        this.add(effectsOnLabel);
+
+        this.volumeOffLabel = WindowFrame.createPhotoLabel("Volume_OFF", VOLUME_OFF_FILE_PATH);
+        this.volumeOffLabel.setBounds(180,40,175,125);
+        this.add(volumeOffLabel);
+        volumeOffLabel.setVisible(false);
+        this.volumeOnLabel = WindowFrame.createPhotoLabel("Volume_ON", VOLUME_ON_FILE_PATH);
+        this.volumeOnLabel.setBounds(200,35,200,125);
+        this.add(volumeOnLabel);
         this.mainSettingsPanelLoop();
     }
 
 
-    public static void changeIcon(){
-       boolean flag = false;
-
+    public void changeVolumeIcon(){
+        if (volumeState == 1){
+            this.volumeOnLabel.setVisible(false);
+            this.volumeOffLabel.setVisible(true);
+            volumeState = 0;
+        } else{
+            this.volumeOffLabel.setVisible(false);
+            this.volumeOnLabel.setVisible(true);
+            volumeState = 1;
+        }
+        SettingsPanel.switchMusicVolume = false;
+    }
+    public void changeEffectsIcon(){
+        if (effectsState == 1){
+            this.effectsOnLabel.setVisible(false);
+            this.effectsOffLabel.setVisible(true);
+            effectsState = 0;
+        } else{
+            this.effectsOffLabel.setVisible(false);
+            this.effectsOnLabel.setVisible(true);
+            effectsState = 1;
+        }
+        SettingsPanel.switchEffectsVolume = false;
     }
 
 
@@ -47,6 +87,7 @@ public class SettingsPanel extends JPanel {
             super.paintComponent(g);
             g.drawImage(this.backgroundImage, 0, 0, this.width, this.height, this);
             g.drawImage(this.effectsImage, 10, 50, 200, 100, this);
+            g.drawImage(this.volumeImage, 10, 200, 200, 100, this);
 
     }
 
@@ -54,6 +95,12 @@ public class SettingsPanel extends JPanel {
         new Thread(() ->{
             while (true){
                 if (WindowFrame.panelChoice == 3){
+                    if(switchMusicVolume){
+                        changeVolumeIcon();
+                    }
+                    if(switchEffectsVolume){
+                        changeEffectsIcon();
+                    }
                     repaint();
                 }
             }

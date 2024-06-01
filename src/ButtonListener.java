@@ -8,28 +8,30 @@ public class ButtonListener implements MouseListener {
         Component label = e.getComponent();
         String command = label.getName();
         if(command.equals("BACK")){
-            WindowFrame.switchPanels = true;
             WindowFrame.panelChoice = 0;
+            WindowFrame.switchPanels = true;
         }
         if (command.equals("Play")){
-            WindowFrame.switchPanels = true;
             WindowFrame.panelChoice = 1;
+            WindowFrame.switchPanels = true;
         }
         if (command.equals("Instructions")){
-            WindowFrame.switchPanels = true;
             WindowFrame.panelChoice = 2;
-        }
-        if (label.getName().equals("Settings")){
             WindowFrame.switchPanels = true;
-            WindowFrame.panelChoice = 3;
         }
-        if (label.getName().equals("Quit")){
+        if (command.equals("Settings")){
+            WindowFrame.panelChoice = 3;
+            WindowFrame.switchPanels = true;
+        }
+        if (command.equals("Quit")){
             System.exit(0);
         }
-        if(command.equals("Volume_up") && command.equals("Volume_MUTE")){
-
+        if(command.equals("Volume_ON") || command.equals("Volume_OFF")){
+            SettingsPanel.switchMusicVolume = true;
         }
-
+        if(command.equals("SoundFX_ON") || command.equals("SoundFX_OFF")){
+            SettingsPanel.switchEffectsVolume = true;
+        }
 
     }
 
