@@ -1,16 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SettingsPanel extends JPanel {
-    private final String MENU_BG_FILE_PATH = "src\\Images\\Menu_background.png";
-    private final String BACK_FILE_PATH = "src\\Images\\BackButton2.png";
-    private final String SOUND_FX_FILE_PATH = "src\\Images\\SoundFXButton2.png";
-    private final String VOLUME_FILE_PATH = "src\\Images\\MusicButton2.png";
+    private final String MENU_BG_FILE_PATH = "resources\\Images\\Menu_background.png";
+    private final String BACK_FILE_PATH = "resources\\Images\\BackButton2.png";
+    private final String SOUND_FX_FILE_PATH = "resources\\Images\\SoundFXButton2.png";
+    private final String VOLUME_FILE_PATH = "resources\\Images\\MusicButton2.png";
     private final Image backgroundImage;
     private final Image effectsImage;
     private final Image volumeImage;
-    private final String VOLUME_ON_FILE_PATH = "src\\Images\\Volume_ON.png";
-    private final String VOLUME_OFF_FILE_PATH = "src\\Images\\Volume_OFF.png";
+    private final String VOLUME_ON_FILE_PATH = "resources\\Images\\Volume_ON.png";
+    private final String VOLUME_OFF_FILE_PATH = "resources\\Images\\Volume_OFF.png";
+
 
     private int width;
     private int height;
@@ -23,6 +26,7 @@ public class SettingsPanel extends JPanel {
     public static boolean switchEffectsVolume;
     private int volumeState = 1;
     private int effectsState = 1;
+    private JLabel volumeLabel;
 
 
     public SettingsPanel (int width, int height) {
@@ -39,21 +43,28 @@ public class SettingsPanel extends JPanel {
         this.backLabel.setBounds(50,850,450,150);
         this.add(backLabel);
         this.effectsOffLabel = WindowFrame.createPhotoLabel("SoundFX_OFF", VOLUME_OFF_FILE_PATH);
-        this.effectsOffLabel.setBounds(180,185,175,125);
+        this.effectsOffLabel.setBounds(180,40,175,125);
         this.add(effectsOffLabel);
         this.effectsOffLabel.setVisible(false);
         this.effectsOnLabel = WindowFrame.createPhotoLabel("SoundFX_ON", VOLUME_ON_FILE_PATH);
-        this.effectsOnLabel.setBounds(200,185,200,125);
+        this.effectsOnLabel.setBounds(200,35,200,125);
         this.add(effectsOnLabel);
 
         this.volumeOffLabel = WindowFrame.createPhotoLabel("Volume_OFF", VOLUME_OFF_FILE_PATH);
-        this.volumeOffLabel.setBounds(180,40,175,125);
+        this.volumeOffLabel.setBounds(180,180,175,125);
         this.add(volumeOffLabel);
         volumeOffLabel.setVisible(false);
         this.volumeOnLabel = WindowFrame.createPhotoLabel("Volume_ON", VOLUME_ON_FILE_PATH);
-        this.volumeOnLabel.setBounds(200,35,200,125);
+        this.volumeOnLabel.setBounds(200,180,200,125);
         this.add(volumeOnLabel);
         this.mainSettingsPanelLoop();
+
+
+
+
+    }
+    private static void adjustVolume(float adjustment) {
+        WindowFrame.musicPlayer.setVolume(adjustment);
     }
 
 
@@ -61,10 +72,12 @@ public class SettingsPanel extends JPanel {
         if (volumeState == 1){
             this.volumeOnLabel.setVisible(false);
             this.volumeOffLabel.setVisible(true);
+            this.adjustVolume(0);
             volumeState = 0;
         } else{
             this.volumeOffLabel.setVisible(false);
             this.volumeOnLabel.setVisible(true);
+            this.adjustVolume(0.5f);
             volumeState = 1;
         }
         SettingsPanel.switchMusicVolume = false;

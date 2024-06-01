@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstructionsPanel extends JPanel {
-    private final String MENU_BG_FILE_PATH = "src\\Images\\Menu_background.png";
-    private final String INSTRUCTION_FILE_PATH = "src\\Images\\Instruction2.png";
-    private final String BACK_FILE_PATH = "src\\Images\\BackButton2.png";
+    private final String MENU_BG_FILE_PATH = "resources\\Images\\Menu_background.png";
+    private final String INSTRUCTION_FILE_PATH = "resources\\Images\\Instruction2.png";
+    private final String BACK_FILE_PATH = "resources\\Images\\BackButton2.png";
     private final Image backgroundImage;
     private final Image instructions;
 
@@ -37,7 +37,7 @@ public class InstructionsPanel extends JPanel {
 
     private void loadMovementFrames(){
         for (int i = 1; i <= 8; i++){
-            Image frame = new ImageIcon("src\\Images\\Run"+i+".png").getImage();
+            Image frame = new ImageIcon("resources\\Images\\Run"+i+".png").getImage();
             this.movmentFrames.add(frame);
         }
     }
@@ -50,8 +50,8 @@ public class InstructionsPanel extends JPanel {
         }
         Main.sleep(80);
         g.drawImage(this.backgroundImage, 0, 0, this.width, this.height, this);
-        g.drawImage(this.instructions, this.width/5, this.height/5, getWidth()/2, getHeight()/2, this);
-        g.drawImage(this.movmentFrames.get(frameCount), this.width/4 + 10,this.height/5 - 150, getWidth()/7, getHeight()/7, this);
+        g.drawImage(this.instructions, this.width/15-170, this.height/10-10, getWidth()/2+15, getHeight()/2, this);
+        g.drawImage(this.movmentFrames.get(frameCount), this.width/8 -170 ,this.height/5 - 220, getWidth()/7-20, getHeight()/7-20, this);
     }
 
     private void mainInstructionPanelLoop(){

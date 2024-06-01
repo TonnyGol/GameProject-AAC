@@ -7,11 +7,11 @@ public class MenuPanel extends JPanel {
 
     private final int DEFAULT_POSITION = 0;
     private final int BUTTON_MARGIN = 40;
-    private final String PLAY_BUTTON_FILE_PATH = "src\\Images\\PlayButton2.png";
-    private final String INSTRUCTIONS_BUTTON_FILE_PATH = "src\\Images\\InstructionButton2.png";
-    private final String SETTINGS_BUTTON_FILE_PATH = "src\\Images\\SettingsButton2.png";
-    private final String QUIT_BUTTON_FILE_PATH = "src\\Images\\QuitButton2.png";
-    private final String MENU_BG_FILE_PATH = "src\\Images\\Menu_background.png";
+    private final String PLAY_BUTTON_FILE_PATH = "resources\\Images\\PlayButton2.png";
+    private final String INSTRUCTIONS_BUTTON_FILE_PATH = "resources\\Images\\InstructionButton2.png";
+    private final String SETTINGS_BUTTON_FILE_PATH = "resources\\Images\\SettingsButton2.png";
+    private final String QUIT_BUTTON_FILE_PATH = "resources\\Images\\QuitButton2.png";
+    private final String MENU_BG_FILE_PATH = "resources\\Images\\Menu_background.png";
 
     private int width;
     private int height;
