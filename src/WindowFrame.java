@@ -29,7 +29,7 @@ public class WindowFrame extends JFrame {
         this.panels = new ArrayList<>();
         this.musicPlayer = new MusicPlayer();
         this.musicPlayer.start();
-        this.musicPlayer.setVolume(0.5f);
+        this.musicPlayer.setVolume(0.0f);
 
         this.menu = new MenuPanel(WIDTH, HEIGHT); // 0 index in the list
         this.add(this.menu);
@@ -50,8 +50,6 @@ public class WindowFrame extends JFrame {
         this.mainWindowLoop();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-
-
     }
     public static JLabel createPhotoLabel(String text, String filePath) {
         JLabel label = new JLabel(text);
