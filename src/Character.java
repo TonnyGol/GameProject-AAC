@@ -18,17 +18,25 @@ public class Character {
     private int dy;
     private int runFrameIndex;
     private int shootFrameIndex;
+    private int rightBoundaryX ;
+    private int leftBoundaryX;
+    private int upperBoundaryY;
+    private int lowerBoundaryY;
 
     private Image defaultFrame;
     private List<Image> runFrames;
     private List<Image> runBackFrames;
     private List<Image> shootFrames;
 
-    public Character(int startX, int startY){
+    public Character(int startX, int startY, int width, int height){
         this.x = startX;
         this.y = startY;
         this.dx = 0;
         this.dy = 0;
+        this.rightBoundaryX=1740;
+        this.leftBoundaryX=-0;
+        this.upperBoundaryY=0;
+        this.lowerBoundaryY=800;
         this.runFrameIndex = 0;
         this.defaultFrame =  new ImageIcon(DEFAULT_FRAME_FILE_PATH).getImage();
         this.runFrames = loadFrames(8, RUN_IMAGES_PATH);
@@ -64,6 +72,14 @@ public class Character {
     public void move(){
         this.x += this.dx;
         this.y += this.dy;
+    }
+
+    public boolean canMove(){
+        int xPosition = this.x + dx;
+        int yPosition = this.y + dy;
+        boolean xPositionOk = xPosition >= leftBoundaryX && xPosition <= rightBoundaryX;
+        boolean yPositionOk = yPosition <= lowerBoundaryY && yPosition >= upperBoundaryY;
+        return xPositionOk && yPositionOk;
     }
 
     public int getDx() {

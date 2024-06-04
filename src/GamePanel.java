@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
-
+    private int paintType;
     private int width;
     private int height;
     private final Image gameBackgroundImage;
@@ -17,12 +17,13 @@ public class GamePanel extends JPanel {
     private final int SHOOT_CODE = 3;
 
     public GamePanel(int width, int height) {
+        this.paintType = 0;
         this.width = width;
         this.height = height;
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, this.width, this.height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        this.character = new Character(10, 700);
+        this.character = new Character(10, 700,this.width,this.height);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.character));
         this.addMouseListener(new GameMouseListener(this, this.character));
@@ -32,22 +33,9 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.width, this.height, this);
-        int paintType = 0;
-        if (this.isCharacterMoving){
-            this.character.move();
-            if (this.isCharacterMovingBack){
-                paintType = MOVE_BACK_CODE;
-            }else{
-                paintType = MOVE_CODE;
-            }
-            Main.sleep(42);
-            this.loopBetweenFrames();
-        } else if (this.isCharacterShooting) {
-            paintType = SHOOT_CODE;
-            Main.sleep(42);
-            this.loopBetweenFrames();
-        }
+
         this.character.paint(g, paintType);
+        this.paintType =0;
     }
     
     private void loopBetweenFrames(){
@@ -65,11 +53,34 @@ public class GamePanel extends JPanel {
         }
     }
 
+    private void update(){
+        if (this.isCharacterMoving){
+            if( this.character.canMove()){
+                this.character.move();
+                if (this.isCharacterMovingBack){
+                    this.paintType = MOVE_BACK_CODE;
+                }else{
+                    this.paintType = MOVE_CODE;
+                }
+                Main.sleep(42);
+                this.loopBetweenFrames();
+            }
+
+
+        } if (this.isCharacterShooting) {
+            this.paintType = SHOOT_CODE;
+            Main.sleep(42);
+            this.loopBetweenFrames();
+        }
+    }
+
     private void mainGamePanelLoop() {
         new Thread(() -> {
             while (true) {
                 if (WindowFrame.panelChoice == 1) {
+                    update();
                     repaint();
+
                 }
             }
         }).start();

@@ -18,43 +18,22 @@ public class GameKeyListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
-        switch (keyCode){
-            case KeyEvent.VK_W:
-                this.gamePanel.setCharacterMoving(true);
-                this.character.setDy(-this.character.getCHARACTER_SPEED());
-                break;
-            case KeyEvent.VK_S:
-                this.gamePanel.setCharacterMoving(true);
-                this.character.setDy(this.character.getCHARACTER_SPEED());
-                break;
-            case KeyEvent.VK_D:
-                this.gamePanel.setCharacterMoving(true);
-                this.gamePanel.setCharacterMovingBack(false);
-                this.character.setDx(this.character.getCHARACTER_SPEED());
-                break;
-            case KeyEvent.VK_A:
-                this.gamePanel.setCharacterMoving(true);
-                this.gamePanel.setCharacterMovingBack(true);
-                this.character.setDx(-this.character.getCHARACTER_SPEED());
-                break;
-        }
 
-//        if (keyCode == KeyEvent.VK_W){
-//            this.gamePanel.setCharacterMoving(true);
-//            this.character.setDy(-this.character.getCHARACTER_SPEED());
-//        } else if (keyCode == KeyEvent.VK_S) {
-//            this.gamePanel.setCharacterMoving(true);
-//            this.character.setDy(this.character.getCHARACTER_SPEED());
-//        }
-//
-//        if (keyCode == KeyEvent.VK_D){
-//            this.gamePanel.setCharacterMoving(true);
-//            this.character.setDx(this.character.getCHARACTER_SPEED());
-//        }else if (keyCode == KeyEvent.VK_A){
-//            this.gamePanel.setCharacterMoving(true);
-//            this.gamePanel.setCharacterMovingBack(true);
-//            this.character.setDx(-this.character.getCHARACTER_SPEED());
-//        }
+
+        if (keyCode == KeyEvent.VK_W){
+            this.gamePanel.setCharacterMoving(true);
+            this.character.setDy(-this.character.getCHARACTER_SPEED());
+        } else if (keyCode == KeyEvent.VK_S) {
+            this.gamePanel.setCharacterMoving(true);
+            this.character.setDy(this.character.getCHARACTER_SPEED());
+        } else if (keyCode == KeyEvent.VK_D){
+            this.gamePanel.setCharacterMoving(true);
+            this.character.setDx(this.character.getCHARACTER_SPEED());
+        } else if (keyCode == KeyEvent.VK_A){
+            this.gamePanel.setCharacterMoving(true);
+            this.gamePanel.setCharacterMovingBack(true);
+            this.character.setDx(-this.character.getCHARACTER_SPEED());
+        }
     }
 
     @Override
