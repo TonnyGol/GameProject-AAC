@@ -26,9 +26,7 @@ public class MenuPanel extends JPanel {
         this.width = width;
         this.height = height;
         this.setBounds(DEFAULT_POSITION, DEFAULT_POSITION, this.width, this.height);
-        this.setFocusable(true);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
 
         this.backgroundImage = new ImageIcon(MENU_BG_FILE_PATH).getImage();
 

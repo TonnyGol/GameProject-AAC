@@ -3,27 +3,38 @@ import java.io.File;
 import java.io.IOException;
 
 public class MusicPlayer extends Thread {
-    private Clip clip;
-    private FloatControl volumeControl;
+    public static boolean isCharacterShooting;
+
+    private Clip backGroundMusicClip;
+    public static Clip gunFireClip;
+    private FloatControl BackgroundMusicVolumeControl;
+    private FloatControl gunFireVolumeControl;
 
     public MusicPlayer(){
         try {
+            this.isCharacterShooting = false;
             // Open an audio input stream.
-            File soundFile = new File("resources\\AudioFiles\\menuSound.wav");
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+            File MusicSoundFile = new File("resources\\AudioFiles\\menuSound.wav");
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(MusicSoundFile);
 
-            // Get a sound clip resource.
-            clip = AudioSystem.getClip();
+            File gunFireSoundFile = new File("resources\\AudioFiles\\gunFire.wav");
+            AudioInputStream audioInFire = AudioSystem.getAudioInputStream(gunFireSoundFile);
 
-            // Open audio clip and load samples from the audio input stream.
-            clip.open(audioIn);
+            // Get a sound backGroundMusicClip resource.
+            backGroundMusicClip = AudioSystem.getClip();
+            gunFireClip = AudioSystem.getClip();
 
-            // Get the volume control from the clip.
-            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            // Open audio backGroundMusicClip and load samples from the audio input stream.
+            backGroundMusicClip.open(audioIn);
+            gunFireClip.open(audioInFire);
+
+            // Get the volume control from the backGroundMusicClip.
+            BackgroundMusicVolumeControl = (FloatControl) backGroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
+            gunFireVolumeControl = (FloatControl) gunFireClip.getControl(FloatControl.Type.MASTER_GAIN);
 
             // Start playing the music.
-            clip.loop(Clip.LOOP_CONTINUOUSLY);  // Loop the clip continuously.
-            clip.start();
+            backGroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY);  // Loop the backGroundMusicClip continuously.
+            backGroundMusicClip.start();
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -34,26 +45,26 @@ public class MusicPlayer extends Thread {
     }
     // Method to stop the music
     public void stopMusic() {
-        if (clip != null) {
-            clip.stop();
-            clip.close();
+        if (backGroundMusicClip != null) {
+            backGroundMusicClip.stop();
+            backGroundMusicClip.close();
         }
     }
     // Method to set the volume (volume should be between 0.0 and 1.0)
     public void setVolume(float volume) {
-        if (volumeControl != null) {
-            float min = volumeControl.getMinimum();
-            float max = volumeControl.getMaximum();
+        if (BackgroundMusicVolumeControl != null) {
+            float min = BackgroundMusicVolumeControl.getMinimum();
+            float max = BackgroundMusicVolumeControl.getMaximum();
             float newVolume = min + (max - min) * volume;
-            volumeControl.setValue(newVolume);
+            BackgroundMusicVolumeControl.setValue(newVolume);
         }
     }
     // Method to get the current volume (returns a value between 0.0 and 1.0)
     public float getVolume() {
-        if (volumeControl != null) {
-            float min = volumeControl.getMinimum();
-            float max = volumeControl.getMaximum();
-            float currentVolume = (volumeControl.getValue() - min) / (max - min);
+        if (BackgroundMusicVolumeControl != null) {
+            float min = BackgroundMusicVolumeControl.getMinimum();
+            float max = BackgroundMusicVolumeControl.getMaximum();
+            float currentVolume = (BackgroundMusicVolumeControl.getValue() - min) / (max - min);
             return currentVolume;
         }
         return 0.1f; // Default volume if volume control is unavailable

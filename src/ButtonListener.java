@@ -24,9 +24,7 @@ public class ButtonListener implements MouseListener {
             WindowFrame.switchPanels = true;
         }
         if (command.equals("Quit")){
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                WindowFrame.musicPlayer.stopMusic();
-            }));
+            WindowFrame.musicPlayer.stopMusic();
             System.exit(0);
         }
         if(command.equals("Volume_ON") || command.equals("Volume_OFF")){

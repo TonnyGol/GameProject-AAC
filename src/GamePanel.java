@@ -9,12 +9,14 @@ public class GamePanel extends JPanel {
     private final Image gameBackgroundImage;
 
     private Character character;
+    private final int STAND_BACK_CODE = -1;
     private boolean isCharacterMoving;
     private final int MOVE_CODE = 1;
     private boolean isCharacterMovingBack;
     private final int MOVE_BACK_CODE = 2;
     private boolean isCharacterShooting;
     private final int SHOOT_CODE = 3;
+    private final int SHOOT_BACK_CODE = 4;
 
     public GamePanel(int width, int height) {
         this.paintType = 0;
@@ -23,7 +25,7 @@ public class GamePanel extends JPanel {
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, this.width, this.height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        this.character = new Character(10, 700,this.width,this.height);
+        this.character = new Character(10, 620,this.width,this.height);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.character));
         this.addMouseListener(new GameMouseListener(this, this.character));
@@ -35,7 +37,7 @@ public class GamePanel extends JPanel {
         g.drawImage(this.gameBackgroundImage, 0, 0, this.width, this.height, this);
 
         this.character.paint(g, paintType);
-        this.paintType =0;
+        this.paintType = 0;
     }
     
     private void loopBetweenFrames(){
@@ -55,23 +57,31 @@ public class GamePanel extends JPanel {
 
     private void update(){
         if (this.isCharacterMoving){
-            if( this.character.canMove()){
+            if(this.character.canMove()){
                 this.character.move();
                 if (this.isCharacterMovingBack){
                     this.paintType = MOVE_BACK_CODE;
                 }else{
                     this.paintType = MOVE_CODE;
                 }
-                Main.sleep(42);
+                Main.sleep(40);
                 this.loopBetweenFrames();
             }
-
-
-        } if (this.isCharacterShooting) {
-            this.paintType = SHOOT_CODE;
-            Main.sleep(42);
+        }else if (this.isCharacterShooting) {
+            if (this.isCharacterMovingBack){
+                this.paintType = SHOOT_BACK_CODE;
+            }else {
+                this.paintType = SHOOT_CODE;
+            }
+            Main.sleep(40);
             this.loopBetweenFrames();
+        } else {
+            if (this.isCharacterMovingBack){
+                this.paintType = STAND_BACK_CODE;
+            }
         }
+        System.out.println("Character x: " + this.character.getX());
+        System.out.println("Character y: " + this.character.getY());
     }
 
     private void mainGamePanelLoop() {
@@ -80,7 +90,6 @@ public class GamePanel extends JPanel {
                 if (WindowFrame.panelChoice == 1) {
                     update();
                     repaint();
-
                 }
             }
         }).start();
