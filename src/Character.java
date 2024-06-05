@@ -52,6 +52,7 @@ public class Character {
         }
     }
 
+
     private List<Image> loadFrames(int frames, String fileName){
         List<Image> frameList = new ArrayList<>(frames);
         for (int i = 1; i <= frames; i++){
