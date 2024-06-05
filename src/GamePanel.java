@@ -3,10 +3,10 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
+
     private int paintType;
-    private int width;
-    private int height;
     private final Image gameBackgroundImage;
+    private final int FPS = 24;
 
     private Character character;
     private final int STAND_BACK_CODE = -1;
@@ -20,12 +20,10 @@ public class GamePanel extends JPanel {
 
     public GamePanel(int width, int height) {
         this.paintType = 0;
-        this.width = width;
-        this.height = height;
         this.setLayout(null);
-        this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, this.width, this.height);
+        this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        this.character = new Character(10, 620,this.width,this.height);
+        this.character = new Character(10, 620, this.getWidth(), this.getHeight());
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.character));
         this.addMouseListener(new GameMouseListener(this, this.character));
@@ -34,8 +32,7 @@ public class GamePanel extends JPanel {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(this.gameBackgroundImage, 0, 0, this.width, this.height, this);
-
+        g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
         this.character.paint(g, paintType);
         this.paintType = 0;
     }
@@ -86,10 +83,19 @@ public class GamePanel extends JPanel {
 
     private void mainGamePanelLoop() {
         new Thread(() -> {
+//            double drawInterval = (double) 1000000000 / FPS;
+//            double nextDrawTime = System.nanoTime() + drawInterval;
             while (true) {
                 if (WindowFrame.panelChoice == 1) {
                     update();
                     repaint();
+//                    double remainingTime = nextDrawTime - System.nanoTime();
+//                    remainingTime = remainingTime / 1000000;
+//                    if (remainingTime < 0){
+//                        remainingTime = 0;
+//                    }
+//                    Main.sleep((long) remainingTime);
+//                    nextDrawTime += drawInterval;
                 }
             }
         }).start();

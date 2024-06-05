@@ -32,7 +32,7 @@ public class Character {
     private List<Image> shootFrames;
     private List<Image> shootBackFrames;
 
-    public Character(int startX, int startY, int width, int height){
+    public Character(int startX, int startY, int panelWidth, int panelHeight){
         this.x = startX;
         this.y = startY;
         this.dx = 0;
@@ -51,7 +51,6 @@ public class Character {
     }
     public void paint(Graphics g, int paintType){
         g.fillRect(this.x + CHARACTER_WIDTH / 4 - 10, this.y + 50, CHARACTER_WIDTH / 2 + 15, CHARACTER_HEIGHT - 50);
-
         switch (paintType){
             case 1:
                 g.drawImage(this.runFrames.get(this.runFrameIndex), this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT,null);

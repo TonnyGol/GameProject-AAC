@@ -38,8 +38,12 @@ public class GameKeyListener implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         this.gamePanel.setCharacterMoving(false);
-        this.character.setDy(0);
-        this.character.setDx(0);
+        if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_D){
+            this.character.setDx(0);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S){
+            this.character.setDy(0);
+        }
         this.character.setRunFrameIndex(0);
     }
 }
