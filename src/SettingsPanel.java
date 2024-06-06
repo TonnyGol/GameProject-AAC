@@ -52,8 +52,11 @@ public class SettingsPanel extends JPanel {
         this.add(musicOnLabel);
         this.mainSettingsPanelLoop();
     }
-    private void adjustVolume(float adjustment) {
-        WindowFrame.musicPlayer.setVolume(adjustment);
+    private void changeMusicOnOrOff(float adjustment){
+        WindowFrame.musicPlayer.setVolumeBackgroundMusic(adjustment);
+    }
+    private void changeSoundFxOnOrOff(float adjustment){
+        WindowFrame.musicPlayer.setVolumeSoundFx(adjustment);
     }
 
 
@@ -61,12 +64,12 @@ public class SettingsPanel extends JPanel {
         if (volumeState == 1){
             this.musicOnLabel.setVisible(false);
             this.musicOffLabel.setVisible(true);
-            this.adjustVolume(0);
+            this.changeMusicOnOrOff(0);
             this.volumeState = 0;
         } else{
             this.musicOffLabel.setVisible(false);
             this.musicOnLabel.setVisible(true);
-            this.adjustVolume(0.5f);
+            this.changeMusicOnOrOff(0.7f);
             this.volumeState = 1;
         }
         SettingsPanel.switchMusicVolume = false;
@@ -75,10 +78,12 @@ public class SettingsPanel extends JPanel {
         if (effectsState == 1){
             this.effectsOnLabel.setVisible(false);
             this.effectsOffLabel.setVisible(true);
+            this.changeSoundFxOnOrOff(0);
             this.effectsState = 0;
         } else{
             this.effectsOffLabel.setVisible(false);
             this.effectsOnLabel.setVisible(true);
+            this.changeSoundFxOnOrOff(0.7f);
             this.effectsState = 1;
         }
         SettingsPanel.switchEffectsVolume = false;

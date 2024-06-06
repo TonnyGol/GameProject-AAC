@@ -20,15 +20,15 @@ public class GameMouseListener implements MouseListener {
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
             MusicPlayer.gunFireClip.setMicrosecondPosition(0);
-            //MusicPlayer.gunFireClip.start();
-            //MusicPlayer.gunFireClip.loop(Clip.LOOP_CONTINUOUSLY);
+            MusicPlayer.gunFireClip.start();
+            MusicPlayer.gunFireClip.loop(Clip.LOOP_CONTINUOUSLY);
             int xMouseClick = e.getX();
-            this.gamePanel.setCharacterMoving(false);
-            this.gamePanel.setCharacterShooting(true);
+            this.character.setCharacterMoving(false);
+            this.character.setCharacterShooting(true);
             if (xMouseClick > this.character.getX() + this.character.getCHARACTER_WIDTH() / 2){
-                this.gamePanel.setCharacterMovingBack(false);
+                this.character.setCharacterMovingBack(false);
             }else {
-                this.gamePanel.setCharacterMovingBack(true);
+                this.character.setCharacterMovingBack(true);
             }
         }
     }
@@ -36,7 +36,7 @@ public class GameMouseListener implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         MusicPlayer.gunFireClip.stop();
-        this.gamePanel.setCharacterShooting(false);
+        this.character.setCharacterShooting(false);
         this.character.setShootFrameIndex(0);
         Main.sleep(10);
     }
