@@ -4,11 +4,11 @@ import java.awt.event.KeyListener;
 
 public class GameKeyListener implements KeyListener {
     GamePanel gamePanel;
-    Character character;
+    Player player;
 
-    public GameKeyListener(GamePanel gamePanel, Character soldier){
+    public GameKeyListener(GamePanel gamePanel, Player soldier){
         this.gamePanel = gamePanel;
-        this.character = soldier;
+        this.player = soldier;
     }
     @Override
     public void keyTyped(KeyEvent e) {
@@ -18,45 +18,45 @@ public class GameKeyListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        this.character.setCharacterStanding(false);
+        this.player.setCharacterStanding(false);
         if (keyCode == KeyEvent.VK_W) {
-            this.character.setCharacterMoving(true);
+            this.player.setCharacterMovingRight(true);
             MusicPlayer.runOnSandClip.start();
             MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.character.setDy(-this.character.getCHARACTER_SPEED());
+            this.player.setDy(-this.player.getCHARACTER_SPEED());
         } else if (keyCode == KeyEvent.VK_S) {
-            this.character.setCharacterMoving(true);
+            this.player.setCharacterMovingRight(true);
             MusicPlayer.runOnSandClip.start();
             MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.character.setDy(this.character.getCHARACTER_SPEED());
+            this.player.setDy(this.player.getCHARACTER_SPEED());
         } else if (keyCode == KeyEvent.VK_D) {
-            this.character.setCharacterMoving(true);
-            this.character.setCharacterMovingBack(false);
+            this.player.setCharacterMovingRight(true);
+            this.player.setCharacterMovingLeft(false);
             MusicPlayer.runOnSandClip.start();
             MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.character.setDx(this.character.getCHARACTER_SPEED());
+            this.player.setDx(this.player.getCHARACTER_SPEED());
         } else if (keyCode == KeyEvent.VK_A) {
-            this.character.setCharacterMoving(true);
-            this.character.setCharacterMovingBack(true);
+            this.player.setCharacterMovingRight(true);
+            this.player.setCharacterMovingLeft(true);
             MusicPlayer.runOnSandClip.start();
             MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.character.setDx(-this.character.getCHARACTER_SPEED());
+            this.player.setDx(-this.player.getCHARACTER_SPEED());
         } else if (keyCode == KeyEvent.VK_SPACE) {
-            this.character.setCharacterMoving(false);
-            this.character.setCharacterStanding(false);
-            this.character.setCharacterAttack(true);
+            this.player.setCharacterMovingRight(false);
+            this.player.setCharacterStanding(false);
+            this.player.setCharacterAttack(true);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        this.character.setCharacterStanding(true);
-        this.character.setCharacterMoving(false);
-        this.character.setCharacterAttack(false);
-        this.character.setDx(0);
-        this.character.setDy(0);
-        this.character.setRunFrameIndex(0);
-        this.character.setAttackFrameIndex(0);
+        this.player.setCharacterStanding(true);
+        this.player.setCharacterMovingRight(false);
+        this.player.setCharacterAttack(false);
+        this.player.setDx(0);
+        this.player.setDy(0);
+        this.player.setRunFrameIndex(0);
+        this.player.setAttackFrameIndex(0);
         MusicPlayer.runOnSandClip.setMicrosecondPosition(0);
         MusicPlayer.runOnSandClip.stop();
     }

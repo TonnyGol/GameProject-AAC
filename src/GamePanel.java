@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
@@ -10,7 +8,7 @@ public class GamePanel extends JPanel {
     private final int FPS = 24;
     private HashSet<Rectangle> obstacles;
     private final Image gameBackgroundImage;
-    private Character character;
+    private Player player;
 
 
     public GamePanel(int width, int height) {
@@ -18,10 +16,10 @@ public class GamePanel extends JPanel {
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        this.character = new Character(10, 620, this.obstacles);
+        this.player = new Player(10, 620, this.obstacles);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
-        this.addKeyListener(new GameKeyListener(this, this.character));
-        this.addMouseListener(new GameMouseListener(this, this.character));
+        this.addKeyListener(new GameKeyListener(this, this.player));
+        this.addMouseListener(new GameMouseListener(this, this.player));
         this.mainGamePanelLoop();
     }
     private HashSet<Rectangle> createObstacles(int count){
@@ -33,7 +31,7 @@ public class GamePanel extends JPanel {
     }
 
     private void update(){
-        this.character.update();
+        this.player.update();
         //System.out.println("Character x: " + this.character.getX());
         //System.out.println("Character y: " + this.character.getY());
     }
@@ -41,7 +39,7 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
-        this.character.paint(g);
+        this.player.paint(g);
     }
 
     private void mainGamePanelLoop() {

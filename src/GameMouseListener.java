@@ -1,16 +1,15 @@
 import javax.sound.sampled.Clip;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class GameMouseListener implements MouseListener {
     GamePanel gamePanel;
-    Character character;
+    Player player;
 
-    public GameMouseListener(GamePanel gamePanel, Character soldier){
+    public GameMouseListener(GamePanel gamePanel, Player soldier){
         this.gamePanel = gamePanel;
-        this.character = soldier;
+        this.player = soldier;
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -23,13 +22,13 @@ public class GameMouseListener implements MouseListener {
             MusicPlayer.gunFireClip.start();
             MusicPlayer.gunFireClip.loop(Clip.LOOP_CONTINUOUSLY);
             int xMouseClick = e.getX();
-            this.character.setCharacterMoving(false);
-            this.character.setCharacterStanding(false);
-            this.character.setCharacterShooting(true);
-            if (xMouseClick > this.character.getX() + this.character.getCHARACTER_WIDTH() / 2){
-                this.character.setCharacterMovingBack(false);
+            this.player.setCharacterMovingRight(false);
+            this.player.setCharacterStanding(false);
+            this.player.setCharacterShooting(true);
+            if (xMouseClick > this.player.getX() + this.player.getCHARACTER_WIDTH() / 2){
+                this.player.setCharacterMovingLeft(false);
             }else {
-                this.character.setCharacterMovingBack(true);
+                this.player.setCharacterMovingLeft(true);
             }
         }
     }
@@ -37,9 +36,9 @@ public class GameMouseListener implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         MusicPlayer.gunFireClip.stop();
-        this.character.setCharacterShooting(false);
-        this.character.setCharacterStanding(true);
-        this.character.setShootFrameIndex(0);
+        this.player.setCharacterShooting(false);
+        this.player.setCharacterStanding(true);
+        this.player.setShootFrameIndex(0);
         Main.sleep(10);
     }
 

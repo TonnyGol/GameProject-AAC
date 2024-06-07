@@ -3,7 +3,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Enemy {
+public class Enemy extends Character {
     private final int CHARACTER_WIDTH = 200;
     private final int CHARACTER_HEIGHT = 250;
     private final int CHARACTER_SPEED = 15;
@@ -19,7 +19,7 @@ public class Enemy {
     private int dy;
     private int runFrameIndex;
     private int attackFrameIndex;
-    private Character character;
+    private Player player;
 
     private Image defaultFrame;
     private Image defaultFrameBack;
@@ -38,7 +38,7 @@ public class Enemy {
     private final int ATTACK_CODE = 3;
     private final int ATTACK_BACK_CODE = 4;
 
-    public Enemy(int startX, int startY, Character character) {
+    public Enemy(int startX, int startY, Player player) {
         this.x = startX;
         this.y = startY;
         this.dx = 0;
@@ -50,7 +50,7 @@ public class Enemy {
         this.runBackFrames = loadFrames(11, RUN_BACK_IMAGES_PATH);
         this.attackFrames = loadFrames(4, ATTACK_IMAGES_PATH);
         //this.attackBackFrames = loadFrames(4, ATTACK_IMAGES_PATH);
-        this.character = character;
+        this.player = player;
     }
 
     private List<Image> loadFrames(int frames, String fileName) {
@@ -91,8 +91,13 @@ public class Enemy {
         }
     }
 
-    private void update(){
-        if (this.x > this.character.getX()){
+    @Override
+    public void paint(Graphics g) {
+
+    }
+
+    public void update(){
+        if (this.x > this.player.getX()){
             this.isCharacterMovingBack = true;
             paintType = MOVE_BACK_CODE;
         } else {
@@ -100,7 +105,7 @@ public class Enemy {
         }
     }
 
-    private void loopBetweenFrames() {
+    protected void loopBetweenFrames() {
             this.setRunFrameIndex(this.getRunFrameIndex() + 1);
             if (this.getRunFrameIndex() % 11 == 0) {
                 this.setRunFrameIndex(0);
@@ -108,8 +113,8 @@ public class Enemy {
     }
 
     public void moveTowardsPlayer() {
-        double dx = this.character.getDx() - x;
-        double dy = this.character.getDy() - y;
+        double dx = this.player.getDx() - x;
+        double dy = this.player.getDy() - y;
         double distance = Math.sqrt(dx * dx + dy * dy);
         dx /= distance;
         dy /= distance;
@@ -179,5 +184,9 @@ public void setCharacterShooting(boolean characterShooting) {
 }
 
 
+    @Override
+    public boolean canMove() {
+        return false;
+    }
 }
 
