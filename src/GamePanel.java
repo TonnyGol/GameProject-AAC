@@ -7,6 +7,7 @@ public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
 
     private int paintType;
+    private int paintTypeEnemy;
     private int width;
     private int height;
     private final Image gameBackgroundImage;
@@ -42,17 +43,14 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.width, this.height, this);
         int paintType = 0;
-        super.paintComponent(g);
-        g.drawImage(this.gameBackgroundImage, 0, 0, this.width, this.height, this);
-
+        int paintTypeEnemy = 0;
         g.fillRect(245, 580, 85, 95);
 
         this.character.paint(g, paintType);
         this.paintType = 0;
-        int enemyPaintType = 0;
-        this.enemies.get(0).paint(g, enemyPaintType);
-        enemyPaintType = 0;
+        this.enemies.get(0).paint(g, paintTypeEnemy);
         this.enemies.get(0).moveTowardsPlayer();
+        this.paintTypeEnemy = 0;
         Main.sleep(50);
         loopBetweenFrames();
 

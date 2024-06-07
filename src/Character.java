@@ -102,4 +102,12 @@ public class Character {
     public void setRunFrameIndex(int runFrameIndex) {
         this.runFrameIndex = runFrameIndex;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
