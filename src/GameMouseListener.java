@@ -24,6 +24,7 @@ public class GameMouseListener implements MouseListener {
             MusicPlayer.gunFireClip.loop(Clip.LOOP_CONTINUOUSLY);
             int xMouseClick = e.getX();
             this.character.setCharacterMoving(false);
+            this.character.setCharacterStanding(false);
             this.character.setCharacterShooting(true);
             if (xMouseClick > this.character.getX() + this.character.getCHARACTER_WIDTH() / 2){
                 this.character.setCharacterMovingBack(false);
@@ -37,6 +38,7 @@ public class GameMouseListener implements MouseListener {
     public void mouseReleased(MouseEvent e) {
         MusicPlayer.gunFireClip.stop();
         this.character.setCharacterShooting(false);
+        this.character.setCharacterStanding(true);
         this.character.setShootFrameIndex(0);
         Main.sleep(10);
     }

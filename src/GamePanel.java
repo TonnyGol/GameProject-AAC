@@ -32,16 +32,16 @@ public class GamePanel extends JPanel {
         return obstacles;
     }
 
+    private void update(){
+        this.character.update();
+        //System.out.println("Character x: " + this.character.getX());
+        //System.out.println("Character y: " + this.character.getY());
+    }
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
         this.character.paint(g);
-    }
-
-    private void update(){
-        this.character.update();
-        System.out.println("Character x: " + this.character.getX());
-        System.out.println("Character y: " + this.character.getY());
     }
 
     private void mainGamePanelLoop() {

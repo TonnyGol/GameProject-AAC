@@ -22,19 +22,19 @@ public class Character {
     private final int UPPER_BOUNDARY_Y = 165;
     private final int LOWER_BOUNDARY_Y = 790;
 
-
     private int x;
     private int y;
     private int dx;
     private int dy;
-    private Rectangle hitBox;
-    private HashSet<Rectangle> obstacles;
+    private final Rectangle hitBox;
+    private final HashSet<Rectangle> obstacles;
     private int runFrameIndex;
     private int shootFrameIndex;
     private int attackFrameIndex;
 
     private int paintType;
     private boolean isCharacterStanding;
+    private final int STAND_CODE = 0;
     private final int STAND_BACK_CODE = -1;
     private boolean isCharacterMoving;
     private final int MOVE_CODE = 1;
@@ -46,36 +46,40 @@ public class Character {
     private boolean isCharacterAttacking;
     private final int ATTACK_CODE = 5;
     private final int ATTACK_BACK_CODE = 6;
-    private final int STAND_CODE = 0;
 
-    private Image defaultFrame;
-    private Image defaultFrameBack;
-    private List<Image> runFrames;
-    private List<Image> runBackFrames;
-    private List<Image> shootFrames;
-    private List<Image> shootBackFrames;
-    private List<Image> attackBackFrames;
-    private List<Image> attackFrames;
+    private final Image defaultFrame;
+    private final Image defaultFrameBack;
+    private final List<Image> runFrames;
+    private final List<Image> runBackFrames;
+    private final List<Image> shootFrames;
+    private final List<Image> shootBackFrames;
+    private final List<Image> attackFrames;
+    private final List<Image> attackBackFrames;
 
     public Character(int startX, int startY, HashSet<Rectangle> obstacles){
         this.x = startX;
         this.y = startY;
         this.dx = 0;
         this.dy = 0;
-        this.hitBox = new Rectangle(this.x + CHARACTER_WIDTH / 4 - 10,
-                this.y + 150, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT - 50)/2);
-        this.obstacles = obstacles;
         this.runFrameIndex = 0;
         this.shootFrameIndex = 0;
         this.attackFrameIndex = 0;
+        this.obstacles = obstacles;
+        this.isCharacterStanding = true;
+        this.isCharacterMoving = false;
+        this.isCharacterMovingBack = false;
+        this.isCharacterShooting = false;
+        this.isCharacterAttacking = false;
+        this.hitBox = new Rectangle(this.x + CHARACTER_WIDTH / 4 - 10,
+                this.y + 150, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT - 50)/2);
         this.defaultFrame = new ImageIcon(DEFAULT_FRAME_FILE_PATH).getImage();
         this.defaultFrameBack = new ImageIcon(DEFAULT_BACK_FRAME_PATH).getImage();
         this.runFrames = loadFrames(8, RUN_IMAGES_PATH);
         this.runBackFrames = loadFrames(8, RUN_BACK_IMAGES_PATH);
         this.shootFrames = loadFrames(4, SHOOT_IMAGES_PATH);
         this.shootBackFrames = loadFrames(4, SHOOT_BACK_IMAGES_PATH);
+        this.attackFrames = loadFrames(3, ATTACK_IMAGES_PATH);
         this.attackBackFrames = loadFrames(3, ATTACK_BACK_IMAGES_PATH);
-        this.attackFrames = loadFrames(3,ATTACK_IMAGES_PATH);
     }
     public void paint(Graphics g){
         //g.fillRect(this.x + CHARACTER_WIDTH / 4 - 10, this.y + 150, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT - 50)/2);
@@ -97,11 +101,13 @@ public class Character {
                         this.x - 30, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT,null);
                 break;
             case 5:
-                g.drawImage(this.attackFrames.get(attackFrameIndex),
+                g.drawImage(this.attackFrames.get(this.attackFrameIndex),
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT,null);
+                break; // YOU HAVE TO PUT THIS BREAK SO THE CODE WILL WORK !! ! ! !! !
             case 6:
-                g.drawImage(this.attackBackFrames.get(attackFrameIndex),
+                g.drawImage(this.attackBackFrames.get(this.attackFrameIndex),
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT,null);
+                break; // YOU HAVE TO PUT THIS BREAK SO THE CODE WILL WORK !! ! ! !! !
             case 0:
                 g.drawImage(this.defaultFrame,
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT,null);
@@ -111,10 +117,17 @@ public class Character {
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT,null);
                 break;
         }
-
     }
     public void update(){
-        if (this.isCharacterMoving){
+        if(this.isCharacterStanding){
+            if (this.isCharacterMovingBack){
+                this.paintType = STAND_BACK_CODE;
+            }
+            else{
+                this.paintType = STAND_CODE;
+            }
+        }
+        else if (this.isCharacterMoving){
             if(this.canMove()){
                 this.move();
                 if (this.isCharacterMovingBack){
@@ -123,9 +136,9 @@ public class Character {
                 else{
                     this.paintType = MOVE_CODE;
                 }
-                Main.sleep(40);
-                this.loopBetweenFrames();
             }
+            Main.sleep(40);
+            this.loopBetweenFrames();
         }
         else if (this.isCharacterShooting) {
             if (this.isCharacterMovingBack){
@@ -138,27 +151,14 @@ public class Character {
             this.loopBetweenFrames();
         }
         else if(this.isCharacterAttacking){
-            if(this.isCharacterMovingBack){
-                 this.paintType = ATTACK_BACK_CODE;
-            }
-            else {
+            if (this.isCharacterMovingBack){
+                this.paintType = ATTACK_BACK_CODE;
+            }else {
                 this.paintType = ATTACK_CODE;
             }
-
-            Main.sleep(60);
+            Main.sleep(65);
             this.loopBetweenFrames();
         }
-        else if(this.isCharacterStanding){
-
-            if (this.isCharacterMovingBack){
-                this.paintType = STAND_BACK_CODE;
-            }
-            else{
-                this.paintType = STAND_CODE;
-            }
-
-        }
-
     }
 
 
@@ -260,7 +260,6 @@ public class Character {
     public void setShootFrameIndex(int shootFrameIndex) {
         this.shootFrameIndex = shootFrameIndex;
     }
-
     public int getShootFrameIndex() {
         return shootFrameIndex;
     }
@@ -268,23 +267,13 @@ public class Character {
     public int getRunFrameIndex() {
         return runFrameIndex;
     }
-
     public void setRunFrameIndex(int runFrameIndex) {
         this.runFrameIndex = runFrameIndex;
-    }
-
-    public boolean isCharacterMoving() {
-        return isCharacterMoving;
     }
 
     public void setCharacterMoving(boolean characterMoving) {
         isCharacterMoving = characterMoving;
     }
-
-    public boolean isCharacterMovingBack() {
-        return isCharacterMovingBack;
-    }
-
     public void setCharacterMovingBack(boolean characterMovingBack) {
         isCharacterMovingBack = characterMovingBack;
     }
@@ -292,19 +281,20 @@ public class Character {
     public void setCharacterShooting(boolean characterShooting) {
         isCharacterShooting = characterShooting;
     }
-    public boolean isCharacterAttacking() {
-        return isCharacterAttacking;
-    }
+
     public void setCharacterAttack(boolean characterAttacking) {
         isCharacterAttacking = characterAttacking;
     }
+
+    public void setCharacterStanding(boolean characterStanding){
+        this.isCharacterStanding = characterStanding;
+    }
+
     public int getAttackFrameIndex(){
         return this.attackFrameIndex;
     }
     public void setAttackFrameIndex(int attackFrameIndex){
-        this.attackFrameIndex=attackFrameIndex;
+        this.attackFrameIndex = attackFrameIndex;
     }
-    public void setCharacterStanding(boolean characterStanding){
-        this.isCharacterStanding = characterStanding;
-    }
+
 }
