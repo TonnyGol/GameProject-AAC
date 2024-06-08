@@ -9,6 +9,7 @@ public class GamePanel extends JPanel {
     private HashSet<Rectangle> obstacles;
     private final Image gameBackgroundImage;
     private Player player;
+    private Enemy enemy;
 
 
     public GamePanel(int width, int height) {
@@ -17,10 +18,12 @@ public class GamePanel extends JPanel {
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         this.player = new Player(10, 620, this.obstacles);
+        this.enemy = new Enemy(1000, 620, this.player);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.player));
         this.addMouseListener(new GameMouseListener(this, this.player));
         this.mainGamePanelLoop();
+        //this.EnemiesMovementMainLoop();
     }
     private HashSet<Rectangle> createObstacles(int count){
         HashSet<Rectangle> obstacles = new HashSet<>(count);
@@ -32,14 +35,20 @@ public class GamePanel extends JPanel {
 
     private void update(){
         this.player.update();
+        this.enemy.update();
         //System.out.println("Character x: " + this.character.getX());
         //System.out.println("Character y: " + this.character.getY());
     }
+
+//    private void enemyUpdate(){
+//        this.enemy.update();
+//    }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
         this.player.paint(g);
+        this.enemy.paint(g);
     }
 
     private void mainGamePanelLoop() {
@@ -61,6 +70,11 @@ public class GamePanel extends JPanel {
             }
         }).start();
     }
-
+//    private void EnemiesMovementMainLoop(){
+//        new Thread(()->{
+//            enemyUpdate();
+//        }).start();
+//
+//    }
 
 }

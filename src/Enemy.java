@@ -6,13 +6,21 @@ import java.util.List;
 public class Enemy extends Character {
     private final int CHARACTER_WIDTH = 200;
     private final int CHARACTER_HEIGHT = 250;
-    private final int CHARACTER_SPEED = 15;
+    private final int CHARACTER_SPEED = 5;
 
-    private final String DEFAULT_FRAME_FILE_PATH = "resources\\Images\\Wolfwalk1.png";
+    private final String DEFAULT_FRAME_FILE_PATH = "resources\\Images\\WolfWalk1";
     private final String RUN_IMAGES_PATH = "resources\\Images\\WolfWalk";
-    private final String RUN_BACK_IMAGES_PATH = "resources\\Images\\RunBack";
+    private final String RUN_BACK_IMAGES_PATH = "resources\\Images\\WolfWalkBack";
     private final String ATTACK_IMAGES_PATH = "resources\\Images\\Attack";
 
+    private int paintType;
+    private boolean isCharacterMovingRight;
+    private final int MOVE_RIGHT_CODE = 1;
+    private boolean isCharacterMovingLeft;
+    private final int MOVE_LEFT_CODE = 2;
+    private boolean isCharacterAttacking;
+    private final int ATTACK_RIGHT_CODE = 5;
+    private final int ATTACK_LEFT_CODE = 6;
     private int x;
     private int y;
     private int dx;
@@ -21,6 +29,7 @@ public class Enemy extends Character {
     private int attackFrameIndex;
     private Player player;
 
+
     private Image defaultFrame;
     private Image defaultFrameBack;
     private List<Image> runFrames;
@@ -28,17 +37,10 @@ public class Enemy extends Character {
     private List<Image> attackFrames;
     private List<Image> attackBackFrames;
 
-    private int paintType;
-    private final int STAND_BACK_CODE = -1;
-    private boolean isCharacterMoving;
-    private final int MOVE_CODE = 1;
-    private boolean isCharacterMovingBack;
-    private final int MOVE_BACK_CODE = 2;
-    private boolean isCharacterShooting;
-    private final int ATTACK_CODE = 3;
-    private final int ATTACK_BACK_CODE = 4;
-
     public Enemy(int startX, int startY, Player player) {
+        this.isCharacterMovingRight = false;
+        this.isCharacterMovingLeft = false;
+        this.isCharacterAttacking = false;
         this.x = startX;
         this.y = startY;
         this.dx = 0;
@@ -62,7 +64,9 @@ public class Enemy extends Character {
         return frameList;
     }
 
-    public void paint(Graphics g, int paintType) {
+
+    @Override
+    public void paint(Graphics g) {
         switch (this.paintType) {
             case 1:
                 g.drawImage(this.runFrames.get(this.runFrameIndex),
@@ -91,18 +95,17 @@ public class Enemy extends Character {
         }
     }
 
-    @Override
-    public void paint(Graphics g) {
-
-    }
-
     public void update(){
         if (this.x > this.player.getX()){
-            this.isCharacterMovingBack = true;
-            paintType = MOVE_BACK_CODE;
+            this.isCharacterMovingLeft = true;
+            this.isCharacterMovingRight = false;
+            paintType = MOVE_LEFT_CODE;
         } else {
-            paintType = MOVE_CODE;
+            this.isCharacterMovingLeft = false;
+            this.isCharacterMovingRight = true;
+            paintType = MOVE_RIGHT_CODE;
         }
+        moveTowardsPlayer();
     }
 
     protected void loopBetweenFrames() {
@@ -113,12 +116,18 @@ public class Enemy extends Character {
     }
 
     public void moveTowardsPlayer() {
-        double dx = this.player.getDx() - x;
-        double dy = this.player.getDy() - y;
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        dx /= distance;
-        dy /= distance;
-        this.x += dx * CHARACTER_SPEED;
+        int distanceX = this.x - this.player.getX();
+        int distanceY = this.y - this.player.getY();
+        if (distanceX > 0) {
+            this.x -= CHARACTER_SPEED;
+        } else {
+            this.x += CHARACTER_SPEED;
+        }
+        if (distanceY > 0){
+            this.y -= CHARACTER_SPEED;
+        } else {
+            this.y += CHARACTER_SPEED;
+        }
     }
 
 
@@ -163,26 +172,29 @@ public class Enemy extends Character {
         this.runFrameIndex = runFrameIndex;
     }
 
-public boolean isCharacterMoving() {
-    return isCharacterMoving;
-}
+    public boolean isCharacterMovingRight() {
+        return isCharacterMovingRight;
+    }
 
-public void setCharacterMoving(boolean characterMoving) {
-    isCharacterMoving = characterMoving;
-}
+    public void setCharacterMovingRight(boolean characterMovingRight) {
+        isCharacterMovingRight = characterMovingRight;
+    }
 
-public boolean isCharacterMovingBack() {
-    return isCharacterMovingBack;
-}
+    public boolean isCharacterMovingLeft() {
+        return isCharacterMovingLeft;
+    }
 
-public void setCharacterMovingBack(boolean characterMovingBack) {
-    isCharacterMovingBack = characterMovingBack;
-}
+    public void setCharacterMovingLeft(boolean characterMovingLeft) {
+        isCharacterMovingLeft = characterMovingLeft;
+    }
 
-public void setCharacterShooting(boolean characterShooting) {
-    isCharacterShooting = characterShooting;
-}
+    public boolean isCharacterAttacking() {
+        return isCharacterAttacking;
+    }
 
+    public void setCharacterAttacking(boolean characterAttacking) {
+        isCharacterAttacking = characterAttacking;
+    }
 
     @Override
     public boolean canMove() {
