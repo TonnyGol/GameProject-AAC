@@ -2,29 +2,28 @@ import java.awt.*;
 import java.util.HashSet;
 
 public abstract class Character {
-    private final int CHARACTER_WIDTH = 250;
-    private final int CHARACTER_HEIGHT = 150;
-    private final int CHARACTER_SPEED = 15;
+    protected final int CHARACTER_WIDTH = 250;
+    protected final int CHARACTER_HEIGHT = 150;
 
-    private final int UPPER_BOUNDARY_Y = 165;
-    private final int LOWER_BOUNDARY_Y = 790;
+    protected final int UPPER_BOUNDARY_Y = 165;
+    protected final int LOWER_BOUNDARY_Y = 790;
 
-    private int x;
-    private int y;
-    private int dx;
-    private int dy;
+    protected int x;
+    protected int y;
+    protected int dx;
+    protected int dy;
 
-    private Rectangle hitBox;
-    private HashSet<Rectangle> obstacles;
+    protected Rectangle hitBox;
+    protected HashSet<Rectangle> obstacles;
 
-    private Image defaultFrameRight;
-    private Image defaultFrameLeft;
+    protected Image defaultFrameRight;
+    protected Image defaultFrameLeft;
 
-    private int paintType;
+    protected int paintType;
 
-    private boolean isCharacterStanding;
-    private boolean isCharacterMovingRight;
-    private boolean isCharacterMovingLeft;
+    protected boolean isCharacterStanding;
+    protected boolean isCharacterMovingRight;
+    protected boolean isCharacterMovingLeft;
 
     public abstract void paint(Graphics g);
     public abstract void update();

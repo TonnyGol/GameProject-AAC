@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class MusicPlayer extends Thread {
-    public static boolean isCharacterShooting;
 
     private Clip backGroundMusicClip;
     public static Clip gunFireClip;
@@ -14,7 +13,6 @@ public class MusicPlayer extends Thread {
 
     public MusicPlayer(){
         try {
-            this.isCharacterShooting = false;
             // Open an audio input stream.
             File MusicSoundFile = new File("resources\\AudioFiles\\menuSound.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(MusicSoundFile);

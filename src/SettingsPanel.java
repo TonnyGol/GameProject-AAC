@@ -8,10 +8,12 @@ public class SettingsPanel extends JPanel {
     private final String MUSIC_FILE_PATH = "resources\\Images\\MusicButton2.png";
     private final String VOLUME_ON_FILE_PATH = "resources\\Images\\Volume_ON.png";
     private final String VOLUME_OFF_FILE_PATH = "resources\\Images\\Volume_OFF.png";
+    private final String VOLUME_SLIDER_PATH = "resources\\Images\\SliderTest.png";
 
     private final Image backgroundImage;
     private final Image effectsImage;
     private final Image musicImage;
+    private final JLabel volumeSliderLabel;
     private JLabel backLabel;
     private JLabel musicOffLabel;
     private JLabel musicOnLabel;
@@ -21,7 +23,6 @@ public class SettingsPanel extends JPanel {
     public static boolean switchEffectsVolume;
     private int volumeState = 1;
     private int effectsState = 1;
-    private JLabel volumeSliderLabel;
 
 
     public SettingsPanel (int width, int height) {
@@ -50,6 +51,10 @@ public class SettingsPanel extends JPanel {
         this.musicOnLabel = WindowFrame.createPhotoLabel("Volume_ON", VOLUME_ON_FILE_PATH);
         this.musicOnLabel.setBounds(200,180,200,125);
         this.add(musicOnLabel);
+
+        this.volumeSliderLabel = new JLabel(new ImageIcon(VOLUME_SLIDER_PATH));
+        this.volumeSliderLabel.setBounds(450, 200, 350, 100);
+        this.add(this.volumeSliderLabel);
         this.mainSettingsPanelLoop();
     }
     private void changeMusicOnOrOff(float adjustment){

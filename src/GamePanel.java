@@ -18,7 +18,7 @@ public class GamePanel extends JPanel {
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         this.player = new Player(10, 620, this.obstacles);
-        this.enemy = new Enemy(1000, 620, this.player);
+        this.enemy = new Enemy(1000, 620, this.player, this.obstacles);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.player));
         this.addMouseListener(new GameMouseListener(this, this.player));
@@ -47,6 +47,9 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
+        g.fillRect(500, 453, 60, 5);
+        g.fillRect(945, 558, 140, 5);
+        g.fillRect(1510, 400, 55, 5);
         this.player.paint(g);
         this.enemy.paint(g);
     }
