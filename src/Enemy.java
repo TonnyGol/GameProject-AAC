@@ -3,7 +3,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 
 public class Enemy extends Character {
     private final int CHARACTER_SPEED = 5;
@@ -21,6 +20,7 @@ public class Enemy extends Character {
     private final int ATTACK_LEFT_CODE = 4;
     private int runFrameIndex;
     private int attackFrameIndex;
+    private boolean isAlive;
     private Player player;
 
     private List<Image> runRightFrames;
@@ -45,8 +45,8 @@ public class Enemy extends Character {
         this.defaultFrameLeft = new ImageIcon(DEFAULT_FRAME_FILE_PATH).getImage();
         this.runRightFrames = loadFrames(11, RUN_IMAGES_PATH);
         this.runLeftFrames = loadFrames(11, RUN_BACK_IMAGES_PATH);
-        //this.attackFrames = loadFrames(4, ATTACK_IMAGES_PATH);
-        //this.attackBackFrames = loadFrames(4, ATTACK_BACK_PATH);
+        this.attackFrames = loadFrames(4, ATTACK_IMAGES_PATH);
+        this.attackBackFrames = loadFrames(4, ATTACK_BACK_PATH);
         this.player = player;
     }
 
@@ -62,8 +62,8 @@ public class Enemy extends Character {
 
     @Override
     public void paint(Graphics g) {
-        g.fillRect(this.x + CHARACTER_WIDTH / 4 - 10,
-                this.y + 100, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT + 50)/2);
+//        g.fillRect(this.x + CHARACTER_WIDTH / 4 - 10,
+//                this.y + 100, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT + 50)/2);
         switch (this.paintType) {
             case 1:
                 g.drawImage(this.runRightFrames.get(this.runFrameIndex),
@@ -102,16 +102,21 @@ public class Enemy extends Character {
             this.isCharacterMovingRight = true;
             this.paintType = MOVE_RIGHT_CODE;
         }
-        //if(this.hitBox.intersects(player.hitBox)){
-            //this.isCharacterAttacking = true;
-            //if (this.isCharacterMovingLeft){
-                //this.paintType = ATTACK_LEFT_CODE;
-            //} else {
-                //this.paintType = ATTACK_RIGHT_CODE;
-            //}
-        //} else {
-            //this.isCharacterAttacking = false;
-        //}
+        if(this.hitBox.intersects(player.hitBox)){
+            this.isCharacterAttacking = true;
+            if (this.isCharacterMovingLeft){
+                this.paintType = ATTACK_LEFT_CODE;
+            } else {
+                this.paintType = ATTACK_RIGHT_CODE;
+            }
+        } else {
+            this.isCharacterAttacking = false;
+        }
+//        for (Rectangle bullet : this.player.getBullets()){
+//            if (this.hitBox.intersects(bullet)){
+//                System.out.println("Dead");
+//            }
+//        }
         this.moveTowardsPlayer();
         this.loopBetweenFrames();
     }
@@ -160,6 +165,9 @@ public class Enemy extends Character {
             if(this.y <= LOWER_BOUNDARY_Y){
                 this.dy = -CHARACTER_SPEED;
             }
+//            if(this.y >= UPPER_BOUNDARY_Y){
+//                this.dy = CHARACTER_SPEED;
+//            }
             this.move();
         }
 

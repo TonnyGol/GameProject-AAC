@@ -2,8 +2,8 @@ import java.awt.*;
 import java.util.HashSet;
 
 public abstract class Character {
-    protected final int CHARACTER_WIDTH = 250;
-    protected final int CHARACTER_HEIGHT = 150;
+    protected final int CHARACTER_WIDTH = 200;
+    protected final int CHARACTER_HEIGHT = 250;
 
     protected final int UPPER_BOUNDARY_Y = 165;
     protected final int LOWER_BOUNDARY_Y = 790;

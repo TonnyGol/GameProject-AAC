@@ -146,8 +146,6 @@ public class Player extends Character {
             this.loopBetweenFrames();
         }
     }
-
-
     private void loopBetweenFrames(){
         if (this.isCharacterMovingRight){
             this.setRunFrameIndex(this.getRunFrameIndex() + 1);
@@ -169,6 +167,13 @@ public class Player extends Character {
         }
     }
 
+//    private List<Rectangle> initialBulletsList(){
+//        List<Rectangle> list = new ArrayList<>(3);
+//        for (int i = 0; i < 3; i++){
+//            list.add(new Rectangle(0,0,0,0));
+//        }
+//        return list;
+//    }
     private List<Image> loadFrames(int frames, String fileName){
         List<Image> frameList = new ArrayList<>(frames);
         for (int i = 1; i <= frames; i++){

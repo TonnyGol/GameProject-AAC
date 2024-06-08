@@ -1,5 +1,6 @@
 import javax.sound.sampled.Clip;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -25,10 +26,13 @@ public class GameMouseListener implements MouseListener {
             this.player.setCharacterMovingRight(false);
             this.player.setCharacterStanding(false);
             this.player.setCharacterShooting(true);
+
             if (xMouseClick > this.player.getX() + this.player.getCHARACTER_WIDTH() / 2){
                 this.player.setCharacterMovingLeft(false);
+                //this.player.getBullets().get(this.player.getBulletIndex()).setBounds(this.player.getX() + 105, this.player.getY() + 105, 20, 5);
             }else {
                 this.player.setCharacterMovingLeft(true);
+                //this.player.getBullets().get(this.player.getBulletIndex()).setBounds(this.player.getX() - 30, this.player.getY() + 105, 20, 5);
             }
         }
     }
