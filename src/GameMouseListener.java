@@ -14,6 +14,7 @@ public class GameMouseListener implements MouseListener {
     }
     @Override
     public void mouseClicked(MouseEvent e) {
+
     }
 
     @Override
@@ -29,10 +30,8 @@ public class GameMouseListener implements MouseListener {
 
             if (xMouseClick > this.player.getX() + this.player.getCHARACTER_WIDTH() / 2){
                 this.player.setCharacterMovingLeft(false);
-                //this.player.getBullets().get(this.player.getBulletIndex()).setBounds(this.player.getX() + 105, this.player.getY() + 105, 20, 5);
             }else {
                 this.player.setCharacterMovingLeft(true);
-                //this.player.getBullets().get(this.player.getBulletIndex()).setBounds(this.player.getX() - 30, this.player.getY() + 105, 20, 5);
             }
         }
     }

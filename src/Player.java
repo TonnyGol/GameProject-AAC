@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Player extends Character {
@@ -17,10 +18,12 @@ public class Player extends Character {
     private final int CHARACTER_SPEED = 15;
     private final int RIGHT_BOUNDARY_X = 1740;
     private final int LEFT_BOUNDARY_X = -45;
+    private final int AMMO_CAPACITY = 15;
 
     private int runFrameIndex;
     private int shootFrameIndex;
     private int attackFrameIndex;
+    private int ammo;
 
     private final int STAND_RIGHT_CODE = 0;
     private final int STAND_LEFT_CODE = -1;
@@ -39,12 +42,14 @@ public class Player extends Character {
     private final List<Image> shootLeftFrames;
     private final List<Image> attackRightFrames;
     private final List<Image> attackLeftFrames;
+    private List<Bullet> bullets;
 
     public Player(int startX, int startY, HashSet<Rectangle> obstacles){
         this.x = startX;
         this.y = startY;
         this.dx = 0;
         this.dy = 0;
+        this.bullets = new LinkedList<>();
         this.runFrameIndex = 0;
         this.shootFrameIndex = 0;
         this.attackFrameIndex = 0;
@@ -102,6 +107,9 @@ public class Player extends Character {
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT,null);
                 break;
         }
+        for (Bullet bullet : this.bullets){
+            g.fillRect((int) bullet.getX(), (int) bullet.getY(), (int) bullet.getWidth(), (int) bullet.getHeight());
+        }
     }
     public void update(){
         if(this.isCharacterStanding){
@@ -128,9 +136,11 @@ public class Player extends Character {
         }
         else if (this.isCharacterShooting) {
             if (this.isCharacterMovingLeft){
+                this.createAndShootBullet(this.getX() - 30, this.getY() + 105, -1);
                 this.paintType = SHOOT_LEFT_CODE;
             }
             else {
+                this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
                 this.paintType = SHOOT_RIGHT_CODE;
             }
             Main.sleep(40);
@@ -145,35 +155,52 @@ public class Player extends Character {
             Main.sleep(65);
             this.loopBetweenFrames();
         }
+        for (Bullet bullet : this.bullets){
+            bullet.fly();
+        }
     }
+
     private void loopBetweenFrames(){
         if (this.isCharacterMovingRight){
             this.setRunFrameIndex(this.getRunFrameIndex() + 1);
-            if (this.getRunFrameIndex() % 8 == 0){
+            if (this.getRunFrameIndex() % this.runRightFrames.size() == 0){
                 this.setRunFrameIndex(0);
             }
         }
         if (this.isCharacterShooting){
             this.setShootFrameIndex(this.getShootFrameIndex() + 1);
-            if (this.getShootFrameIndex() % 4 == 0){
+            if (this.getShootFrameIndex() % this.shootRightFrames.size() == 0){
                 this.setShootFrameIndex(0);
             }
         }
         if (this.isCharacterAttacking){
             this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
-            if (this.getAttackFrameIndex() % 3 == 0){
+            if (this.getAttackFrameIndex() % this.attackRightFrames.size() == 0){
                 this.setAttackFrameIndex(0);
             }
         }
     }
 
-//    private List<Rectangle> initialBulletsList(){
-//        List<Rectangle> list = new ArrayList<>(3);
-//        for (int i = 0; i < 3; i++){
-//            list.add(new Rectangle(0,0,0,0));
-//        }
-//        return list;
-//    }
+    public void createAndShootBullet(int xBullet, int yBullet, int direction) {
+        boolean allBulletsGone = true;
+        if (this.bullets.size() == AMMO_CAPACITY){
+            //Reload animation
+            for (Bullet bullet : this.bullets){
+                if (bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45){
+                    allBulletsGone = true;
+                } else { allBulletsGone = false; }
+            }
+            if (allBulletsGone){
+                this.bullets.clear();
+                this.ammo = 0;
+            }
+        }else {
+            Bullet newBullet = new Bullet(xBullet, yBullet, direction);
+            this.bullets.add(newBullet);
+            this.ammo++;
+        }
+    }
+
     private List<Image> loadFrames(int frames, String fileName){
         List<Image> frameList = new ArrayList<>(frames);
         for (int i = 1; i <= frames; i++){
@@ -204,6 +231,9 @@ public class Player extends Character {
         return xPositionOk && yPositionOk;
     }
 
+    public List<Bullet> getBullets(){
+        return this.bullets;
+    }
     public int getDx() {
         return dx;
     }

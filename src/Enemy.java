@@ -7,26 +7,31 @@ import java.util.List;
 public class Enemy extends Character {
     private final int CHARACTER_SPEED = 5;
 
-    private final String DEFAULT_FRAME_FILE_PATH = "resources\\Images\\WolfWalk1";
-    private final String RUN_IMAGES_PATH = "resources\\Images\\WolfWalk";
-    private final String RUN_BACK_IMAGES_PATH = "resources\\Images\\WolfWalkBack";
-    private final String ATTACK_IMAGES_PATH = "resources\\Images\\WolfAttack";
-    private final String ATTACK_BACK_PATH = "resources\\Images\\WolfAttackBack";
+    private final String RUN_RIGHT_IMAGES_PATH = "resources\\Images\\WolfWalk";
+    private final String RUN_LEFT_IMAGES_PATH = "resources\\Images\\WolfWalkBack";
+    private final String ATTACK_RIGHT_IMAGES_PATH = "resources\\Images\\WolfAttack";
+    private final String ATTACK_LEFT_IMAGES_PATH = "resources\\Images\\WolfAttackBack";
+    private final String DIE_RIGHT_IMAGES_PATH = "resources\\Images\\WolfDead";
+    private final String DIE_LEFT_IMAGES_PATH = "resources\\Images\\WolfDeadBack";
 
     private final int MOVE_RIGHT_CODE = 1;
     private final int MOVE_LEFT_CODE = 2;
     private boolean isCharacterAttacking;
     private final int ATTACK_RIGHT_CODE = 3;
     private final int ATTACK_LEFT_CODE = 4;
+    private final int DIE_RIGHT_CODE = 5;
+    private final int DIE_LEFT_CODE = 6;
     private int runFrameIndex;
     private int attackFrameIndex;
-    private boolean isAlive;
+    private int deathFrameIndex;
     private Player player;
 
     private List<Image> runRightFrames;
     private List<Image> runLeftFrames;
-    private List<Image> attackFrames;
-    private List<Image> attackBackFrames;
+    private List<Image> attackRightFrames;
+    private List<Image> attackLeftFrames;
+    private List<Image> deathRightFrames;
+    private List<Image> deathLeftFrames;
 
     public Enemy(int startX, int startY, Player player, HashSet<Rectangle> obstacles) {
         this.isCharacterMovingRight = false;
@@ -36,17 +41,19 @@ public class Enemy extends Character {
         this.y = startY;
         this.dx = 0;
         this.dy = 0;
+        this.isAlive = true;
         this.runFrameIndex = 0;
         this.attackFrameIndex = 0;
+        this.deathFrameIndex = 0;
         this.obstacles = obstacles;
         this.hitBox = new Rectangle(this.x + CHARACTER_WIDTH / 4 - 10,
                 this.y + 100, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT + 50)/2);
-        this.defaultFrameRight = new ImageIcon(DEFAULT_FRAME_FILE_PATH).getImage();
-        this.defaultFrameLeft = new ImageIcon(DEFAULT_FRAME_FILE_PATH).getImage();
-        this.runRightFrames = loadFrames(11, RUN_IMAGES_PATH);
-        this.runLeftFrames = loadFrames(11, RUN_BACK_IMAGES_PATH);
-        this.attackFrames = loadFrames(4, ATTACK_IMAGES_PATH);
-        this.attackBackFrames = loadFrames(4, ATTACK_BACK_PATH);
+        this.runRightFrames = loadFrames(11, RUN_RIGHT_IMAGES_PATH);
+        this.runLeftFrames = loadFrames(11, RUN_LEFT_IMAGES_PATH);
+        this.attackRightFrames = loadFrames(4, ATTACK_RIGHT_IMAGES_PATH);
+        this.attackLeftFrames = loadFrames(4, ATTACK_LEFT_IMAGES_PATH);
+        this.deathRightFrames = loadFrames(2, DIE_RIGHT_IMAGES_PATH);
+        this.deathLeftFrames = loadFrames(2, DIE_LEFT_IMAGES_PATH);
         this.player = player;
     }
 
@@ -74,20 +81,24 @@ public class Enemy extends Character {
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT, null);
                 break;
             case 3:
-                g.drawImage(this.attackFrames.get(this.attackFrameIndex),
+                g.drawImage(this.attackRightFrames.get(this.attackFrameIndex),
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT, null);
                 break;
             case 4:
-                g.drawImage(this.attackBackFrames.get(this.attackFrameIndex),
+                g.drawImage(this.attackLeftFrames.get(this.attackFrameIndex),
                         this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT, null);
                 break;
-            case 0:
-                g.drawImage(this.defaultFrameRight,
-                        this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT, null);
+            case 5:
+                for (int i = 0; i < this.deathRightFrames.size(); i++){
+                    g.drawImage(this.deathRightFrames.get(i),
+                            this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT, null);
+                }
                 break;
-            case -1:
-                g.drawImage(this.defaultFrameLeft,
-                        this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT, null);
+            case 6:
+                for (int i = 0; i < this.deathLeftFrames.size(); i++){
+                    g.drawImage(this.deathLeftFrames.get(i),
+                            this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT, null);
+                }
                 break;
         }
     }
@@ -112,13 +123,25 @@ public class Enemy extends Character {
         } else {
             this.isCharacterAttacking = false;
         }
-//        for (Rectangle bullet : this.player.getBullets()){
-//            if (this.hitBox.intersects(bullet)){
-//                System.out.println("Dead");
-//            }
-//        }
-        this.moveTowardsPlayer();
-        this.loopBetweenFrames();
+        for (Bullet bullet : this.player.getBullets()){
+            if (this.hitBox.intersects(bullet)){
+                this.setIsAlive(false);
+                System.out.println("Dead");
+                //this.player.addPoint();
+            }
+        }
+        if (this.isAlive){
+            this.moveTowardsPlayer();
+        }else {
+            if (this.isCharacterMovingLeft){
+                this.paintType = DIE_LEFT_CODE;
+            }else {
+                this.paintType = DIE_RIGHT_CODE;
+            }
+        }
+        if (this.isAlive){
+            this.loopBetweenFrames();
+        }
     }
 
     protected void loopBetweenFrames() {
@@ -127,7 +150,7 @@ public class Enemy extends Character {
             this.setRunFrameIndex(0);
         }
         this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
-        if (this.getAttackFrameIndex() % 4 == 0){
+        if (this.getAttackFrameIndex() % this.attackRightFrames.size() == 0){
             this.setAttackFrameIndex(0);
         }
     }
@@ -212,6 +235,14 @@ public class Enemy extends Character {
 
     public void setDy(int dy) {
         this.dy = dy;
+    }
+
+    public int getDeathFrameIndex() {
+        return deathFrameIndex;
+    }
+
+    public void setDeathFrameIndex(int deathFrameIndex) {
+        this.deathFrameIndex = deathFrameIndex;
     }
 
     public void setShootFrameIndex(int shootFrameIndex) {

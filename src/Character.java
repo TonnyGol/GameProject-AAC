@@ -21,6 +21,7 @@ public abstract class Character {
 
     protected int paintType;
 
+    protected boolean isAlive;
     protected boolean isCharacterStanding;
     protected boolean isCharacterMovingRight;
     protected boolean isCharacterMovingLeft;
@@ -29,6 +30,14 @@ public abstract class Character {
     public abstract void update();
     public abstract boolean canMove();
     public abstract void move();
+
+    protected void setIsAlive(boolean isAlive){
+        this.isAlive = isAlive;
+    }
+    protected boolean isAlive(){
+        return this.isAlive;
+    }
+
 //    protected abstract void loopBetweenFrames();
 //
 //    public abstract int getCHARACTER_WIDTH();
