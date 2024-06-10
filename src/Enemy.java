@@ -29,9 +29,12 @@ public class Enemy extends Character {
 
     public Enemy(int startX, int startY, Player player, HashSet<Rectangle> obstacles) {
         super(startX, startY, obstacles);
-        this.setHitBox(new Rectangle(this.getX() + this.getCHARACTER_WIDTH() / 4 - 10,
-                this.getY() + 100, this.getCHARACTER_WIDTH() / 2 + 15, (this.getCHARACTER_HEIGHT() + 50)/2));
-
+//        this.setHitBox(new Rectangle(this.getX() + this.getCHARACTER_WIDTH() / 4 - 10,
+//                this.getY() + 100, this.getCHARACTER_WIDTH() / 2 + 15, (this.getCHARACTER_HEIGHT() + 50)/2));
+        this.setHitBox(new Rectangle(this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10,
+                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, this.getCHARACTER_HEIGHT()));
+//        this.setCollisionHitBox(new Rectangle(this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10,
+//                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, this.getCHARACTER_HEIGHT()));
         this.setRunRightFrames(this.loadFrames(11, RUN_RIGHT_IMAGES_PATH));
         this.setRunLeftFrames(this.loadFrames(11, RUN_LEFT_IMAGES_PATH));
         this.setAttackRightFrames(this.loadFrames(4, ATTACK_RIGHT_IMAGES_PATH));
@@ -44,8 +47,8 @@ public class Enemy extends Character {
     }
     @Override
     public void paint(Graphics g) {
-//        g.fillRect(this.x + CHARACTER_WIDTH / 4 - 10,
-//                this.y + 100, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT + 50)/2);
+//        g.fillRect((this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10),
+//                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, (this.getCHARACTER_HEIGHT()));
         this.loopBetweenFrames();
         switch (this.getPaintType()) {
             case 1:

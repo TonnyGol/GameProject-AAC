@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 public class GameKeyListener implements KeyListener {
     GamePanel gamePanel;
     Player player;
-    boolean wPressed, sPressed, aPressed, dPressed;
+    boolean wPressed, sPressed, aPressed, dPressed, spacePressed;
 
     public GameKeyListener(GamePanel gamePanel, Player soldier){
         this.gamePanel = gamePanel;
@@ -14,6 +14,7 @@ public class GameKeyListener implements KeyListener {
         this.sPressed = false;
         this.aPressed = false;
         this.dPressed = false;
+        this.spacePressed = false;
     }
     @Override
     public void keyTyped(KeyEvent e) {
@@ -51,6 +52,7 @@ public class GameKeyListener implements KeyListener {
             MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
             this.player.setDx(-this.player.getCHARACTER_SPEED());
         } else if (keyCode == KeyEvent.VK_SPACE) {
+            this.spacePressed = true;
             this.player.setCharacterMovingRight(false);
             this.player.setCharacterStanding(false);
             this.player.setCharacterAttacking(true);
@@ -75,9 +77,12 @@ public class GameKeyListener implements KeyListener {
             }else {
                 this.aPressed = false;
             }
+        }else if(keyCode == KeyEvent.VK_SPACE){
+            this.spacePressed = false;
         }
 
-        if (!aPressed && !wPressed && !sPressed && !dPressed){
+        if (!aPressed && !wPressed && !sPressed && !dPressed && !spacePressed){
+            this.player.setCharacterAttacking(false);
             this.player.setCharacterMovingRight(false);
             this.player.setCharacterStanding(true);
             this.player.setRunFrameIndex(0);

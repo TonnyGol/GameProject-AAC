@@ -17,6 +17,7 @@ public abstract class Character {
     private int dy;
 
     private Rectangle hitBox;
+    private Rectangle CollisionHitBox;
     private HashSet<Rectangle> obstacles;
 
     private int runFrameIndex;
@@ -75,6 +76,14 @@ public abstract class Character {
             frameList.add(frame);
         }
         return frameList;
+    }
+
+    public Rectangle getCollisionHitBox() {
+        return CollisionHitBox;
+    }
+
+    public void setCollisionHitBox(Rectangle collisionHitBox) {
+        CollisionHitBox = collisionHitBox;
     }
 
     public int getCHARACTER_WIDTH() {

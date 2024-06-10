@@ -15,6 +15,8 @@ public class Player extends Character {
     private final String SHOOT_LEFT_IMAGES_PATH = "resources\\Images\\ShootBack";
     private final String ATTACK_RIGHT_IMAGES_PATH = "resources\\Images\\Attack";
     private final String ATTACK_LEFT_IMAGES_PATH = "resources\\Images\\AttackBack";
+    private final String RECHARGE_RIGHT_IMAGES_PATH = "resources\\Images\\Recharge";
+    private final String RECHARGE_LEFT_IMAGES_PATH = "resources\\Images\\RechargeBack";
 
     private final int CHARACTER_SPEED = 15;
     private final int AMMO_CAPACITY = 15;
@@ -24,9 +26,10 @@ public class Player extends Character {
 
     private boolean isCharacterStanding;
     private boolean isCharacterShooting;
+    private boolean isCharacterRecharging;
 
-    private int ammo;
     private int shootFrameIndex;
+    private int rechargeFrameIndex;
 
     private final int STAND_RIGHT_CODE = 0;
     private final int STAND_LEFT_CODE = -1;
@@ -36,10 +39,14 @@ public class Player extends Character {
     private final int SHOOT_LEFT_CODE = 4;
     private final int ATTACK_RIGHT_CODE = 5;
     private final int ATTACK_LEFT_CODE = 6;
+    private final int RECHARGE_RIGHT_CODE = 7;
+    private final int RECHARGE_LEFT_CODE = 8;
 
     private List<Bullet> bullets;
     private final List<Image> shootRightFrames;
     private final List<Image> shootLeftFrames;
+    private final List<Image> rechargeRightFrames;
+    private final List<Image> rechargeLeftFrames;
 
     public Player(int startX, int startY, HashSet<Rectangle> obstacles){
         super(startX, startY, obstacles);
@@ -57,9 +64,13 @@ public class Player extends Character {
         this.isCharacterStanding = true;
         this.bullets = new LinkedList<>();
         this.shootFrameIndex = 0;
+        this.rechargeFrameIndex = 0;
         this.isCharacterShooting = false;
+        this.isCharacterRecharging = false;
         this.shootRightFrames = loadFrames(4, SHOOT_RIGHT_IMAGES_PATH);
         this.shootLeftFrames = loadFrames(4, SHOOT_LEFT_IMAGES_PATH);
+        this.rechargeRightFrames = loadFrames(13, RECHARGE_RIGHT_IMAGES_PATH);
+        this.rechargeLeftFrames = loadFrames(13, RECHARGE_LEFT_IMAGES_PATH);
     }
     @Override
     public void paint(Graphics g){
@@ -90,6 +101,14 @@ public class Player extends Character {
                 g.drawImage(this.getAttackLeftFrames().get(this.getAttackFrameIndex()),
                         this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
                 break;
+            case 7:
+                g.drawImage(this.rechargeRightFrames.get(this.getRechargeFrameIndex()),
+                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
+                break;
+            case 8:
+                g.drawImage(this.rechargeLeftFrames.get(this.getRechargeFrameIndex()),
+                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
+                break;
             case 0:
                 g.drawImage(this.getDefaultFrameRight(),
                         this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
@@ -106,11 +125,13 @@ public class Player extends Character {
 
     public void update(){
         if(this.isCharacterStanding){
-            if (this.isCharacterMovingLeft()){
-                this.setPaintType(STAND_LEFT_CODE);
-            }
-            else{
-                this.setPaintType(STAND_RIGHT_CODE);
+            if (!this.isCharacterRecharging){
+                if (this.isCharacterMovingLeft()){
+                    this.setPaintType(STAND_LEFT_CODE);
+                }
+                else{
+                    this.setPaintType(STAND_RIGHT_CODE);
+                }
             }
         }
         else if (this.isCharacterMovingRight()){
@@ -126,12 +147,16 @@ public class Player extends Character {
         }
         else if (this.isCharacterShooting) {
             if (this.isCharacterMovingLeft()){
-                this.createAndShootBullet(this.getX() - 30, this.getY() + 105, -1);
-                this.setPaintType(SHOOT_LEFT_CODE);
+                if (!this.isCharacterRecharging){
+                    this.createAndShootBullet(this.getX() - 30, this.getY() + 105, -1);
+                    this.setPaintType(SHOOT_LEFT_CODE);
+                }
             }
             else {
-                this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
-                this.setPaintType(SHOOT_RIGHT_CODE);
+                if (!this.isCharacterRecharging){
+                    this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
+                    this.setPaintType(SHOOT_RIGHT_CODE);
+                }
             }
         }
         else if(this.isCharacterAttacking()){
@@ -165,12 +190,26 @@ public class Player extends Character {
                 this.setAttackFrameIndex(0);
             }
         }
+        if (this.isCharacterRecharging){
+            this.setRechargeFrameIndex(this.getRechargeFrameIndex() + 1);
+            if (this.getRechargeFrameIndex() % this.rechargeRightFrames.size() == 0){
+                this.setRechargeFrameIndex(0);
+                this.isCharacterRecharging = false;
+            }
+        }
+
     }
 
     public void createAndShootBullet(int xBullet, int yBullet, int direction) {
         boolean allBulletsGone = true;
         if (this.bullets.size() == AMMO_CAPACITY){
             //Reload animation
+            this.isCharacterRecharging = true;
+            if (this.isCharacterMovingLeft()){
+                this.setPaintType(RECHARGE_LEFT_CODE);
+            }else {
+                this.setPaintType(RECHARGE_RIGHT_CODE);
+            }
             for (Bullet bullet : this.bullets){
                 if (bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45){
                     allBulletsGone = true;
@@ -178,12 +217,10 @@ public class Player extends Character {
             }
             if (allBulletsGone){
                 this.bullets.clear();
-                this.ammo = 0;
             }
         }else {
             Bullet newBullet = new Bullet(xBullet, yBullet, direction);
             this.bullets.add(newBullet);
-            this.ammo++;
         }
     }
 
@@ -225,6 +262,14 @@ public class Player extends Character {
     }
     public void setCharacterShooting(boolean characterShooting) {
         isCharacterShooting = characterShooting;
+    }
+
+    public int getRechargeFrameIndex() {
+        return rechargeFrameIndex;
+    }
+
+    public void setRechargeFrameIndex(int rechargeFrameIndex) {
+        this.rechargeFrameIndex = rechargeFrameIndex;
     }
 
 }
