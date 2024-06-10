@@ -5,7 +5,7 @@ import java.util.HashSet;
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
 
-    private final int FPS = 24;
+    private final int FPS = 25;
     private final HashSet<Rectangle> obstacles;
     private final Image gameBackgroundImage;
     private final Player player;
@@ -51,19 +51,19 @@ public class GamePanel extends JPanel {
 
     private void mainGamePanelLoop() {
         new Thread(() -> {
-//            double drawInterval = (double) 1000000000 / FPS;
-//            double nextDrawTime = System.nanoTime() + drawInterval;
+            double drawInterval = (double) 1000000000 / FPS;
+            double nextDrawTime = System.nanoTime() + drawInterval;
             while (true) {
                 if (WindowFrame.panelChoice == 1) {
                     update();
                     repaint();
-//                    double remainingTime = nextDrawTime - System.nanoTime();
-//                    remainingTime = remainingTime / 1000000;
-//                    if (remainingTime < 0){
-//                        remainingTime = 0;
-//                    }
-//                    Main.sleep((long) remainingTime);
-//                    nextDrawTime += drawInterval;
+                    double remainingTime = nextDrawTime - System.nanoTime();
+                    remainingTime = remainingTime / 1000000;
+                    if (remainingTime < 0){
+                        remainingTime = 0;
+                    }
+                    Main.sleep((long) remainingTime);
+                    nextDrawTime += drawInterval;
                 }
             }
         }).start();
