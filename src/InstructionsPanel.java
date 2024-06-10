@@ -70,10 +70,8 @@ public class InstructionsPanel extends JPanel {
     private void mainInstructionPanelLoop(){
         new Thread(() ->{
             while (true){
-                if (WindowFrame.panelChoice == 2){
-                    update();
-                    repaint();
-                }
+                update();
+                repaint();
             }
         }).start();
     }

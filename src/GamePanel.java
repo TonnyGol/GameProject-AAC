@@ -6,12 +6,13 @@ import java.util.List;
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
 
+    private static final int SPAWN_INTERVAL = 3000;
+    private long lastSpawnTime = 0;
     private final int FPS = 25;
     private final HashSet<Rectangle> obstacles;
     private final Image gameBackgroundImage;
     private final Player player;
     private List<Enemy> enemies;
-    //private Enemy enemy;
 
 
     public GamePanel(int width, int height) {
@@ -20,7 +21,6 @@ public class GamePanel extends JPanel {
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         this.player = new Player(10, 620, this.obstacles);
-        //this.enemy = new Enemy(900, 620, this.player, this.obstacles);
         this.enemies = new LinkedList<>();
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.player));
@@ -37,8 +37,9 @@ public class GamePanel extends JPanel {
 
     private void update(){
         this.player.update();
-
-        //this.enemy.update();
+        for (Enemy enemy : this.enemies){
+            enemy.update();
+        }
         //System.out.println("Character x: " + this.character.getX());
         //System.out.println("Character y: " + this.character.getY());
     }
@@ -46,35 +47,52 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
-        g.fillRect(500, 453, 60, 5);
-        g.fillRect(945, 558, 140, 5);
-        g.fillRect(1510, 400, 55, 5);
         this.player.paint(g);
-        //this.enemy.paint(g);
+        for (Enemy enemy : this.enemies){
+            enemy.paint(g);
+        }
     }
-    private void spawnEnemy(){
-        int xStart = new Random().nextInt();
-        int yStart = new Random().nextInt();
-    }
+    private void spawnEnemy(long deltaTime){
+        int xStart = new Random().nextInt(-200, 1);
+        int xStart2 = new Random().nextInt(1930, 2131);
+        int yStart = new Random().nextInt(this.player.getUPPER_BOUNDARY_Y(), this.player.getLOWER_BOUNDARY_Y());
+        int chosenStart = new Random().nextBoolean() ? xStart : xStart2;
+        lastSpawnTime += deltaTime;
 
+        if (lastSpawnTime >= SPAWN_INTERVAL) {
+            Enemy newEnemy = new Enemy(chosenStart, yStart, this.player, this.obstacles);
+            this.enemies.add(newEnemy);
+            this.enemies.removeIf(enemy -> !enemy.isAlive());
+            lastSpawnTime = 0;
+        }
+    }
 
     private void mainGamePanelLoop() {
         new Thread(() -> {
             double drawInterval = (double) 1000000000 / FPS;
-            double nextDrawTime = System.nanoTime() + drawInterval;
+            double delta = 0;
+            long lastTime = System.nanoTime();
+            long currentTimeNano;
+
+            long previousTime = System.currentTimeMillis();
             while (true) {
-                if (WindowFrame.panelChoice == 1) {
+                long currentTimeMillis = System.currentTimeMillis();
+                long deltaTime = currentTimeMillis - previousTime;
+                previousTime = currentTimeMillis;
+                this.spawnEnemy(deltaTime);
+
+                currentTimeNano = System.nanoTime();
+                delta += (currentTimeNano - lastTime) / drawInterval;
+                lastTime = currentTimeNano;
+                if (delta >= 1) {
                     update();
                     repaint();
-                    double remainingTime = nextDrawTime - System.nanoTime();
-                    remainingTime = remainingTime / 1000000;
-                    if (remainingTime < 0){
-                        remainingTime = 0;
-                    }
-                    Main.sleep((long) remainingTime);
-                    nextDrawTime += drawInterval;
+                    delta--;
                 }
+
             }
         }).start();
     }
+
+
 }

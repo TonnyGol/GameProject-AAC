@@ -113,10 +113,8 @@ public class SettingsPanel extends JPanel {
     private void mainSettingsPanelLoop(){
         new Thread(() ->{
             while (true){
-                if (WindowFrame.panelChoice == 3){
-                    update();
-                    repaint();
-                }
+                update();
+                repaint();
             }
         }).start();
     }
