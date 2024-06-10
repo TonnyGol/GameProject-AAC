@@ -65,15 +65,23 @@ public class Enemy extends Character {
                         this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
                 break;
             case 5:
-                for (int i = 0; i < this.deathRightFrames.size(); i++){
-                    g.drawImage(this.deathRightFrames.get(i),
-                            this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
+                g.drawImage(this.deathRightFrames.get(this.deathFrameIndex),
+                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
+                if (this.deathFrameIndex < 1){
+                    this.deathFrameIndex++;
+                }
+                if (this.deathFrameIndex >= this.deathRightFrames.size()) {
+                    this.deathFrameIndex = 1;
                 }
                 break;
             case 6:
-                for (int i = 0; i < this.deathLeftFrames.size(); i++){
-                    g.drawImage(this.deathLeftFrames.get(i),
-                            this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
+                g.drawImage(this.deathLeftFrames.get(this.deathFrameIndex),
+                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
+                if (this.deathFrameIndex < 1){
+                    this.deathFrameIndex++;
+                }
+                if (this.deathFrameIndex >= this.deathRightFrames.size()) {
+                    this.deathFrameIndex = 1;
                 }
                 break;
         }

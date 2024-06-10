@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashSet;
+import java.util.*;
+import java.util.List;
 
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
@@ -9,7 +10,8 @@ public class GamePanel extends JPanel {
     private final HashSet<Rectangle> obstacles;
     private final Image gameBackgroundImage;
     private final Player player;
-    private Enemy enemy;
+    private List<Enemy> enemies;
+    //private Enemy enemy;
 
 
     public GamePanel(int width, int height) {
@@ -18,7 +20,8 @@ public class GamePanel extends JPanel {
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         this.player = new Player(10, 620, this.obstacles);
-        this.enemy = new Enemy(900, 620, this.player, this.obstacles);
+        //this.enemy = new Enemy(900, 620, this.player, this.obstacles);
+        this.enemies = new LinkedList<>();
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.player));
         this.addMouseListener(new GameMouseListener(this, this.player));
@@ -34,7 +37,8 @@ public class GamePanel extends JPanel {
 
     private void update(){
         this.player.update();
-        this.enemy.update();
+
+        //this.enemy.update();
         //System.out.println("Character x: " + this.character.getX());
         //System.out.println("Character y: " + this.character.getY());
     }
@@ -46,8 +50,13 @@ public class GamePanel extends JPanel {
         g.fillRect(945, 558, 140, 5);
         g.fillRect(1510, 400, 55, 5);
         this.player.paint(g);
-        this.enemy.paint(g);
+        //this.enemy.paint(g);
     }
+    private void spawnEnemy(){
+        int xStart = new Random().nextInt();
+        int yStart = new Random().nextInt();
+    }
+
 
     private void mainGamePanelLoop() {
         new Thread(() -> {
