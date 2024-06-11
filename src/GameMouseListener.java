@@ -22,9 +22,9 @@ public class GameMouseListener implements MouseListener {
         if (SwingUtilities.isLeftMouseButton(e)){
 
             if (!this.player.isCharacterRecharging()){
-                MusicPlayer.gunFireClip.setMicrosecondPosition(0);
-                MusicPlayer.gunFireClip.start();
-                MusicPlayer.gunFireClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.gamePanel.getMusicPlayer().getGunFireClip().setMicrosecondPosition(0);
+                this.gamePanel.getMusicPlayer().getGunFireClip().start();
+                this.gamePanel.getMusicPlayer().getGunFireClip().loop(Clip.LOOP_CONTINUOUSLY);
             }
             int xMouseClick = e.getX();
             this.player.setCharacterMovingRight(false);
@@ -40,7 +40,7 @@ public class GameMouseListener implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        MusicPlayer.gunFireClip.stop();
+        this.gamePanel.getMusicPlayer().getGunFireClip().stop();
         this.player.setCharacterShooting(false);
         this.player.setCharacterStanding(true);
         this.player.setShootFrameIndex(0);

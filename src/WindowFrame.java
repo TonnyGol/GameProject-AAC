@@ -19,7 +19,7 @@ public class WindowFrame extends JFrame {
     private PausePanel pausePanel;
     private List<JPanel> panels;
 
-    public static MusicPlayer musicPlayer;
+    public MusicPlayer musicPlayer;
 
     public WindowFrame(){
         this.setTitle("Soldier Survival Game");
@@ -27,16 +27,15 @@ public class WindowFrame extends JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.panels = new ArrayList<>();
-        musicPlayer = new MusicPlayer();
-        musicPlayer.start();
-        musicPlayer.setVolumeSoundFx(0.3f);
-        musicPlayer.setVolumeBackgroundMusic(0.1f);
+        this.musicPlayer = new MusicPlayer();
+        this.musicPlayer.setVolumeSoundFx(0.3f);
+        this.musicPlayer.setVolumeBackgroundMusic(0.5f);
 
         this.menu = new MenuPanel(WIDTH, HEIGHT); // 0 index in the list
         this.add(this.menu);
         this.panels.add(this.menu);
 
-        this.gamePanel = new GamePanel(WIDTH, HEIGHT); // 1 index in the list
+        this.gamePanel = new GamePanel(WIDTH, HEIGHT, this.musicPlayer); // 1 index in the list
         this.add(gamePanel);
         this.panels.add(this.gamePanel);
 
@@ -44,7 +43,7 @@ public class WindowFrame extends JFrame {
         this.add(this.instructionsPanel);
         this.panels.add(this.instructionsPanel);
 
-        this.settingsPanel = new SettingsPanel(WIDTH,HEIGHT);  // 3 index in the list
+        this.settingsPanel = new SettingsPanel(WIDTH,HEIGHT, this.musicPlayer);  // 3 index in the list
         this.add(this.settingsPanel);
         this.panels.add(this.settingsPanel);
 

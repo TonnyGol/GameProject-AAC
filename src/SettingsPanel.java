@@ -19,17 +19,21 @@ public class SettingsPanel extends JPanel {
     private JLabel musicOnLabel;
     private JLabel effectsOffLabel;
     private JLabel effectsOnLabel;
+
     public static boolean switchMusicVolume;
     public static boolean switchEffectsVolume;
+
     private int volumeState = 1;
     private int effectsState = 1;
+    private MusicPlayer musicPlayer;
 
 
-    public SettingsPanel (int width, int height) {
+    public SettingsPanel (int width, int height, MusicPlayer musicPlayer) {
         SettingsPanel.switchMusicVolume = false;
         SettingsPanel.switchEffectsVolume = false;
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
+        this.musicPlayer = musicPlayer;
         this.backgroundImage = new ImageIcon(MENU_BG_FILE_PATH).getImage();
         this.effectsImage = new ImageIcon(SOUND_FX_FILE_PATH).getImage();
         this.musicImage = new ImageIcon(MUSIC_FILE_PATH).getImage();
@@ -58,10 +62,10 @@ public class SettingsPanel extends JPanel {
         this.mainSettingsPanelLoop();
     }
     private void changeMusicOnOrOff(float adjustment){
-        WindowFrame.musicPlayer.setVolumeBackgroundMusic(adjustment);
+        this.musicPlayer.setVolumeBackgroundMusic(adjustment);
     }
     private void changeSoundFxOnOrOff(float adjustment){
-        WindowFrame.musicPlayer.setVolumeSoundFx(adjustment);
+        this.musicPlayer.setVolumeSoundFx(adjustment);
     }
 
 

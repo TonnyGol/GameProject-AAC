@@ -29,16 +29,14 @@ public class GameKeyListener implements KeyListener {
             if (keyCode == KeyEvent.VK_W){
                 this.wPressed = true;
                 this.player.setCharacterMovingRight(true);
-                MusicPlayer.runOnSandClip.start();
-                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.makeRunOnSandSound();
                 this.player.setDy(-this.player.getCHARACTER_SPEED());
             }
 
             if (keyCode == KeyEvent.VK_S){
                 this.sPressed = true;
                 this.player.setCharacterMovingRight(true);
-                MusicPlayer.runOnSandClip.start();
-                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.makeRunOnSandSound();
                 this.player.setDy(this.player.getCHARACTER_SPEED());
             }
 
@@ -46,8 +44,7 @@ public class GameKeyListener implements KeyListener {
                 this.dPressed = true;
                 this.player.setCharacterMovingRight(true);
                 this.player.setCharacterMovingLeft(false);
-                MusicPlayer.runOnSandClip.start();
-                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.makeRunOnSandSound();
                 this.player.setDx(this.player.getCHARACTER_SPEED());
             }
 
@@ -55,17 +52,15 @@ public class GameKeyListener implements KeyListener {
                 this.aPressed = true;
                 this.player.setCharacterMovingRight(true);
                 this.player.setCharacterMovingLeft(true);
-                MusicPlayer.runOnSandClip.start();
-                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.makeRunOnSandSound();
                 this.player.setDx(-this.player.getCHARACTER_SPEED());
             }
 
             if (keyCode == KeyEvent.VK_SPACE){
                 this.spacePressed = true;
-                this.player.setCharacterMovingLeft(false);
                 this.player.setCharacterMovingRight(false);
                 this.player.setCharacterStanding(false);
-                this.player.setCharacterSliding(true);
+                this.player.setCharacterAttacking(true);
                 if(player.isCharacterMovingLeft()){
                     this.player.setDx(-this.player.getCHARACTER_SPEED());
                 }else{
@@ -75,6 +70,11 @@ public class GameKeyListener implements KeyListener {
             }
         }
 
+    }
+
+    private void makeRunOnSandSound(){
+        this.gamePanel.getMusicPlayer().getRunOnSandClip().start();
+        this.gamePanel.getMusicPlayer().getRunOnSandClip().loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     @Override
@@ -111,8 +111,8 @@ public class GameKeyListener implements KeyListener {
             this.player.setCharacterStanding(true);
             this.player.setRunFrameIndex(0);
             this.player.setAttackFrameIndex(0);
-            MusicPlayer.runOnSandClip.setMicrosecondPosition(0);
-            MusicPlayer.runOnSandClip.stop();
+            this.gamePanel.getMusicPlayer().getRunOnSandClip().setMicrosecondPosition(0);
+            this.gamePanel.getMusicPlayer().getRunOnSandClip().stop();
         }
     }
 }

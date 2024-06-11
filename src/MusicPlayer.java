@@ -2,11 +2,12 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-public class MusicPlayer extends Thread {
+public class MusicPlayer{
 
     private Clip backGroundMusicClip;
-    public static Clip gunFireClip;
-    public static Clip runOnSandClip;
+    private Clip gunFireClip;
+
+    private Clip runOnSandClip;
     private FloatControl BackgroundMusicVolumeControl;
     private FloatControl gunFireVolumeControl;
     private FloatControl runOnSandVolumeControl;
@@ -80,6 +81,21 @@ public class MusicPlayer extends Thread {
         return 0.1f; // Default volume if volume control is unavailable
     }
 
+    public Clip getRunOnSandClip() {
+        return runOnSandClip;
+    }
+
+    public void setRunOnSandClip(Clip runOnSandClip) {
+        this.runOnSandClip = runOnSandClip;
+    }
+
+    public Clip getGunFireClip() {
+        return gunFireClip;
+    }
+
+    public void setGunFireClip(Clip gunFireClip) {
+        this.gunFireClip = gunFireClip;
+    }
 
 }
 

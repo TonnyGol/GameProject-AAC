@@ -14,11 +14,13 @@ public class GamePanel extends JPanel {
     private List<Enemy> enemies;
     private final HashSet<Rectangle> obstacles;
     private final Image gameBackgroundImage;
+    private final MusicPlayer musicPlayer;
 
-    public GamePanel(int width, int height){
+    public GamePanel(int width, int height, MusicPlayer musicPlayer){
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        this.musicPlayer = musicPlayer;
         this.obstacles = createObstacles(3);
         this.enemies = new LinkedList<>();
         this.player = new Player(10, 620, this.obstacles);
@@ -67,6 +69,8 @@ public class GamePanel extends JPanel {
         }
     }
 
+
+
     private void mainGamePanelLoop() {
         new Thread(() -> {
             double drawInterval = (double) 1000000000 / FPS;
@@ -95,5 +99,8 @@ public class GamePanel extends JPanel {
         }).start();
     }
 
-
+    public MusicPlayer getMusicPlayer() {
+        return musicPlayer;
+    }
+    
 }
