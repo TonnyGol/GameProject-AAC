@@ -35,6 +35,7 @@ public class Enemy extends Character {
                 this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, this.getCHARACTER_HEIGHT()));
 //        this.setCollisionHitBox(new Rectangle(this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10,
 //                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, this.getCHARACTER_HEIGHT()));
+
         this.setRunRightFrames(this.loadFrames(11, RUN_RIGHT_IMAGES_PATH));
         this.setRunLeftFrames(this.loadFrames(11, RUN_LEFT_IMAGES_PATH));
         this.setAttackRightFrames(this.loadFrames(4, ATTACK_RIGHT_IMAGES_PATH));
