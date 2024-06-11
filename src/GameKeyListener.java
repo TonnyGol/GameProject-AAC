@@ -25,45 +25,62 @@ public class GameKeyListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         this.player.setCharacterStanding(false);
-        if (keyCode == KeyEvent.VK_W) {
-            this.wPressed = true;
-            this.player.setCharacterMovingRight(true);
-            MusicPlayer.runOnSandClip.start();
-            MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.player.setDy(-this.player.getCHARACTER_SPEED());
-        } else if (keyCode == KeyEvent.VK_S) {
-            this.sPressed = true;
-            this.player.setCharacterMovingRight(true);
-            MusicPlayer.runOnSandClip.start();
-            MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.player.setDy(this.player.getCHARACTER_SPEED());
-        } else if (keyCode == KeyEvent.VK_D) {
-            this.dPressed = true;
-            this.player.setCharacterMovingRight(true);
-            this.player.setCharacterMovingLeft(false);
-            MusicPlayer.runOnSandClip.start();
-            MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.player.setDx(this.player.getCHARACTER_SPEED());
-        } else if (keyCode == KeyEvent.VK_A) {
-            this.aPressed = true;
-            this.player.setCharacterMovingRight(true);
-            this.player.setCharacterMovingLeft(true);
-            MusicPlayer.runOnSandClip.start();
-            MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
-            this.player.setDx(-this.player.getCHARACTER_SPEED());
-        } else if (keyCode == KeyEvent.VK_SPACE) {
-            this.spacePressed = true;
-            this.player.setCharacterMovingRight(false);
-            this.player.setCharacterStanding(false);
-            this.player.setCharacterAttacking(true);
+        if(!this.player.isCharacterRecharging()){
+            if (keyCode == KeyEvent.VK_W){
+                this.wPressed = true;
+                this.player.setCharacterMovingRight(true);
+                MusicPlayer.runOnSandClip.start();
+                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.player.setDy(-this.player.getCHARACTER_SPEED());
+            }
+
+            if (keyCode == KeyEvent.VK_S){
+                this.sPressed = true;
+                this.player.setCharacterMovingRight(true);
+                MusicPlayer.runOnSandClip.start();
+                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.player.setDy(this.player.getCHARACTER_SPEED());
+            }
+
+            if (keyCode == KeyEvent.VK_D){
+                this.dPressed = true;
+                this.player.setCharacterMovingRight(true);
+                this.player.setCharacterMovingLeft(false);
+                MusicPlayer.runOnSandClip.start();
+                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.player.setDx(this.player.getCHARACTER_SPEED());
+            }
+
+            if (keyCode == KeyEvent.VK_A){
+                this.aPressed = true;
+                this.player.setCharacterMovingRight(true);
+                this.player.setCharacterMovingLeft(true);
+                MusicPlayer.runOnSandClip.start();
+                MusicPlayer.runOnSandClip.loop(Clip.LOOP_CONTINUOUSLY);
+                this.player.setDx(-this.player.getCHARACTER_SPEED());
+            }
+
+            if (keyCode == KeyEvent.VK_SPACE){
+                this.spacePressed = true;
+                this.player.setCharacterMovingLeft(false);
+                this.player.setCharacterMovingRight(false);
+                this.player.setCharacterStanding(false);
+                this.player.setCharacterSliding(true);
+                if(player.isCharacterMovingLeft()){
+                    this.player.setDx(-this.player.getCHARACTER_SPEED());
+                }else{
+                    this.player.setDx(this.player.getCHARACTER_SPEED());
+                }
+
+            }
         }
+
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e){
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_S) {
-            this.player.setDy(0);
             if (keyCode == KeyEvent.VK_W){
                 this.wPressed = false;
             }else {
@@ -71,14 +88,21 @@ public class GameKeyListener implements KeyListener {
             }
         }
         else if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_A) {
-            this.player.setDx(0);
             if (keyCode == KeyEvent.VK_D){
                 this.dPressed = false;
             }else {
                 this.aPressed = false;
             }
-        }else if(keyCode == KeyEvent.VK_SPACE){
+        }
+        else if(keyCode == KeyEvent.VK_SPACE){
             this.spacePressed = false;
+        }
+
+        if (!this.aPressed && !this.dPressed){
+            this.player.setDx(0);
+        }
+        if(!this.sPressed && !this.wPressed){
+            this.player.setDy(0);
         }
 
         if (!aPressed && !wPressed && !sPressed && !dPressed && !spacePressed){

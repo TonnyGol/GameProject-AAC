@@ -119,7 +119,9 @@ public class Enemy extends Character {
             }
         }
         if (this.isAlive()){
-            this.moveTowardsPlayer();
+            if(!this.isCharacterAttacking()){
+                this.moveTowardsPlayer();
+            }
         }else {
             if (this.isCharacterMovingLeft()){
                 this.setPaintType(DIE_LEFT_CODE);

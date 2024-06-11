@@ -20,14 +20,16 @@ public class GameMouseListener implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
-            MusicPlayer.gunFireClip.setMicrosecondPosition(0);
-            MusicPlayer.gunFireClip.start();
-            MusicPlayer.gunFireClip.loop(Clip.LOOP_CONTINUOUSLY);
+
+            if (!this.player.isCharacterRecharging()){
+                MusicPlayer.gunFireClip.setMicrosecondPosition(0);
+                MusicPlayer.gunFireClip.start();
+                MusicPlayer.gunFireClip.loop(Clip.LOOP_CONTINUOUSLY);
+            }
             int xMouseClick = e.getX();
             this.player.setCharacterMovingRight(false);
             this.player.setCharacterStanding(false);
             this.player.setCharacterShooting(true);
-
             if (xMouseClick > this.player.getX() + this.player.getCHARACTER_WIDTH() / 2){
                 this.player.setCharacterMovingLeft(false);
             }else {

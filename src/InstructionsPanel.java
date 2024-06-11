@@ -64,7 +64,6 @@ public class InstructionsPanel extends JPanel {
         if (this.fireFrameCount % 4 == 0){
             this.fireFrameCount = 0;
         }
-        Main.sleep(65);
     }
 
     private void mainInstructionPanelLoop(){
@@ -72,6 +71,7 @@ public class InstructionsPanel extends JPanel {
             while (true){
                 update();
                 repaint();
+                Main.sleep(60);
             }
         }).start();
     }

@@ -17,6 +17,8 @@ public class Player extends Character {
     private final String ATTACK_LEFT_IMAGES_PATH = "resources\\Images\\AttackBack";
     private final String RECHARGE_RIGHT_IMAGES_PATH = "resources\\Images\\Recharge";
     private final String RECHARGE_LEFT_IMAGES_PATH = "resources\\Images\\RechargeBack";
+    private final String SLIDELEFT_IMAGES_PATH = "resources\\Images\\SlideLeft";
+    private final String SLIDERIGHT_IMAGES_PATH = "resources\\Images\\SlideRight";
 
     private final int CHARACTER_SPEED = 15;
     private final int AMMO_CAPACITY = 15;
@@ -27,6 +29,7 @@ public class Player extends Character {
     private boolean isCharacterStanding;
     private boolean isCharacterShooting;
     private boolean isCharacterRecharging;
+    private boolean isCharacterSliding;
 
     private int shootFrameIndex;
     private int rechargeFrameIndex;
@@ -37,16 +40,20 @@ public class Player extends Character {
     private final int MOVE_LEFT_CODE = 2;
     private final int SHOOT_RIGHT_CODE = 3;
     private final int SHOOT_LEFT_CODE = 4;
-    private final int ATTACK_RIGHT_CODE = 5;
-    private final int ATTACK_LEFT_CODE = 6;
+    //private final int ATTACK_RIGHT_CODE = 5;
+    //private final int ATTACK_LEFT_CODE = 6;
     private final int RECHARGE_RIGHT_CODE = 7;
     private final int RECHARGE_LEFT_CODE = 8;
+    private final int SLIDING_RIGHT_CODE = 9;
+    private final int SLIDING_LEFT_CODE = 10;
 
     private List<Bullet> bullets;
     private final List<Image> shootRightFrames;
     private final List<Image> shootLeftFrames;
     private final List<Image> rechargeRightFrames;
     private final List<Image> rechargeLeftFrames;
+    private final Image slideRightFrame;
+    private final Image slideLeftFrame;
 
     public Player(int startX, int startY, HashSet<Rectangle> obstacles){
         super(startX, startY, obstacles);
@@ -58,8 +65,8 @@ public class Player extends Character {
 
         this.setRunRightFrames(this.loadFrames(8, RUN_RIGHT_IMAGES_PATH));
         this.setRunLeftFrames(this.loadFrames(8, RUN_LEFT_IMAGES_PATH));
-        this.setAttackRightFrames(this.loadFrames(3, ATTACK_RIGHT_IMAGES_PATH));
-        this.setAttackLeftFrames(this.loadFrames(3, ATTACK_LEFT_IMAGES_PATH));
+//        this.setAttackRightFrames(this.loadFrames(3, ATTACK_RIGHT_IMAGES_PATH));
+//        this.setAttackLeftFrames(this.loadFrames(3, ATTACK_LEFT_IMAGES_PATH));
 
         this.isCharacterStanding = true;
         this.bullets = new LinkedList<>();
@@ -67,10 +74,13 @@ public class Player extends Character {
         this.rechargeFrameIndex = 0;
         this.isCharacterShooting = false;
         this.isCharacterRecharging = false;
+        this.isCharacterSliding = false;
         this.shootRightFrames = loadFrames(4, SHOOT_RIGHT_IMAGES_PATH);
         this.shootLeftFrames = loadFrames(4, SHOOT_LEFT_IMAGES_PATH);
         this.rechargeRightFrames = loadFrames(13, RECHARGE_RIGHT_IMAGES_PATH);
         this.rechargeLeftFrames = loadFrames(13, RECHARGE_LEFT_IMAGES_PATH);
+        this.slideRightFrame = new ImageIcon(DEFAULT_FRAME_RIGHT_PATH).getImage();
+        this.slideLeftFrame = new ImageIcon(DEFAULT_FRAME_LEFT_PATH).getImage();
     }
     @Override
     public void paint(Graphics g){
@@ -93,20 +103,28 @@ public class Player extends Character {
                 g.drawImage(this.shootLeftFrames.get(this.shootFrameIndex),
                         this.getX() - 30, this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
                 break;
-            case 5:
-                g.drawImage(this.getAttackRightFrames().get(this.getAttackFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 6:
-                g.drawImage(this.getAttackLeftFrames().get(this.getAttackFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
+//            case 5:
+//                g.drawImage(this.getAttackRightFrames().get(this.getAttackFrameIndex()),
+//                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
+//                break;
+//            case 6:
+//                g.drawImage(this.getAttackLeftFrames().get(this.getAttackFrameIndex()),
+//                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
+//                break;
             case 7:
                 g.drawImage(this.rechargeRightFrames.get(this.getRechargeFrameIndex()),
                         this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
                 break;
             case 8:
                 g.drawImage(this.rechargeLeftFrames.get(this.getRechargeFrameIndex()),
+                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
+                break;
+            case 9:
+                g.drawImage(this.slideRightFrame,
+                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
+                break;
+            case 10:
+                g.drawImage(this.slideLeftFrame,
                         this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
                 break;
             case 0:
@@ -123,18 +141,52 @@ public class Player extends Character {
         }
     }
 
+
+
     public void update(){
-        if(this.isCharacterStanding){
-            if (!this.isCharacterRecharging){
-                if (this.isCharacterMovingLeft()){
-                    this.setPaintType(STAND_LEFT_CODE);
-                }
-                else{
-                    this.setPaintType(STAND_RIGHT_CODE);
-                }
+        if(this.isCharacterSliding){
+            if (this.isCharacterMovingLeft()){
+                this.setPaintType(SLIDING_LEFT_CODE);
+            }else {
+                this.setPaintType(SLIDING_RIGHT_CODE);
             }
         }
-        else if (this.isCharacterMovingRight()){
+        if(this.isCharacterRecharging){
+            if (this.isCharacterMovingLeft()){
+                this.setPaintType(RECHARGE_LEFT_CODE);
+            }else {
+                this.setPaintType(RECHARGE_RIGHT_CODE);
+            }
+        }
+
+        if (this.bullets.size() == AMMO_CAPACITY){
+            this.isCharacterRecharging = true;
+            boolean allBulletsGone = true; // if all the bullets are out of bounds of window
+            for (Bullet bullet : this.bullets){
+                if (bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45){
+                    allBulletsGone = true;
+                } else { allBulletsGone = false; }
+            }
+            if (allBulletsGone){
+                this.bullets.clear();
+            }
+        }
+        for (Bullet bullet : this.bullets){
+            bullet.fly();
+        }
+
+        if (this.isCharacterShooting) {
+            if (!this.isCharacterRecharging){
+                if (this.isCharacterMovingLeft()){
+                    this.createAndShootBullet(this.getX() - 30, this.getY() + 105, -1);
+                    this.setPaintType(SHOOT_LEFT_CODE);
+                }
+                else {
+                    this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
+                    this.setPaintType(SHOOT_RIGHT_CODE);
+                }
+            }
+        } else if (this.isCharacterMovingRight()){
             if(this.canMove()){
                 this.move();
                 if (this.isCharacterMovingLeft()){
@@ -145,29 +197,16 @@ public class Player extends Character {
                 }
             }
         }
-        else if (this.isCharacterShooting) {
-            if (this.isCharacterMovingLeft()){
-                if (!this.isCharacterRecharging){
-                    this.createAndShootBullet(this.getX() - 30, this.getY() + 105, -1);
-                    this.setPaintType(SHOOT_LEFT_CODE);
+
+        if(this.isCharacterStanding){
+            if (!this.isCharacterRecharging){
+                if (this.isCharacterMovingLeft()){
+                    this.setPaintType(STAND_LEFT_CODE);
+                }
+                else{
+                    this.setPaintType(STAND_RIGHT_CODE);
                 }
             }
-            else {
-                if (!this.isCharacterRecharging){
-                    this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
-                    this.setPaintType(SHOOT_RIGHT_CODE);
-                }
-            }
-        }
-        else if(this.isCharacterAttacking()){
-            if (this.isCharacterMovingLeft()){
-                this.setPaintType(ATTACK_LEFT_CODE);
-            }else {
-                this.setPaintType(ATTACK_RIGHT_CODE);
-            }
-        }
-        for (Bullet bullet : this.bullets){
-            bullet.fly();
         }
     }
 
@@ -184,44 +223,27 @@ public class Player extends Character {
                 this.setShootFrameIndex(0);
             }
         }
-        if (this.isCharacterAttacking()){
-            this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
-            if (this.getAttackFrameIndex() % this.getAttackRightFrames().size() == 0){
-                this.setAttackFrameIndex(0);
-            }
-        }
+//        if (this.isCharacterAttacking()){
+//            this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
+//            if (this.getAttackFrameIndex() % this.getAttackRightFrames().size() == 0){
+//                this.setAttackFrameIndex(0);
+//            }
+//        }
         if (this.isCharacterRecharging){
             this.setRechargeFrameIndex(this.getRechargeFrameIndex() + 1);
             if (this.getRechargeFrameIndex() % this.rechargeRightFrames.size() == 0){
-                this.setRechargeFrameIndex(0);
                 this.isCharacterRecharging = false;
+                this.setRechargeFrameIndex(0);
             }
         }
-
     }
 
     public void createAndShootBullet(int xBullet, int yBullet, int direction) {
-        boolean allBulletsGone = true;
-        if (this.bullets.size() == AMMO_CAPACITY){
-            //Reload animation
-            this.isCharacterRecharging = true;
-            if (this.isCharacterMovingLeft()){
-                this.setPaintType(RECHARGE_LEFT_CODE);
-            }else {
-                this.setPaintType(RECHARGE_RIGHT_CODE);
-            }
-            for (Bullet bullet : this.bullets){
-                if (bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45){
-                    allBulletsGone = true;
-                } else { allBulletsGone = false; }
-            }
-            if (allBulletsGone){
-                this.bullets.clear();
-            }
-        }else {
+        if (!this.isCharacterRecharging){
             Bullet newBullet = new Bullet(xBullet, yBullet, direction);
             this.bullets.add(newBullet);
         }
+
     }
 
     public void move(){
@@ -267,9 +289,18 @@ public class Player extends Character {
     public int getRechargeFrameIndex() {
         return rechargeFrameIndex;
     }
+    public boolean isCharacterRecharging(){
+        return isCharacterRecharging;
+    }
 
     public void setRechargeFrameIndex(int rechargeFrameIndex) {
         this.rechargeFrameIndex = rechargeFrameIndex;
+    }
+    public boolean isCharacterSliding() {
+        return isCharacterSliding;
+    }
+    public void setCharacterSliding(boolean characterSliding) {
+        isCharacterSliding = characterSliding;
     }
 
 }

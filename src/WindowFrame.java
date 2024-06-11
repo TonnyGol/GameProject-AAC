@@ -29,8 +29,8 @@ public class WindowFrame extends JFrame {
         this.panels = new ArrayList<>();
         musicPlayer = new MusicPlayer();
         musicPlayer.start();
-        musicPlayer.setVolumeSoundFx(0.7f);
-        musicPlayer.setVolumeBackgroundMusic(0.7f);
+        musicPlayer.setVolumeSoundFx(0.3f);
+        musicPlayer.setVolumeBackgroundMusic(0.1f);
 
         this.menu = new MenuPanel(WIDTH, HEIGHT); // 0 index in the list
         this.add(this.menu);

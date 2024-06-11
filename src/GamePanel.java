@@ -6,22 +6,22 @@ import java.util.List;
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
 
-    private static final int SPAWN_INTERVAL = 3000;
-    private long lastSpawnTime = 0;
     private final int FPS = 25;
-    private final HashSet<Rectangle> obstacles;
-    private final Image gameBackgroundImage;
+    private long lastSpawnTime = 0;
+    private static final int SPAWN_INTERVAL = 3000;
+
     private final Player player;
     private List<Enemy> enemies;
+    private final HashSet<Rectangle> obstacles;
+    private final Image gameBackgroundImage;
 
-
-    public GamePanel(int width, int height) {
-        this.obstacles = createObstacles(3);
+    public GamePanel(int width, int height){
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        this.player = new Player(10, 620, this.obstacles);
+        this.obstacles = createObstacles(3);
         this.enemies = new LinkedList<>();
+        this.player = new Player(10, 620, this.obstacles);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.player));
         this.addMouseListener(new GameMouseListener(this, this.player));
@@ -56,14 +56,14 @@ public class GamePanel extends JPanel {
         int xStart = new Random().nextInt(-200, 1);
         int xStart2 = new Random().nextInt(1930, 2131);
         int yStart = new Random().nextInt(this.player.getUPPER_BOUNDARY_Y(), this.player.getLOWER_BOUNDARY_Y());
-        int chosenStart = new Random().nextBoolean() ? xStart : xStart2;
-        lastSpawnTime += deltaTime;
+        int xChosenStart = new Random().nextBoolean() ? xStart : xStart2;
+        this.lastSpawnTime += deltaTime;
 
-        if (lastSpawnTime >= SPAWN_INTERVAL) {
-            Enemy newEnemy = new Enemy(chosenStart, yStart, this.player, this.obstacles);
+        if (this.lastSpawnTime >= SPAWN_INTERVAL) {
+            Enemy newEnemy = new Enemy(xChosenStart, yStart, this.player, this.obstacles);
             this.enemies.add(newEnemy);
             this.enemies.removeIf(enemy -> !enemy.isAlive());
-            lastSpawnTime = 0;
+            this.lastSpawnTime = 0;
         }
     }
 
@@ -79,7 +79,9 @@ public class GamePanel extends JPanel {
                 long currentTimeMillis = System.currentTimeMillis();
                 long deltaTime = currentTimeMillis - previousTime;
                 previousTime = currentTimeMillis;
-                this.spawnEnemy(deltaTime);
+                if (WindowFrame.panelChoice == 1){
+                    this.spawnEnemy(deltaTime);
+                }
 
                 currentTimeNano = System.nanoTime();
                 delta += (currentTimeNano - lastTime) / drawInterval;
@@ -89,7 +91,6 @@ public class GamePanel extends JPanel {
                     repaint();
                     delta--;
                 }
-
             }
         }).start();
     }
