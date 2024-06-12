@@ -3,11 +3,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class MusicPlayer{
-
     private Clip backGroundMusicClip;
     private Clip gunFireClip;
-
     private Clip runOnSandClip;
+
     private FloatControl BackgroundMusicVolumeControl;
     private FloatControl gunFireVolumeControl;
     private FloatControl runOnSandVolumeControl;
@@ -54,29 +53,40 @@ public class MusicPlayer{
     }
     // Method to set the volume (volume should be between 0.0 and 1.0)
     public void setVolumeBackgroundMusic(float volume) {
-        if (BackgroundMusicVolumeControl != null) {
-            float min = BackgroundMusicVolumeControl.getMinimum();
-            float max = BackgroundMusicVolumeControl.getMaximum();
-            float newVolume = min + (max - min) * volume;
-            BackgroundMusicVolumeControl.setValue(newVolume);
+        if(volume >= 0 || volume <= 1){
+            if (BackgroundMusicVolumeControl != null) {
+                float min = BackgroundMusicVolumeControl.getMinimum();
+                float max = BackgroundMusicVolumeControl.getMaximum();
+                float newVolume = min + (max - min) * volume;
+                BackgroundMusicVolumeControl.setValue(newVolume);
+            }
         }
     }
     public void setVolumeSoundFx(float volume){
-        if (gunFireVolumeControl != null && runOnSandVolumeControl != null) {
-            gunFireVolumeControl.setValue(gunFireVolumeControl.getMinimum()
-                    + (gunFireVolumeControl.getMaximum() - gunFireVolumeControl.getMinimum()) * volume);
-            runOnSandVolumeControl.setValue(runOnSandVolumeControl.getMinimum()
-                    + (runOnSandVolumeControl.getMaximum() - runOnSandVolumeControl.getMinimum()) * volume);
+        if (volume >= 0 || volume <= 1){
+            if (gunFireVolumeControl != null && runOnSandVolumeControl != null) {
+                gunFireVolumeControl.setValue(gunFireVolumeControl.getMinimum()
+                        + (gunFireVolumeControl.getMaximum() - gunFireVolumeControl.getMinimum()) * volume);
+                runOnSandVolumeControl.setValue(runOnSandVolumeControl.getMinimum()
+                        + (runOnSandVolumeControl.getMaximum() - runOnSandVolumeControl.getMinimum()) * volume);
 
+            }
         }
     }
     // Method to get the current volume (returns a value between 0.0 and 1.0)
-    public float getVolume() {
+    public float getVolumeBackgroundMusic() {
         if (BackgroundMusicVolumeControl != null) {
             float min = BackgroundMusicVolumeControl.getMinimum();
             float max = BackgroundMusicVolumeControl.getMaximum();
-            float currentVolume = (BackgroundMusicVolumeControl.getValue() - min) / (max - min);
-            return currentVolume;
+            return (BackgroundMusicVolumeControl.getValue() - min) / (max - min);
+        }
+        return 0.1f; // Default volume if volume control is unavailable
+    }
+    public float getVolumeSoundFx(){
+        if (gunFireVolumeControl != null && runOnSandVolumeControl != null) {
+            float min = gunFireVolumeControl.getMinimum();
+            float max = gunFireVolumeControl.getMaximum();
+            return (gunFireVolumeControl.getValue() - min) / (max - min);
         }
         return 0.1f; // Default volume if volume control is unavailable
     }

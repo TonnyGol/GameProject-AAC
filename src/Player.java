@@ -13,37 +13,31 @@ public class Player extends Character {
     private final String SHOOT_LEFT_IMAGES_PATH = "resources\\Images\\ShootBack";
     private final String ATTACK_RIGHT_IMAGES_PATH = "resources\\Images\\Attack";
     private final String ATTACK_LEFT_IMAGES_PATH = "resources\\Images\\AttackBack";
-    private final String RECHARGE_RIGHT_IMAGES_PATH = "resources\\Images\\Recharge";
-    private final String RECHARGE_LEFT_IMAGES_PATH = "resources\\Images\\RechargeBack";
+    private final String RELOAD_RIGHT_IMAGES_PATH = "resources\\Images\\Recharge";
+    private final String RELOAD_LEFT_IMAGES_PATH = "resources\\Images\\RechargeBack";
 
     private final int CHARACTER_SPEED = 15;
     private final int AMMO_CAPACITY = 15;
     private final int RIGHT_BOUNDARY_X = 1740;
     private final int LEFT_BOUNDARY_X = -45;
+    private final int RELOAD_FRAME_COUNT = 13;
+    private final int SHOOT_FRAME_COUNT = 4;
+    private final int ATTACK_FRAME_COUNT = 3;
+    private final int RUN_FRAME_COUNT = 8;
+
 
     private boolean isCharacterStanding;
     private boolean isCharacterShooting;
-    private boolean isCharacterRecharging;
+    private boolean isCharacterReloading;
 
     private int shootFrameIndex;
-    private int rechargeFrameIndex;
-
-    private final int STAND_RIGHT_CODE = 0;
-    private final int STAND_LEFT_CODE = -1;
-    private final int MOVE_RIGHT_CODE = 1;
-    private final int MOVE_LEFT_CODE = 2;
-    private final int SHOOT_RIGHT_CODE = 3;
-    private final int SHOOT_LEFT_CODE = 4;
-    private final int ATTACK_RIGHT_CODE = 5;
-    private final int ATTACK_LEFT_CODE = 6;
-    private final int RECHARGE_RIGHT_CODE = 7;
-    private final int RECHARGE_LEFT_CODE = 8;
+    private int reloadFrameIndex;
 
     private List<Bullet> bullets;
     private final List<Image> shootRightFrames;
     private final List<Image> shootLeftFrames;
-    private final List<Image> rechargeRightFrames;
-    private final List<Image> rechargeLeftFrames;
+    private final List<Image> reloadRightFrames;
+    private final List<Image> reloadLeftFrames;
 
     public Player(int startX, int startY, HashSet<Rectangle> obstacles){
         super(startX, startY, obstacles);
@@ -53,67 +47,28 @@ public class Player extends Character {
         this.setDefaultFrameRight(new ImageIcon(DEFAULT_FRAME_RIGHT_PATH).getImage());
         this.setDefaultFrameLeft(new ImageIcon(DEFAULT_FRAME_LEFT_PATH).getImage());
 
-        this.setRunRightFrames(this.loadFrames(8, RUN_RIGHT_IMAGES_PATH));
-        this.setRunLeftFrames(this.loadFrames(8, RUN_LEFT_IMAGES_PATH));
-        this.setAttackRightFrames(this.loadFrames(3, ATTACK_RIGHT_IMAGES_PATH));
-        this.setAttackLeftFrames(this.loadFrames(3, ATTACK_LEFT_IMAGES_PATH));
+        this.setRunRightFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_RIGHT_IMAGES_PATH));
+        this.setRunLeftFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_LEFT_IMAGES_PATH));
+        this.setAttackRightFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_RIGHT_IMAGES_PATH));
+        this.setAttackLeftFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_LEFT_IMAGES_PATH));
 
+        this.setCurrentFrame(this.getDefaultFrameRight());
         this.isCharacterStanding = true;
         this.bullets = new LinkedList<>();
         this.shootFrameIndex = 0;
-        this.rechargeFrameIndex = 0;
+        this.reloadFrameIndex = 0;
         this.isCharacterShooting = false;
-        this.isCharacterRecharging = false;
-        this.shootRightFrames = loadFrames(4, SHOOT_RIGHT_IMAGES_PATH);
-        this.shootLeftFrames = loadFrames(4, SHOOT_LEFT_IMAGES_PATH);
-        this.rechargeRightFrames = loadFrames(13, RECHARGE_RIGHT_IMAGES_PATH);
-        this.rechargeLeftFrames = loadFrames(13, RECHARGE_LEFT_IMAGES_PATH);
+        this.isCharacterReloading = false;
+        this.shootRightFrames = Main.loadFrames(SHOOT_FRAME_COUNT, SHOOT_RIGHT_IMAGES_PATH);
+        this.shootLeftFrames = Main.loadFrames(SHOOT_FRAME_COUNT, SHOOT_LEFT_IMAGES_PATH);
+        this.reloadRightFrames = Main.loadFrames(RELOAD_FRAME_COUNT, RELOAD_RIGHT_IMAGES_PATH);
+        this.reloadLeftFrames = Main.loadFrames(RELOAD_FRAME_COUNT, RELOAD_LEFT_IMAGES_PATH);
     }
     @Override
     public void paint(Graphics g){
         //g.fillRect(this.getX() + CHARACTER_WIDTH / 4 - 10, this.getY() + 150, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT - 50)/2);
-        switch (this.getPaintType()){
-            case 1:
-                g.drawImage(this.getRunRightFrames().get(this.getRunFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 2:
-                g.drawImage(this.getRunLeftFrames().get(this.getRunFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 3:
-                g.drawImage(this.shootRightFrames.get(this.shootFrameIndex),
-                        this.getX() + 30, this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 4:
-                g.drawImage(this.shootLeftFrames.get(this.shootFrameIndex),
-                        this.getX() - 30, this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 5:
-                g.drawImage(this.getAttackRightFrames().get(this.getAttackFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 6:
-                g.drawImage(this.getAttackLeftFrames().get(this.getAttackFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 7:
-                g.drawImage(this.rechargeRightFrames.get(this.getRechargeFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 8:
-                g.drawImage(this.rechargeLeftFrames.get(this.getRechargeFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case 0:
-                g.drawImage(this.getDefaultFrameRight(),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-            case -1:
-                g.drawImage(this.getDefaultFrameLeft(),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-                break;
-        }
+        g.drawImage(this.getCurrentFrame(),
+                this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
         for (Bullet bullet : this.bullets){
             g.fillRect((int) bullet.getX(), (int) bullet.getY(), (int) bullet.getWidth(), (int) bullet.getHeight());
         }
@@ -129,20 +84,18 @@ public class Player extends Character {
     }
 
     private void checkIfReloading(){
-        if(this.isCharacterRecharging){
+        if(this.isCharacterReloading){
             if (this.isCharacterMovingLeft()){
-                this.setPaintType(RECHARGE_LEFT_CODE);
+                this.setCurrentFrame(this.reloadLeftFrames.get(this.reloadFrameIndex));
             }else {
-                this.setPaintType(RECHARGE_RIGHT_CODE);
+                this.setCurrentFrame(this.reloadRightFrames.get(this.reloadFrameIndex));
             }
         }
         if (this.bullets.size() == AMMO_CAPACITY){
-            this.isCharacterRecharging = true;
+            this.isCharacterReloading = true;
             boolean allBulletsGone = true; // if all the bullets are out of bounds of window
             for (Bullet bullet : this.bullets){
-                if (bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45){
-                    allBulletsGone = true;
-                } else { allBulletsGone = false; }
+                allBulletsGone = bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45;
             }
             if (allBulletsGone){
                 this.bullets.clear();
@@ -154,39 +107,46 @@ public class Player extends Character {
     }
     private void checkIfShooting(){
         if (this.isCharacterShooting) {
-            if (!this.isCharacterRecharging){
+            if (!this.isCharacterReloading){
                 if (this.isCharacterMovingLeft()){
                     this.createAndShootBullet(this.getX() - 30, this.getY() + 105, -1);
-                    this.setPaintType(SHOOT_LEFT_CODE);
+                    this.setCurrentFrame(this.shootLeftFrames.get(this.shootFrameIndex));
                 }
                 else {
                     this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
-                    this.setPaintType(SHOOT_RIGHT_CODE);
+                    this.setCurrentFrame(this.shootRightFrames.get(this.shootFrameIndex));
                 }
             }
         }
     }
     private void checkIfAttacking(){
         if(this.isCharacterAttacking()){
-            if (!this.isCharacterRecharging && !this.isCharacterShooting){
+            if (!this.isCharacterReloading && !this.isCharacterShooting){
                 if (this.isCharacterMovingLeft()){
-                    this.setPaintType(ATTACK_LEFT_CODE);
+                    this.setCurrentFrame(this.getAttackLeftFrames().get(this.getAttackFrameIndex()));
                 }else {
-                    this.setPaintType(ATTACK_RIGHT_CODE);
+                    this.setCurrentFrame(this.getAttackRightFrames().get(this.getAttackFrameIndex()));
                 }
             }
         }
     }
     private void checkMovementDirection(){
         if (this.isCharacterMovingRight()){
-            if (!this.isCharacterRecharging && !this.isCharacterShooting && !this.isCharacterAttacking()){
+            if (!this.isCharacterReloading && !this.isCharacterShooting && !this.isCharacterAttacking()){
                 if(this.canMove()){
                     this.move();
                     if (this.isCharacterMovingLeft()){
-                        this.setPaintType(MOVE_LEFT_CODE);
+                        this.setCurrentFrame(this.getRunLeftFrames().get(this.getRunFrameIndex()));
                     }
                     else{
-                        this.setPaintType(MOVE_RIGHT_CODE);
+                        this.setCurrentFrame(this.getRunRightFrames().get(this.getRunFrameIndex()));
+                    }
+                }else {
+                    if (this.isCharacterMovingLeft()){
+                        this.setCurrentFrame(this.getDefaultFrameLeft());
+                    }
+                    else{
+                        this.setCurrentFrame(this.getDefaultFrameRight());
                     }
                 }
             }
@@ -194,20 +154,20 @@ public class Player extends Character {
     }
     private void checkIfStanding(){
         if(this.isCharacterStanding){
-            if (!this.isCharacterRecharging && !this.isCharacterShooting &&
+            if (!this.isCharacterReloading && !this.isCharacterShooting &&
                     !this.isCharacterAttacking() && !this.isCharacterMovingRight()){
                 if (this.isCharacterMovingLeft()){
-                    this.setPaintType(STAND_LEFT_CODE);
+                    this.setCurrentFrame(this.getDefaultFrameLeft());
                 }
                 else{
-                    this.setPaintType(STAND_RIGHT_CODE);
+                    this.setCurrentFrame(this.getDefaultFrameRight());
                 }
             }
         }
     }
 
     private void createAndShootBullet(int xBullet, int yBullet, int direction) {
-        if (!this.isCharacterRecharging){
+        if (!this.isCharacterReloading){
             Bullet newBullet = new Bullet(xBullet, yBullet, direction);
             this.bullets.add(newBullet);
         }
@@ -253,11 +213,11 @@ public class Player extends Character {
                 this.setAttackFrameIndex(0);
             }
         }
-        if (this.isCharacterRecharging){
-            this.setRechargeFrameIndex(this.getRechargeFrameIndex() + 1);
-            if (this.getRechargeFrameIndex() % this.rechargeRightFrames.size() == 0){
-                this.isCharacterRecharging = false;
-                this.setRechargeFrameIndex(0);
+        if (this.isCharacterReloading){
+            this.setReloadFrameIndex(this.getReloadFrameIndex() + 1);
+            if (this.getReloadFrameIndex() % this.reloadRightFrames.size() == 0){
+                this.isCharacterReloading = false;
+                this.setReloadFrameIndex(0);
             }
         }
     }
@@ -281,21 +241,21 @@ public class Player extends Character {
         isCharacterShooting = characterShooting;
     }
 
-    public int getRechargeFrameIndex() {
-        return rechargeFrameIndex;
+    public int getReloadFrameIndex() {
+        return reloadFrameIndex;
     }
-    public boolean isCharacterRecharging(){
-        return isCharacterRecharging;
+    public boolean isCharacterReloading(){
+        return isCharacterReloading;
     }
 
-    public void setRechargeFrameIndex(int rechargeFrameIndex) {
-        this.rechargeFrameIndex = rechargeFrameIndex;
+    public void setReloadFrameIndex(int reloadFrameIndex) {
+        this.reloadFrameIndex = reloadFrameIndex;
     }
     public boolean isCharacterShooting() {
         return isCharacterShooting;
     }
-    public void setCharacterRecharging(boolean characterRecharging) {
-        isCharacterRecharging = characterRecharging;
+    public void setCharacterReloading(boolean characterReloading) {
+        isCharacterReloading = characterReloading;
     }
     public boolean isCharacterStanding() {
         return isCharacterStanding;

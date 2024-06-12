@@ -1,12 +1,11 @@
 import javax.sound.sampled.Clip;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class GameMouseListener implements MouseListener {
-    GamePanel gamePanel;
     Player player;
+    GamePanel gamePanel;
 
     public GameMouseListener(GamePanel gamePanel, Player soldier){
         this.gamePanel = gamePanel;
@@ -21,21 +20,22 @@ public class GameMouseListener implements MouseListener {
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
 
-            if (!this.player.isCharacterRecharging()){
-                this.gamePanel.getMusicPlayer().getGunFireClip().setMicrosecondPosition(0);
-                this.gamePanel.getMusicPlayer().getGunFireClip().start();
-                this.gamePanel.getMusicPlayer().getGunFireClip().loop(Clip.LOOP_CONTINUOUSLY);
+            if (!this.player.isCharacterReloading()){
+                this.makeShootSound();
             }
             int xMouseClick = e.getX();
             this.player.setCharacterMovingRight(false);
             this.player.setCharacterStanding(false);
             this.player.setCharacterShooting(true);
-            if (xMouseClick > this.player.getX() + this.player.getCHARACTER_WIDTH() / 2){
-                this.player.setCharacterMovingLeft(false);
-            }else {
-                this.player.setCharacterMovingLeft(true);
-            }
+            this.player.setCharacterMovingLeft(
+                    xMouseClick <= this.player.getX() + this.player.getCHARACTER_WIDTH() / 2);
         }
+    }
+
+    private void makeShootSound(){
+        this.gamePanel.getMusicPlayer().getGunFireClip().setMicrosecondPosition(0);
+        this.gamePanel.getMusicPlayer().getGunFireClip().start();
+        this.gamePanel.getMusicPlayer().getGunFireClip().loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     @Override

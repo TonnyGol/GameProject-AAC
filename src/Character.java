@@ -32,6 +32,7 @@ public abstract class Character {
     private List<Image> attackLeftFrames;
 
     private int paintType;
+    private Image currentFrame;
 
     private boolean isAlive;
     private boolean isCharacterMovingRight;
@@ -67,15 +68,6 @@ public abstract class Character {
         this.isAlive = true;
         this.isCharacterMovingRight = false;
         this.isCharacterMovingLeft = false;
-    }
-
-    public List<Image> loadFrames(int frames, String fileName){
-        List<Image> frameList = new ArrayList<>(frames);
-        for (int i = 1; i <= frames; i++){
-            Image frame = new ImageIcon(fileName+i+".png").getImage();
-            frameList.add(frame);
-        }
-        return frameList;
     }
 
     public Rectangle getCollisionHitBox() {
@@ -248,5 +240,17 @@ public abstract class Character {
 
     public void setCharacterAttacking(boolean characterAttacking) {
         isCharacterAttacking = characterAttacking;
+    }
+
+    public void setObstacles(HashSet<Rectangle> obstacles) {
+        this.obstacles = obstacles;
+    }
+
+    public Image getCurrentFrame() {
+        return currentFrame;
+    }
+
+    public void setCurrentFrame(Image currentFrame) {
+        this.currentFrame = currentFrame;
     }
 }

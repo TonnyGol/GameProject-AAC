@@ -19,7 +19,8 @@ public class WindowFrame extends JFrame {
     private PausePanel pausePanel;
     private List<JPanel> panels;
 
-    public MusicPlayer musicPlayer;
+    private MusicPlayer musicPlayer;
+    private ButtonListener buttonListener;
 
     public WindowFrame(){
         this.setTitle("Soldier Survival Game");
@@ -30,8 +31,9 @@ public class WindowFrame extends JFrame {
         this.musicPlayer = new MusicPlayer();
         this.musicPlayer.setVolumeSoundFx(0.3f);
         this.musicPlayer.setVolumeBackgroundMusic(0.5f);
+        this.buttonListener = new ButtonListener(this.musicPlayer);
 
-        this.menu = new MenuPanel(WIDTH, HEIGHT); // 0 index in the list
+        this.menu = new MenuPanel(WIDTH, HEIGHT, this.buttonListener); // 0 index in the list
         this.add(this.menu);
         this.panels.add(this.menu);
 
@@ -39,11 +41,11 @@ public class WindowFrame extends JFrame {
         this.add(gamePanel);
         this.panels.add(this.gamePanel);
 
-        this.instructionsPanel = new InstructionsPanel(WIDTH, HEIGHT); // 2 index in the list
+        this.instructionsPanel = new InstructionsPanel(WIDTH, HEIGHT, this.buttonListener); // 2 index in the list
         this.add(this.instructionsPanel);
         this.panels.add(this.instructionsPanel);
 
-        this.settingsPanel = new SettingsPanel(WIDTH,HEIGHT, this.musicPlayer);  // 3 index in the list
+        this.settingsPanel = new SettingsPanel(WIDTH,HEIGHT, this.musicPlayer, this.buttonListener);  // 3 index in the list
         this.add(this.settingsPanel);
         this.panels.add(this.settingsPanel);
 
@@ -51,19 +53,6 @@ public class WindowFrame extends JFrame {
         this.mainWindowLoop();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-    }
-    public static JLabel createPhotoLabel(String text, String filePath) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font(text,Font.PLAIN,0));
-        label.setIcon(new ImageIcon(filePath)); // Set the icon for the label
-        label.setHorizontalTextPosition(JLabel.CENTER);
-        label.setVerticalTextPosition(JLabel.CENTER);
-        label.setForeground(Color.ORANGE);
-        label.setName(text);
-
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        label.addMouseListener(new ButtonListener());
-        return label;
     }
 
     private void showOnlyOnePanel(){
@@ -74,7 +63,6 @@ public class WindowFrame extends JFrame {
         }
         WindowFrame.switchPanels = false;
     }
-
     private void mainWindowLoop(){
         new Thread(() -> {
             while(true){

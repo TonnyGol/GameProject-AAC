@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MenuPanel extends JPanel {
     private final String PLAY_BUTTON_FILE_PATH = "resources\\Images\\PlayButton2.png";
@@ -11,23 +9,26 @@ public class MenuPanel extends JPanel {
     private final String MENU_BG_FILE_PATH = "resources\\Images\\Menu_background.png";
 
     private final int BUTTON_MARGIN = 40;
-    private JLabel playLabel;
-    private JLabel instructionsLabel;
-    private JLabel settingsLabel;
-    private JLabel quitLabel;
+    private final JLabel playLabel;
+    private final JLabel instructionsLabel;
+    private final JLabel settingsLabel;
+    private final JLabel quitLabel;
     private final Image backgroundImage;
 
-    public MenuPanel(int width, int height){
+    private final ButtonListener buttonListener;
+
+    public MenuPanel(int width, int height, ButtonListener buttonListener){
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.backgroundImage = new ImageIcon(MENU_BG_FILE_PATH).getImage();
+        this.buttonListener = buttonListener;
 
         // Create labels for each menu option with icons
-        this.playLabel = WindowFrame.createPhotoLabel("Play", PLAY_BUTTON_FILE_PATH);
-        this.instructionsLabel = WindowFrame.createPhotoLabel("Instructions", INSTRUCTIONS_BUTTON_FILE_PATH);
-        this.settingsLabel = WindowFrame.createPhotoLabel("Settings", SETTINGS_BUTTON_FILE_PATH);
-        this.quitLabel = WindowFrame.createPhotoLabel("Quit", QUIT_BUTTON_FILE_PATH);
+        this.playLabel = Main.createButtonLabel("Play", PLAY_BUTTON_FILE_PATH, this.buttonListener);
+        this.instructionsLabel = Main.createButtonLabel("Instructions", INSTRUCTIONS_BUTTON_FILE_PATH, this.buttonListener);
+        this.settingsLabel = Main.createButtonLabel("Settings", SETTINGS_BUTTON_FILE_PATH, this.buttonListener);
+        this.quitLabel = Main.createButtonLabel("Quit", QUIT_BUTTON_FILE_PATH, this.buttonListener);
 
         // Add labels to the panel with some spacing
         int buttonWidthMargin = (width / 50);

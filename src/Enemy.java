@@ -13,19 +13,15 @@ public class Enemy extends Character {
     private final String DIE_LEFT_IMAGES_PATH = "resources\\Images\\WolfDeadBack";
 
     private final int CHARACTER_SPEED = 5;
+    private final int RUN_FRAME_COUNT = 11;
+    private final int ATTACK_FRAME_COUNT = 4;
+    private final int DEATH_FRAME_COUNT = 2;
 
-    private final int MOVE_RIGHT_CODE = 1;
-    private final int MOVE_LEFT_CODE = 2;
-    private final int ATTACK_RIGHT_CODE = 3;
-    private final int ATTACK_LEFT_CODE = 4;
-    private final int DIE_RIGHT_CODE = 5;
-    private final int DIE_LEFT_CODE = 6;
-
-    private Player player;
+    private final Player player;
     private int deathFrameIndex;
 
-    private List<Image> deathRightFrames;
-    private List<Image> deathLeftFrames;
+    private final List<Image> deathRightFrames;
+    private final List<Image> deathLeftFrames;
 
     public Enemy(int startX, int startY, Player player, HashSet<Rectangle> obstacles) {
         super(startX, startY, obstacles);
@@ -36,81 +32,56 @@ public class Enemy extends Character {
 //        this.setCollisionHitBox(new Rectangle(this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10,
 //                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, this.getCHARACTER_HEIGHT()));
 
-        this.setRunRightFrames(this.loadFrames(11, RUN_RIGHT_IMAGES_PATH));
-        this.setRunLeftFrames(this.loadFrames(11, RUN_LEFT_IMAGES_PATH));
-        this.setAttackRightFrames(this.loadFrames(4, ATTACK_RIGHT_IMAGES_PATH));
-        this.setAttackLeftFrames(this.loadFrames(4, ATTACK_LEFT_IMAGES_PATH));
+        this.setRunRightFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_RIGHT_IMAGES_PATH));
+        this.setRunLeftFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_LEFT_IMAGES_PATH));
+        this.setAttackRightFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_RIGHT_IMAGES_PATH));
+        this.setAttackLeftFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_LEFT_IMAGES_PATH));
+        this.setCurrentFrame(this.getDefaultFrameRight());
 
         this.player = player;
         this.deathFrameIndex = 0;
-        this.deathRightFrames = loadFrames(2, DIE_RIGHT_IMAGES_PATH);
-        this.deathLeftFrames = loadFrames(2, DIE_LEFT_IMAGES_PATH);
+        this.deathRightFrames = Main.loadFrames(DEATH_FRAME_COUNT, DIE_RIGHT_IMAGES_PATH);
+        this.deathLeftFrames = Main.loadFrames(DEATH_FRAME_COUNT, DIE_LEFT_IMAGES_PATH);
     }
     @Override
     public void paint(Graphics g) {
 //        g.fillRect((this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10),
 //                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, (this.getCHARACTER_HEIGHT()));
+        g.drawImage(this.getCurrentFrame(),
+                this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
         this.loopBetweenFrames();
-        switch (this.getPaintType()) {
-            case 1:
-                g.drawImage(this.getRunRightFrames().get(this.getRunFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
-                break;
-            case 2:
-                g.drawImage(this.getRunLeftFrames().get(this.getRunFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
-                break;
-            case 3:
-                g.drawImage(this.getAttackRightFrames().get(this.getAttackFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
-                break;
-            case 4:
-                g.drawImage(this.getAttackLeftFrames().get(this.getAttackFrameIndex()),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
-                break;
-            case 5:
-                g.drawImage(this.deathRightFrames.get(this.deathFrameIndex),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
-                if (this.deathFrameIndex < 1){
-                    this.deathFrameIndex++;
-                }
-                if (this.deathFrameIndex >= this.deathRightFrames.size()) {
-                    this.deathFrameIndex = 1;
-                }
-                break;
-            case 6:
-                g.drawImage(this.deathLeftFrames.get(this.deathFrameIndex),
-                        this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(), null);
-                if (this.deathFrameIndex < 1){
-                    this.deathFrameIndex++;
-                }
-                if (this.deathFrameIndex >= this.deathRightFrames.size()) {
-                    this.deathFrameIndex = 1;
-                }
-                break;
-        }
     }
 
     public void update(){
+        this.checkMovementDirection();
+        this.checkIfAttacking();
+        this.checkBulletCollision();
+        this.checkAlive();
+    }
+    public void checkMovementDirection(){
         if (this.getX() > this.player.getX()){
             this.setCharacterMovingLeft(true);
             this.setCharacterMovingRight(false);
-            this.setPaintType(MOVE_LEFT_CODE);
+            this.setCurrentFrame(this.getRunLeftFrames().get(this.getRunFrameIndex()));
         } else {
             this.setCharacterMovingLeft(false);
             this.setCharacterMovingRight(true);
-            this.setPaintType(MOVE_RIGHT_CODE);
+            this.setCurrentFrame(this.getRunRightFrames().get(this.getRunFrameIndex()));
         }
+    }
+    public void checkIfAttacking(){
         if(this.getHitBox().intersects(player.getHitBox())){
             this.setCharacterAttacking(true);
             if (this.isCharacterMovingLeft()){
-                this.setPaintType(ATTACK_LEFT_CODE);
+                this.setCurrentFrame(this.getAttackLeftFrames().get(this.getAttackFrameIndex()));
             } else {
-                this.setPaintType(ATTACK_RIGHT_CODE);
+                this.setCurrentFrame(this.getAttackRightFrames().get(this.getAttackFrameIndex()));
             }
         } else {
             this.setCharacterAttacking(false);
         }
+    }
+    public void checkBulletCollision(){
         for (Bullet bullet : this.player.getBullets()){
             if (this.getHitBox().intersects(bullet)){
                 this.setAlive(false);
@@ -118,27 +89,33 @@ public class Enemy extends Character {
                 //this.player.addPoint();
             }
         }
+    }
+    public void checkAlive(){
         if (this.isAlive()){
             if(!this.isCharacterAttacking()){
                 this.moveTowardsPlayer();
             }
         }else {
             if (this.isCharacterMovingLeft()){
-                this.setPaintType(DIE_LEFT_CODE);
+                this.setCurrentFrame(this.deathLeftFrames.get(this.getDeathFrameIndex()));
             }else {
-                this.setPaintType(DIE_RIGHT_CODE);
+                this.setCurrentFrame(this.deathRightFrames.get(this.getDeathFrameIndex()));
             }
         }
     }
 
+
     protected void loopBetweenFrames() {
         this.setRunFrameIndex(this.getRunFrameIndex() + 1);
-        if (this.getRunFrameIndex() % 11 == 0) {
+        if (this.getRunFrameIndex() % this.getRunRightFrames().size() == 0) {
             this.setRunFrameIndex(0);
         }
         this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
         if (this.getAttackFrameIndex() % this.getAttackRightFrames().size() == 0){
             this.setAttackFrameIndex(0);
+        }
+        if (this.getDeathFrameIndex() != 1) {
+            this.deathFrameIndex++;
         }
     }
 
