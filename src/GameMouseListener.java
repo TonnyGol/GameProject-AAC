@@ -22,6 +22,8 @@ public class GameMouseListener implements MouseListener {
 
             if (!this.player.isCharacterReloading()){
                 this.makeShootSound();
+            }else {
+                this.gamePanel.getMusicPlayer().getGunFireClip().stop();
             }
             int xMouseClick = e.getX();
             this.player.setCharacterMovingRight(false);

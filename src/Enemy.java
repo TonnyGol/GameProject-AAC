@@ -18,10 +18,6 @@ public class Enemy extends Character {
     private final int DEATH_FRAME_COUNT = 2;
 
     private final Player player;
-    private int deathFrameIndex;
-
-    private final List<Image> deathRightFrames;
-    private final List<Image> deathLeftFrames;
 
     public Enemy(int startX, int startY, Player player, HashSet<Rectangle> obstacles) {
         super(startX, startY, obstacles);
@@ -36,12 +32,10 @@ public class Enemy extends Character {
         this.setRunLeftFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_LEFT_IMAGES_PATH));
         this.setAttackRightFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_RIGHT_IMAGES_PATH));
         this.setAttackLeftFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_LEFT_IMAGES_PATH));
+        this.setDeathRightFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_RIGHT_IMAGES_PATH));
+        this.setDeathLeftFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_LEFT_IMAGES_PATH));
         this.setCurrentFrame(this.getDefaultFrameRight());
-
         this.player = player;
-        this.deathFrameIndex = 0;
-        this.deathRightFrames = Main.loadFrames(DEATH_FRAME_COUNT, DIE_RIGHT_IMAGES_PATH);
-        this.deathLeftFrames = Main.loadFrames(DEATH_FRAME_COUNT, DIE_LEFT_IMAGES_PATH);
     }
     @Override
     public void paint(Graphics g) {
@@ -77,6 +71,7 @@ public class Enemy extends Character {
             } else {
                 this.setCurrentFrame(this.getAttackRightFrames().get(this.getAttackFrameIndex()));
             }
+            this.player.setAlive(false);
         } else {
             this.setCharacterAttacking(false);
         }
@@ -97,9 +92,9 @@ public class Enemy extends Character {
             }
         }else {
             if (this.isCharacterMovingLeft()){
-                this.setCurrentFrame(this.deathLeftFrames.get(this.getDeathFrameIndex()));
+                this.setCurrentFrame(this.getDeathLeftFrames().get(this.getDeathFrameIndex()));
             }else {
-                this.setCurrentFrame(this.deathRightFrames.get(this.getDeathFrameIndex()));
+                this.setCurrentFrame(this.getDeathRightFrames().get(this.getDeathFrameIndex()));
             }
         }
     }
@@ -115,7 +110,7 @@ public class Enemy extends Character {
             this.setAttackFrameIndex(0);
         }
         if (this.getDeathFrameIndex() != 1) {
-            this.deathFrameIndex++;
+            this.setDeathFrameIndex(this.getDeathFrameIndex() + 1);
         }
     }
 
@@ -183,14 +178,6 @@ public class Enemy extends Character {
 
     public int getCHARACTER_SPEED() {
         return CHARACTER_SPEED;
-    }
-
-    public int getDeathFrameIndex() {
-        return deathFrameIndex;
-    }
-
-    public void setDeathFrameIndex(int deathFrameIndex) {
-        this.deathFrameIndex = deathFrameIndex;
     }
 }
 

@@ -15,6 +15,8 @@ public class Player extends Character {
     private final String ATTACK_LEFT_IMAGES_PATH = "resources\\Images\\AttackBack";
     private final String RELOAD_RIGHT_IMAGES_PATH = "resources\\Images\\Recharge";
     private final String RELOAD_LEFT_IMAGES_PATH = "resources\\Images\\RechargeBack";
+    private final String DEATH_RIGHT_IMAGES_PATH = "resources\\Images\\Death";
+    private final String DEATH_LEFT_IMAGES_PATH = "resources\\Images\\DeathBack";
 
     private final int CHARACTER_SPEED = 15;
     private final int AMMO_CAPACITY = 15;
@@ -24,7 +26,7 @@ public class Player extends Character {
     private final int SHOOT_FRAME_COUNT = 4;
     private final int ATTACK_FRAME_COUNT = 3;
     private final int RUN_FRAME_COUNT = 8;
-
+    private final int DEATH_FRAME_COUNT = 4;
 
     private boolean isCharacterStanding;
     private boolean isCharacterShooting;
@@ -46,13 +48,14 @@ public class Player extends Character {
 
         this.setDefaultFrameRight(new ImageIcon(DEFAULT_FRAME_RIGHT_PATH).getImage());
         this.setDefaultFrameLeft(new ImageIcon(DEFAULT_FRAME_LEFT_PATH).getImage());
-
         this.setRunRightFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_RIGHT_IMAGES_PATH));
         this.setRunLeftFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_LEFT_IMAGES_PATH));
         this.setAttackRightFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_RIGHT_IMAGES_PATH));
         this.setAttackLeftFrames(Main.loadFrames(ATTACK_FRAME_COUNT, ATTACK_LEFT_IMAGES_PATH));
-
+        this.setDeathRightFrames(Main.loadFrames(DEATH_FRAME_COUNT, DEATH_RIGHT_IMAGES_PATH));
+        this.setDeathLeftFrames(Main.loadFrames(DEATH_FRAME_COUNT, DEATH_LEFT_IMAGES_PATH));
         this.setCurrentFrame(this.getDefaultFrameRight());
+
         this.isCharacterStanding = true;
         this.bullets = new LinkedList<>();
         this.shootFrameIndex = 0;
@@ -81,6 +84,7 @@ public class Player extends Character {
         this.checkIfAttacking();
         this.checkMovementDirection();
         this.checkIfStanding();
+        this.checkIfAlive();
     }
 
     private void checkIfReloading(){
@@ -165,6 +169,15 @@ public class Player extends Character {
             }
         }
     }
+    private void checkIfAlive(){
+        if(!this.isAlive()){
+            if (this.isCharacterMovingLeft()){
+                this.setCurrentFrame(this.getDeathLeftFrames().get(this.getDeathFrameIndex()));
+            }else {
+                this.setCurrentFrame(this.getDeathRightFrames().get(this.getDeathFrameIndex()));
+            }
+        }
+    }
 
     private void createAndShootBullet(int xBullet, int yBullet, int direction) {
         if (!this.isCharacterReloading){
@@ -218,6 +231,12 @@ public class Player extends Character {
             if (this.getReloadFrameIndex() % this.reloadRightFrames.size() == 0){
                 this.isCharacterReloading = false;
                 this.setReloadFrameIndex(0);
+            }
+        }
+        if (!this.isAlive() && this.getDeathFrameIndex() != 3){
+            this.setDeathFrameIndex(this.getDeathFrameIndex() + 1);
+            if (this.getDeathFrameIndex() % this.getDeathRightFrames().size() == 0){
+                this.setDeathFrameIndex(3);
             }
         }
     }

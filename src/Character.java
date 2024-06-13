@@ -22,6 +22,7 @@ public abstract class Character {
 
     private int runFrameIndex;
     private int attackFrameIndex;
+    private int deathFrameIndex;
 
     private Image defaultFrameRight;
     private Image defaultFrameLeft;
@@ -30,6 +31,8 @@ public abstract class Character {
     private List<Image> runLeftFrames;
     private List<Image> attackRightFrames;
     private List<Image> attackLeftFrames;
+    private List<Image> deathRightFrames;
+    private List<Image> deathLeftFrames;
 
     private int paintType;
     private Image currentFrame;
@@ -56,6 +59,7 @@ public abstract class Character {
 
         this.runFrameIndex = 0;
         this.attackFrameIndex = 0;
+        this.deathFrameIndex = 0;
 
         this.defaultFrameLeft = null;
         this.defaultFrameRight = null;
@@ -64,6 +68,8 @@ public abstract class Character {
         this.runLeftFrames = null;
         this.attackRightFrames = null;
         this.attackLeftFrames = null;
+        this.deathRightFrames = null;
+        this.deathLeftFrames = null;
 
         this.isAlive = true;
         this.isCharacterMovingRight = false;
@@ -252,5 +258,29 @@ public abstract class Character {
 
     public void setCurrentFrame(Image currentFrame) {
         this.currentFrame = currentFrame;
+    }
+
+    public int getDeathFrameIndex() {
+        return deathFrameIndex;
+    }
+
+    public void setDeathFrameIndex(int deathFrameIndex) {
+        this.deathFrameIndex = deathFrameIndex;
+    }
+
+    public List<Image> getDeathRightFrames() {
+        return deathRightFrames;
+    }
+
+    public void setDeathRightFrames(List<Image> deathRightFrames) {
+        this.deathRightFrames = deathRightFrames;
+    }
+
+    public List<Image> getDeathLeftFrames() {
+        return deathLeftFrames;
+    }
+
+    public void setDeathLeftFrames(List<Image> deathLeftFrames) {
+        this.deathLeftFrames = deathLeftFrames;
     }
 }
