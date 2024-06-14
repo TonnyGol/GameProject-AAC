@@ -40,10 +40,20 @@ public class MenuPanel extends JPanel {
         this.add(settingsLabel);
         this.add(Box.createRigidArea(new Dimension(buttonWidthMargin, BUTTON_MARGIN)));
         this.add(quitLabel);
+
+        this.menuLoop();
     }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
+    }
+
+    private void menuLoop(){
+        new Thread(() ->{
+            if (WindowFrame.panelChoice == 0){
+                repaint();
+            }
+        }).start();
     }
 }

@@ -7,8 +7,9 @@ public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
 
     private final int FPS = 25;
-    private long lastSpawnTime = 0;
-    private static final int SPAWN_INTERVAL = 3000;
+    private int countTimer;
+    private long lastSpawnTime;
+    private static final int SPAWN_INTERVAL = 1000;
 
     private final Player player;
     private List<Enemy> enemies;
@@ -16,14 +17,16 @@ public class GamePanel extends JPanel {
     private final Image gameBackgroundImage;
     private final MusicPlayer musicPlayer;
 
-    public GamePanel(int width, int height, MusicPlayer musicPlayer){
+    public GamePanel(int width, int height, MusicPlayer musicPlayer) {
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         this.musicPlayer = musicPlayer;
         this.obstacles = createObstacles(3);
+        this.lastSpawnTime = 0;
+        this.countTimer = 0;
         this.enemies = new LinkedList<>();
-        this.player = new Player(10, 620, this.obstacles);
+        this.player = new Player(500, 620, this.obstacles);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
         this.addKeyListener(new GameKeyListener(this, this.player));
         this.addMouseListener(new GameMouseListener(this, this.player));
@@ -49,6 +52,9 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
+        g.setFont(new Font(null, Font.PLAIN, 30));
+        g.drawString("Time: " + this.countTimer / 10000000, 20, 40);
+        g.drawString("Points: " + this.player.getPoints(), 250, 40);
         this.player.paint(g);
         for (Enemy enemy : this.enemies){
             enemy.paint(g);
@@ -71,7 +77,7 @@ public class GamePanel extends JPanel {
 
 
 
-    private void mainGamePanelLoop() {
+    private void mainGamePanelLoop(){
         new Thread(() -> {
             double drawInterval = (double) 1000000000 / FPS;
             double delta = 0;
@@ -84,15 +90,17 @@ public class GamePanel extends JPanel {
                 long deltaTime = currentTimeMillis - previousTime;
                 previousTime = currentTimeMillis;
                 if (WindowFrame.panelChoice == 1){
+                    this.countTimer ++;
                     this.spawnEnemy(deltaTime);
                 }
-
                 currentTimeNano = System.nanoTime();
                 delta += (currentTimeNano - lastTime) / drawInterval;
                 lastTime = currentTimeNano;
                 if (delta >= 1) {
-                    update();
-                    repaint();
+                    if (WindowFrame.panelChoice == 1){
+                        update();
+                        repaint();
+                    }
                     delta--;
                 }
             }

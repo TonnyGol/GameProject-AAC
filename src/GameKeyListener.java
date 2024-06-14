@@ -7,9 +7,9 @@ public class GameKeyListener implements KeyListener {
     Player player;
     boolean wPressed, sPressed, aPressed, dPressed, spacePressed;
 
-    public GameKeyListener(GamePanel gamePanel, Player soldier){
+    public GameKeyListener(GamePanel gamePanel, Player player){
         this.gamePanel = gamePanel;
-        this.player = soldier;
+        this.player = player;
         this.wPressed = false;
         this.sPressed = false;
         this.aPressed = false;
@@ -25,7 +25,11 @@ public class GameKeyListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         this.player.setCharacterStanding(false);
-        if(!this.player.isCharacterReloading()){
+        if (keyCode == KeyEvent.VK_ESCAPE) {
+            WindowFrame.panelChoice = 0;
+            WindowFrame.switchPanels = true;
+        }
+        if(!this.player.isCharacterReloading() && this.player.isAlive()){
             if (keyCode == KeyEvent.VK_W){
                 this.wPressed = true;
                 this.player.setCharacterMovingRight(true);

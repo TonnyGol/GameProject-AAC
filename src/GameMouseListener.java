@@ -7,9 +7,9 @@ public class GameMouseListener implements MouseListener {
     Player player;
     GamePanel gamePanel;
 
-    public GameMouseListener(GamePanel gamePanel, Player soldier){
+    public GameMouseListener(GamePanel gamePanel, Player player){
         this.gamePanel = gamePanel;
-        this.player = soldier;
+        this.player = player;
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -19,18 +19,19 @@ public class GameMouseListener implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
-
-            if (!this.player.isCharacterReloading()){
-                this.makeShootSound();
-            }else {
-                this.gamePanel.getMusicPlayer().getGunFireClip().stop();
+            if (this.player.isAlive()){
+                if (!this.player.isCharacterReloading()){
+                    this.makeShootSound();
+                }else {
+                    this.gamePanel.getMusicPlayer().getGunFireClip().stop();
+                }
+                int xMouseClick = e.getX();
+                this.player.setCharacterMovingRight(false);
+                this.player.setCharacterStanding(false);
+                this.player.setCharacterShooting(true);
+                this.player.setCharacterMovingLeft(
+                        xMouseClick <= this.player.getX() + this.player.getCHARACTER_WIDTH() / 2);
             }
-            int xMouseClick = e.getX();
-            this.player.setCharacterMovingRight(false);
-            this.player.setCharacterStanding(false);
-            this.player.setCharacterShooting(true);
-            this.player.setCharacterMovingLeft(
-                    xMouseClick <= this.player.getX() + this.player.getCHARACTER_WIDTH() / 2);
         }
     }
 

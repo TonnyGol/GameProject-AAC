@@ -19,7 +19,7 @@ public class Player extends Character {
     private final String DEATH_LEFT_IMAGES_PATH = "resources\\Images\\DeathBack";
 
     private final int CHARACTER_SPEED = 15;
-    private final int AMMO_CAPACITY = 15;
+    private final int AMMO_CAPACITY = 3;
     private final int RIGHT_BOUNDARY_X = 1740;
     private final int LEFT_BOUNDARY_X = -45;
     private final int RELOAD_FRAME_COUNT = 13;
@@ -34,6 +34,7 @@ public class Player extends Character {
 
     private int shootFrameIndex;
     private int reloadFrameIndex;
+    private int points;
 
     private List<Bullet> bullets;
     private final List<Image> shootRightFrames;
@@ -58,6 +59,7 @@ public class Player extends Character {
 
         this.isCharacterStanding = true;
         this.bullets = new LinkedList<>();
+        this.points = 0;
         this.shootFrameIndex = 0;
         this.reloadFrameIndex = 0;
         this.isCharacterShooting = false;
@@ -79,12 +81,14 @@ public class Player extends Character {
     }
 
     public void update(){
-        this.checkIfReloading();
-        this.checkIfShooting();
-        this.checkIfAttacking();
-        this.checkMovementDirection();
-        this.checkIfStanding();
         this.checkIfAlive();
+        if (this.isAlive()){
+            this.checkIfReloading();
+            this.checkIfShooting();
+            this.checkIfAttacking();
+            this.checkMovementDirection();
+            this.checkIfStanding();
+        }
     }
 
     private void checkIfReloading(){
@@ -239,6 +243,14 @@ public class Player extends Character {
                 this.setDeathFrameIndex(3);
             }
         }
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public List<Bullet> getBullets(){

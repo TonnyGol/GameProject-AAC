@@ -79,9 +79,13 @@ public class Enemy extends Character {
     public void checkBulletCollision(){
         for (Bullet bullet : this.player.getBullets()){
             if (this.getHitBox().intersects(bullet)){
+                if (this.isAlive()){
+                    this.player.setPoints(this.player.getPoints() + 10);
+                }
+                bullet.setBounds(0,0,0,0);
+                this.setHitBox(new Rectangle(0,0,0,0));
                 this.setAlive(false);
                 System.out.println("Dead");
-                //this.player.addPoint();
             }
         }
     }

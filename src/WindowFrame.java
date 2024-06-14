@@ -16,7 +16,6 @@ public class WindowFrame extends JFrame {
     private MenuPanel menu;
     private InstructionsPanel instructionsPanel;
     private SettingsPanel settingsPanel;
-    private PausePanel pausePanel;
     private List<JPanel> panels;
 
     private MusicPlayer musicPlayer;
@@ -29,8 +28,8 @@ public class WindowFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.panels = new ArrayList<>();
         this.musicPlayer = new MusicPlayer();
-        this.musicPlayer.setVolumeSoundFx(0.3f);
-        this.musicPlayer.setVolumeBackgroundMusic(0.5f);
+        this.musicPlayer.setVolumeSoundFx(0.7f);
+        this.musicPlayer.setVolumeBackgroundMusic(0.7f);
         this.buttonListener = new ButtonListener(this.musicPlayer);
 
         this.menu = new MenuPanel(WIDTH, HEIGHT, this.buttonListener); // 0 index in the list
