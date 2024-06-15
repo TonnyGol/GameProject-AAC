@@ -34,7 +34,7 @@ public class ButtonListener implements MouseListener {
                 if (command.equals("Volume_ON")){
                     this.musicPlayer.setVolumeBackgroundMusic(0);
                 }else{
-                    this.musicPlayer.setVolumeBackgroundMusic(0.7f);
+                    this.musicPlayer.setVolumeBackgroundMusic(0.6f);
                 }
                 break;
             case "SoundFX_ON", "SoundFX_OFF":
@@ -59,11 +59,11 @@ public class ButtonListener implements MouseListener {
                 break;
             case "RaiseSfx":
                 this.musicPlayer.setVolumeSoundFx(this.musicPlayer.getVolumeSoundFx() + 0.10f);
-                SettingsPanel.sfxVolumeChanged = true;
+                SettingsPanel.soundFxVolumeChanged = true;
                 break;
             case "LowerSfx":
                 this.musicPlayer.setVolumeSoundFx(this.musicPlayer.getVolumeSoundFx() - 0.10f);
-                SettingsPanel.sfxVolumeChanged = true;
+                SettingsPanel.soundFxVolumeChanged = true;
                 break;
             default:
                 System.out.println("A button was clicked");

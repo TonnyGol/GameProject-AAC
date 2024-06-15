@@ -30,10 +30,10 @@ public class SettingsPanel extends JPanel {
     public static boolean switchMusicVolume;
     public static boolean switchEffectsVolume;
     public static boolean musicVolumeChanged;
-    public static boolean sfxVolumeChanged;
+    public static boolean soundFxVolumeChanged;
 
-    private int volumeState = 1;
-    private int effectsState = 1;
+    private int musicState = 1;
+    private int soundFxState = 1;
     private final MusicPlayer musicPlayer;
     private final ButtonListener buttonListener;
 
@@ -123,37 +123,49 @@ public class SettingsPanel extends JPanel {
     private void update(){
         this.toggleVolumeOnOff();
         if (SettingsPanel.musicVolumeChanged){
-            this.musicVolume = (int) (this.musicPlayer.getVolumeBackgroundMusic() * 100) + "%";
-            SettingsPanel.musicVolumeChanged = false;
+            if(musicState == 1) {
+                int musicVolume = (int) (this.musicPlayer.getVolumeBackgroundMusic() * 100);
+                if (musicVolume % 10 == 9) {
+                    musicVolume++;
+                }
+                this.musicVolume = musicVolume + "%";
+                SettingsPanel.musicVolumeChanged = false;
+            }
         }
-        if (SettingsPanel.sfxVolumeChanged){
-            this.soundFxVolume = (int) (this.musicPlayer.getVolumeSoundFx() * 100) + "%";
-            SettingsPanel.sfxVolumeChanged = false;
+        if (SettingsPanel.soundFxVolumeChanged){
+            if(soundFxState == 1) {
+                int sfxVolume = (int) (this.musicPlayer.getVolumeSoundFx() * 100);
+                if (sfxVolume % 10 == 9) {
+                    sfxVolume++;
+                }
+                this.soundFxVolume = sfxVolume + "%";
+                SettingsPanel.soundFxVolumeChanged = false;
+            }
         }
     }
 
     public void toggleVolumeOnOff(){
         if (switchMusicVolume){
-            if (volumeState == 1){
+            if (musicState == 1){
                 this.musicOnLabel.setVisible(false);
                 this.musicOffLabel.setVisible(true);
-                this.volumeState = 0;
+                this.musicState = 0;
             } else{
                 this.musicOffLabel.setVisible(false);
                 this.musicOnLabel.setVisible(true);
-                this.volumeState = 1;
+                this.musicState = 1;
             }
             SettingsPanel.switchMusicVolume = false;
         }
         if(switchEffectsVolume){
-            if (effectsState == 1){
+            if (soundFxState == 1){
                 this.soundEffectsOnLabel.setVisible(false);
                 this.soundEffectsOffLabel.setVisible(true);
-                this.effectsState = 0;
+                this.soundFxState = 0;
             } else{
                 this.soundEffectsOffLabel.setVisible(false);
                 this.soundEffectsOnLabel.setVisible(true);
-                this.effectsState = 1;
+                this.soundFxState = 1;
             }
             SettingsPanel.switchEffectsVolume = false;
         }

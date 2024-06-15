@@ -43,6 +43,8 @@ public class Enemy extends Character {
 //                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, (this.getCHARACTER_HEIGHT()));
         g.drawImage(this.getCurrentFrame(),
                 this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
+//        g.fillRect((int) this.getHitBox().getX(),
+//                (int) this.getHitBox().getY() + 105, (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight()/2);
         this.loopBetweenFrames();
     }
 
@@ -64,7 +66,9 @@ public class Enemy extends Character {
         }
     }
     public void checkIfAttacking(){
-        if(this.getHitBox().intersects(player.getHitBox())){
+        Rectangle attackHitBox = new Rectangle((int) this.getHitBox().getX(),
+                (int) this.getHitBox().getY() + 105, (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight()/2);
+        if(attackHitBox.intersects(player.getHitBox())){
             this.setCharacterAttacking(true);
             if (this.isCharacterMovingLeft()){
                 this.setCurrentFrame(this.getAttackLeftFrames().get(this.getAttackFrameIndex()));
@@ -148,7 +152,7 @@ public class Enemy extends Character {
                 this.setDy(-CHARACTER_SPEED);
                 this.setDx(CHARACTER_SPEED);
             }
-            if(this.getY() <= this.getLOWER_BOUNDARY_Y()){
+            if(this.getY() >= this.getLOWER_BOUNDARY_Y() / 2){
                 this.setDy(-CHARACTER_SPEED);
             }
 //            if(this.y >= UPPER_BOUNDARY_Y){
@@ -161,14 +165,17 @@ public class Enemy extends Character {
 
     public boolean canMove(){
         int yPosition = this.getY() + this.getDy();
+        Rectangle CollisionHitBox = new Rectangle((int) this.getHitBox().getX(),
+                (int) this.getHitBox().getY() + 105, (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight()/2);
+
         boolean yPositionOk = yPosition <= this.getLOWER_BOUNDARY_Y() && yPosition >= this.getUPPER_BOUNDARY_Y();
         this.getHitBox().setLocation((int) (this.getHitBox().getX() + this.getDx()), (int) (this.getHitBox().getY() + this.getDy()));
 //        this.hitBox.setBounds((int) (this.hitBox.getX() + dx),
 //                (int) (this.hitBox.getY() + dy), (int) this.hitBox.getWidth(), (int) this.hitBox.getHeight());
         for (Rectangle obstacle : this.getObstacles()){
-            if (this.getHitBox().intersects(obstacle)){
+            if (CollisionHitBox.intersects(obstacle)){
                 System.out.println("Hit");
-                return false;
+                yPositionOk = false;
             }
         }
         return yPositionOk;

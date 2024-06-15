@@ -9,7 +9,7 @@ public class GamePanel extends JPanel {
     private final int FPS = 25;
     private int countTimer;
     private long lastSpawnTime;
-    private static final int SPAWN_INTERVAL = 1000;
+    private static final int SPAWN_INTERVAL = 2000;
 
     private final Player player;
     private List<Enemy> enemies;
