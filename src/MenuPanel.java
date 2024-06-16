@@ -2,11 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MenuPanel extends JPanel {
+    private final String MENU_BG_FILE_PATH = "resources\\Images\\Menu_background.png";
     private final String PLAY_BUTTON_FILE_PATH = "resources\\Images\\PlayButton2.png";
     private final String INSTRUCTIONS_BUTTON_FILE_PATH = "resources\\Images\\InstructionButton2.png";
     private final String SETTINGS_BUTTON_FILE_PATH = "resources\\Images\\SettingsButton2.png";
     private final String QUIT_BUTTON_FILE_PATH = "resources\\Images\\QuitButton2.png";
-    private final String MENU_BG_FILE_PATH = "resources\\Images\\Menu_background.png";
 
     private final int BUTTON_MARGIN = 40;
     private final JLabel playLabel;
@@ -14,21 +14,19 @@ public class MenuPanel extends JPanel {
     private final JLabel settingsLabel;
     private final JLabel quitLabel;
     private final Image backgroundImage;
+    private final MusicPlayer musicPlayer;
 
-    private final ButtonListener buttonListener;
-
-    public MenuPanel(int width, int height, ButtonListener buttonListener){
+    public MenuPanel(int width, int height, MusicPlayer musicPlayer){
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+        this.musicPlayer = musicPlayer;
         this.backgroundImage = new ImageIcon(MENU_BG_FILE_PATH).getImage();
-        this.buttonListener = buttonListener;
 
         // Create labels for each menu option with icons
-        this.playLabel = Main.createButtonLabel("Play", PLAY_BUTTON_FILE_PATH, this.buttonListener);
-        this.instructionsLabel = Main.createButtonLabel("Instructions", INSTRUCTIONS_BUTTON_FILE_PATH, this.buttonListener);
-        this.settingsLabel = Main.createButtonLabel("Settings", SETTINGS_BUTTON_FILE_PATH, this.buttonListener);
-        this.quitLabel = Main.createButtonLabel("Quit", QUIT_BUTTON_FILE_PATH, this.buttonListener);
+        this.playLabel = Main.createButtonLabel("Play", PLAY_BUTTON_FILE_PATH, new ButtonListener(this.musicPlayer));
+        this.instructionsLabel = Main.createButtonLabel("Instructions", INSTRUCTIONS_BUTTON_FILE_PATH, new ButtonListener(this.musicPlayer));
+        this.settingsLabel = Main.createButtonLabel("Settings", SETTINGS_BUTTON_FILE_PATH, new ButtonListener(this.musicPlayer));
+        this.quitLabel = Main.createButtonLabel("Quit", QUIT_BUTTON_FILE_PATH, new ButtonListener(this.musicPlayer));
 
         // Add labels to the panel with some spacing
         int buttonWidthMargin = (width / 50);

@@ -9,8 +9,8 @@ public class WindowFrame extends JFrame {
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
 
-    public static boolean switchPanels;
     public static int panelChoice;
+    public static boolean switchPanels;
 
     private GamePanel gamePanel;
     private MenuPanel menu;
@@ -19,39 +19,41 @@ public class WindowFrame extends JFrame {
     private List<JPanel> panels;
 
     private MusicPlayer musicPlayer;
-    private ButtonListener buttonListener;
 
     public WindowFrame(){
         this.setTitle("Soldier Survival Game");
         this.setSize(WIDTH, HEIGHT);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setVisible(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         this.panels = new ArrayList<>();
         this.musicPlayer = new MusicPlayer();
-        this.musicPlayer.setVolumeSoundFx(0.7f);
-        this.musicPlayer.setVolumeBackgroundMusic(0.6f);
-        this.buttonListener = new ButtonListener(this.musicPlayer);
+        this.musicPlayer.setVolumeSoundFx(0.7f); // starting soundFx volume 70%
+        this.musicPlayer.setVolumeBackgroundMusic(0.6f); // starting music Background 60%
 
-        this.menu = new MenuPanel(WIDTH, HEIGHT, this.buttonListener); // 0 index in the list
+        this.menu = new MenuPanel(WIDTH, HEIGHT, this.musicPlayer); // 0 index in the list
         this.add(this.menu);
         this.panels.add(this.menu);
+        this.showOnlyOnePanel();
 
         this.gamePanel = new GamePanel(WIDTH, HEIGHT, this.musicPlayer); // 1 index in the list
         this.add(gamePanel);
         this.panels.add(this.gamePanel);
+        this.showOnlyOnePanel();
 
-        this.instructionsPanel = new InstructionsPanel(WIDTH, HEIGHT, this.buttonListener); // 2 index in the list
+        this.instructionsPanel = new InstructionsPanel(WIDTH, HEIGHT, this.musicPlayer); // 2 index in the list
         this.add(this.instructionsPanel);
         this.panels.add(this.instructionsPanel);
+        this.showOnlyOnePanel();
 
-        this.settingsPanel = new SettingsPanel(WIDTH,HEIGHT, this.musicPlayer, this.buttonListener);  // 3 index in the list
+        this.settingsPanel = new SettingsPanel(WIDTH,HEIGHT, this.musicPlayer);  // 3 index in the list
         this.add(this.settingsPanel);
         this.panels.add(this.settingsPanel);
 
         this.showOnlyOnePanel();
         this.mainWindowLoop();
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
     }
 
     private void showOnlyOnePanel(){

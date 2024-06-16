@@ -17,7 +17,6 @@ public abstract class Character {
     private int dy;
 
     private Rectangle hitBox;
-    private Rectangle CollisionHitBox;
     private HashSet<Rectangle> obstacles;
 
     private int runFrameIndex;
@@ -34,7 +33,6 @@ public abstract class Character {
     private List<Image> deathRightFrames;
     private List<Image> deathLeftFrames;
 
-    private int paintType;
     private Image currentFrame;
 
     private boolean isAlive;
@@ -52,7 +50,6 @@ public abstract class Character {
         this.y = startY;
         this.dx = 0;
         this.dy = 0;
-        this.paintType = 0;
 
         this.hitBox = null;
         this.obstacles = obstacles;
@@ -74,14 +71,6 @@ public abstract class Character {
         this.isAlive = true;
         this.isCharacterMovingRight = false;
         this.isCharacterMovingLeft = false;
-    }
-
-    public Rectangle getCollisionHitBox() {
-        return CollisionHitBox;
-    }
-
-    public void setCollisionHitBox(Rectangle collisionHitBox) {
-        CollisionHitBox = collisionHitBox;
     }
 
     public int getCHARACTER_WIDTH() {
@@ -208,14 +197,6 @@ public abstract class Character {
         this.attackLeftFrames = attackLeftFrames;
     }
 
-    public int getPaintType() {
-        return paintType;
-    }
-
-    public void setPaintType(int paintType) {
-        this.paintType = paintType;
-    }
-
     public boolean isAlive() {
         return isAlive;
     }
@@ -246,10 +227,6 @@ public abstract class Character {
 
     public void setCharacterAttacking(boolean characterAttacking) {
         isCharacterAttacking = characterAttacking;
-    }
-
-    public void setObstacles(HashSet<Rectangle> obstacles) {
-        this.obstacles = obstacles;
     }
 
     public Image getCurrentFrame() {

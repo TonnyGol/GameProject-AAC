@@ -21,12 +21,8 @@ public class Enemy extends Character {
 
     public Enemy(int startX, int startY, Player player, HashSet<Rectangle> obstacles) {
         super(startX, startY, obstacles);
-//        this.setHitBox(new Rectangle(this.getX() + this.getCHARACTER_WIDTH() / 4 - 10,
-//                this.getY() + 100, this.getCHARACTER_WIDTH() / 2 + 15, (this.getCHARACTER_HEIGHT() + 50)/2));
         this.setHitBox(new Rectangle(this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10,
                 this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, this.getCHARACTER_HEIGHT()));
-//        this.setCollisionHitBox(new Rectangle(this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10,
-//                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, this.getCHARACTER_HEIGHT()));
 
         this.setRunRightFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_RIGHT_IMAGES_PATH));
         this.setRunLeftFrames(Main.loadFrames(RUN_FRAME_COUNT, RUN_LEFT_IMAGES_PATH));
@@ -39,12 +35,8 @@ public class Enemy extends Character {
     }
     @Override
     public void paint(Graphics g) {
-//        g.fillRect((this.getX() + (this.getCHARACTER_WIDTH() / 4) - 10),
-//                this.getY() + 15, (this.getCHARACTER_WIDTH() / 2) + 50, (this.getCHARACTER_HEIGHT()));
         g.drawImage(this.getCurrentFrame(),
                 this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-//        g.fillRect((int) this.getHitBox().getX(),
-//                (int) this.getHitBox().getY() + 105, (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight()/2);
         this.loopBetweenFrames();
     }
 
@@ -155,40 +147,30 @@ public class Enemy extends Character {
             if(this.getY() >= this.getLOWER_BOUNDARY_Y() / 2){
                 this.setDy(-CHARACTER_SPEED);
             }
-//            if(this.y >= UPPER_BOUNDARY_Y){
-//                this.dy = CHARACTER_SPEED;
-//            }
             this.move();
         }
-
     }
 
     public boolean canMove(){
+        boolean checkCollisionOk = true;
         int yPosition = this.getY() + this.getDy();
         Rectangle CollisionHitBox = new Rectangle((int) this.getHitBox().getX(),
                 (int) this.getHitBox().getY() + 105, (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight()/2);
-
         boolean yPositionOk = yPosition <= this.getLOWER_BOUNDARY_Y() && yPosition >= this.getUPPER_BOUNDARY_Y();
         this.getHitBox().setLocation((int) (this.getHitBox().getX() + this.getDx()), (int) (this.getHitBox().getY() + this.getDy()));
-//        this.hitBox.setBounds((int) (this.hitBox.getX() + dx),
-//                (int) (this.hitBox.getY() + dy), (int) this.hitBox.getWidth(), (int) this.hitBox.getHeight());
         for (Rectangle obstacle : this.getObstacles()){
             if (CollisionHitBox.intersects(obstacle)){
                 System.out.println("Hit");
-                yPositionOk = false;
+                checkCollisionOk = false;
             }
         }
-        return yPositionOk;
+        return yPositionOk && checkCollisionOk;
     }
 
 
     public void move(){
         this.setX(this.getX() + this.getDx());
         this.setY(this.getY() + this.getDy());
-    }
-
-    public int getCHARACTER_SPEED() {
-        return CHARACTER_SPEED;
     }
 }
 

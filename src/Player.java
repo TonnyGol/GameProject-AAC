@@ -20,8 +20,10 @@ public class Player extends Character {
 
     private final int CHARACTER_SPEED = 15;
     private final int AMMO_CAPACITY = 3;
+
     private final int RIGHT_BOUNDARY_X = 1740;
     private final int LEFT_BOUNDARY_X = -45;
+
     private final int RELOAD_FRAME_COUNT = 13;
     private final int SHOOT_FRAME_COUNT = 4;
     private final int ATTACK_FRAME_COUNT = 3;
@@ -71,7 +73,6 @@ public class Player extends Character {
     }
     @Override
     public void paint(Graphics g){
-        //g.fillRect(this.getX() + CHARACTER_WIDTH / 4 - 10, this.getY() + 150, CHARACTER_WIDTH / 2 + 15, (CHARACTER_HEIGHT - 50)/2);
         g.drawImage(this.getCurrentFrame(),
                 this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
         for (Bullet bullet : this.bullets){
@@ -281,14 +282,5 @@ public class Player extends Character {
 
     public void setReloadFrameIndex(int reloadFrameIndex) {
         this.reloadFrameIndex = reloadFrameIndex;
-    }
-    public boolean isCharacterShooting() {
-        return isCharacterShooting;
-    }
-    public void setCharacterReloading(boolean characterReloading) {
-        isCharacterReloading = characterReloading;
-    }
-    public boolean isCharacterStanding() {
-        return isCharacterStanding;
     }
 }
