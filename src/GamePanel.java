@@ -5,6 +5,8 @@ import java.util.List;
 
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
+    private final String REPLAY_BUTTON_FILE_PATH = "resources\\Images\\replayButton.png";
+    private final String GIVEUP_BUTTON_FILE_PATH = "resources\\Images\\giveUpButton.png";
 
     private final int FPS = 25;
     private int countTimer;
@@ -17,7 +19,14 @@ public class GamePanel extends JPanel {
     private final Image gameBackgroundImage;
     private final MusicPlayer musicPlayer;
 
-    public GamePanel(int width, int height, MusicPlayer musicPlayer) {
+
+    private final JLabel giveUpLabel;
+    private final JLabel replayLabel;
+
+    private final ButtonListener buttonListener ;
+
+    public GamePanel(int width, int height, MusicPlayer musicPlayer, ButtonListener buttonListener) {
+        this.buttonListener = buttonListener;
         this.setLayout(null);
         this.setBounds(WindowFrame.DEFAULT_POSITION, WindowFrame.DEFAULT_POSITION, width, height);
         this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -28,6 +37,21 @@ public class GamePanel extends JPanel {
         this.enemies = new LinkedList<>();
         this.player = new Player(500, 620, this.obstacles);
         this.gameBackgroundImage = new ImageIcon(GAME_BG_FILE_PATH).getImage();
+
+        this.giveUpLabel = Main.createButtonLabel("GiveUp", GIVEUP_BUTTON_FILE_PATH,this.buttonListener);
+        this.giveUpLabel.setBounds((int)(this.getWidth()/3+50),
+                (int)(this.getHeight()-600), (int)(this.getWidth()/2), (int)(this.getHeight()/4));
+        this.add(giveUpLabel);
+        this.giveUpLabel.setFocusable(false);
+        this.giveUpLabel.setVisible(false);
+        this.replayLabel = Main.createButtonLabel("Replay", REPLAY_BUTTON_FILE_PATH, this.buttonListener);
+        this.replayLabel.setBounds((int)(this.getWidth()/3+50),
+                (int)(this.getHeight()-800), (int)(this.getWidth()/2), (int)(this.getHeight()/4));
+        this.add(replayLabel);
+        this.replayLabel.setFocusable(false);
+        this.replayLabel.setVisible(false);
+
+
         this.addKeyListener(new GameKeyListener(this, this.player));
         this.addMouseListener(new GameMouseListener(this, this.player));
         this.mainGamePanelLoop();
@@ -52,6 +76,7 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
+
         g.setFont(new Font(null, Font.PLAIN, 30));
         g.drawString("Time: " + this.countTimer / 10000000, 20, 40);
         g.drawString("Points: " + this.player.getPoints(), 250, 40);
@@ -103,6 +128,21 @@ public class GamePanel extends JPanel {
                     }
                     delta--;
                 }
+                if(!this.player.isAlive()){
+                    this.giveUpLabel.setFocusable(true);
+                    this.giveUpLabel.setVisible(true);
+                    this.replayLabel.setFocusable(true);
+                    this.replayLabel.setVisible(true);
+                    this.countTimer =0;
+                    this.player.setPoints(0);
+                    this.player.setX(500);
+                    this.player.setY(620);
+                    this.enemies.clear();
+
+
+                    }
+
+
             }
         }).start();
     }
