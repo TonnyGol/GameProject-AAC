@@ -91,6 +91,17 @@ public class ButtonListener implements MouseListener {
                 this.gamePanel.getPlayer().setPoints(0);
                 this.gamePanel.replay();
                 break;
+            case "Replay":
+
+                break;
+            case "GiveUp":
+                WindowFrame.panelChoice = 0;
+                WindowFrame.switchPanels = true;
+                label.setFocusable(false);
+                label.setVisible(false);
+//                this.replayLabel.setFocusable(true);
+//                this.replayLabel.setVisible(true);
+                break;
             default:
                 System.out.println("A button was clicked");
                 break;

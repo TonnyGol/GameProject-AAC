@@ -38,7 +38,7 @@ public class WindowFrame extends JFrame {
         this.panels.add(this.menu);
         this.showOnlyOnePanel();
 
-        this.gamePanel = new GamePanel(WIDTH, HEIGHT, this.musicPlayer); // 1 index in the list
+        this.gamePanel = new GamePanel(WIDTH, HEIGHT, this.musicPlayer,this.buttonListener); // 1 index in the list
         this.add(gamePanel);
         this.panels.add(this.gamePanel);
         this.showOnlyOnePanel();
