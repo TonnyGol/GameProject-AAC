@@ -43,7 +43,6 @@ public class MusicPlayer{
         }
     }
 
-
     public void setVolumeBackgroundMusic(float volume) {
         if(volume >= MIN_VOLUME || volume <= MAX_VOLUME){
             if (BackgroundMusicVolumeControl != null) {

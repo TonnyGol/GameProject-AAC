@@ -1,8 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class Enemy extends Character {
     private final String RUN_RIGHT_IMAGES_PATH = "resources\\Images\\WolfWalk";
@@ -12,12 +9,12 @@ public class Enemy extends Character {
     private final String DIE_RIGHT_IMAGES_PATH = "resources\\Images\\WolfDead";
     private final String DIE_LEFT_IMAGES_PATH = "resources\\Images\\WolfDeadBack";
 
-    private final int CHARACTER_SPEED = 5;
+    private final int ENEMY_SPEED = 5;
     private final int RUN_FRAME_COUNT = 11;
     private final int ATTACK_FRAME_COUNT = 4;
     private final int DEATH_FRAME_COUNT = 2;
 
-    private final Player player;
+    private Player player;
 
     public Enemy(int startX, int startY, Player player, HashSet<Rectangle> obstacles) {
         super(startX, startY, obstacles);
@@ -31,9 +28,10 @@ public class Enemy extends Character {
         this.setDeathRightFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_RIGHT_IMAGES_PATH));
         this.setDeathLeftFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_LEFT_IMAGES_PATH));
         this.setCurrentFrame(this.getDefaultFrameRight());
+
         this.player = player;
     }
-    @Override
+
     public void paint(Graphics g) {
         g.drawImage(this.getCurrentFrame(),
                 this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
@@ -44,9 +42,11 @@ public class Enemy extends Character {
         this.checkMovementDirection();
         this.checkIfAttacking();
         this.checkBulletCollision();
+        this.checkPlayerCollision();
         this.checkAlive();
     }
-    public void checkMovementDirection(){
+
+    private void checkMovementDirection(){
         if (this.getX() > this.player.getX()){
             this.setCharacterMovingLeft(true);
             this.setCharacterMovingRight(false);
@@ -57,9 +57,11 @@ public class Enemy extends Character {
             this.setCurrentFrame(this.getRunRightFrames().get(this.getRunFrameIndex()));
         }
     }
-    public void checkIfAttacking(){
+
+    private void checkIfAttacking(){
         Rectangle attackHitBox = new Rectangle((int) this.getHitBox().getX(),
                 (int) this.getHitBox().getY() + 105, (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight()/2);
+
         if(attackHitBox.intersects(player.getHitBox())){
             this.setCharacterAttacking(true);
             if (this.isCharacterMovingLeft()){
@@ -72,7 +74,8 @@ public class Enemy extends Character {
             this.setCharacterAttacking(false);
         }
     }
-    public void checkBulletCollision(){
+
+    private void checkBulletCollision(){
         for (Bullet bullet : this.player.getBullets()){
             if (this.getHitBox().intersects(bullet)){
                 if (this.isAlive()){
@@ -81,11 +84,20 @@ public class Enemy extends Character {
                 bullet.setBounds(0,0,0,0);
                 this.setHitBox(new Rectangle(0,0,0,0));
                 this.setAlive(false);
-                System.out.println("Dead");
             }
         }
     }
-    public void checkAlive(){
+
+    private void checkPlayerCollision(){
+        if (this.getHitBox().intersects(this.player.getAttackHitBox())){
+            if (this.player.isCharacterAttacking()){
+                this.setHitBox(new Rectangle(0,0,0,0));
+                this.setAlive(false);
+            }
+        }
+    }
+
+    private void checkAlive(){
         if (this.isAlive()){
             if(!this.isCharacterAttacking()){
                 this.moveTowardsPlayer();
@@ -99,8 +111,7 @@ public class Enemy extends Character {
         }
     }
 
-
-    protected void loopBetweenFrames() {
+    private void loopBetweenFrames() {
         this.setRunFrameIndex(this.getRunFrameIndex() + 1);
         if (this.getRunFrameIndex() % this.getRunRightFrames().size() == 0) {
             this.setRunFrameIndex(0);
@@ -114,38 +125,38 @@ public class Enemy extends Character {
         }
     }
 
-    public void moveTowardsPlayer() {
+    private void moveTowardsPlayer() {
         int distanceX = this.getX() - this.player.getX();
         int distanceY = this.getY() - this.player.getY();
         if(this.canMove()) {
             if (distanceX > 0) {
-                this.setDx(-CHARACTER_SPEED); // move left
+                this.setDx(-ENEMY_SPEED); // move left
             } else {
-                this.setDx(CHARACTER_SPEED); // move right
+                this.setDx(ENEMY_SPEED); // move right
             }
             if (distanceY > 0) {
-                this.setDy(-CHARACTER_SPEED); // move up
+                this.setDy(-ENEMY_SPEED); // move up
             } else {
-                this.setDy(CHARACTER_SPEED); // move down
+                this.setDy(ENEMY_SPEED); // move down
             }
             this.move();
         }else {
             if (distanceX > 0){ // if he goes left and got stuck
-                this.setDx(-CHARACTER_SPEED);
-                this.setDy(CHARACTER_SPEED);
+                this.setDx(-ENEMY_SPEED);
+                this.setDy(ENEMY_SPEED);
             }else if (distanceX < 0){ // if he goes right and got stuck
-                this.setDx(CHARACTER_SPEED);
-                this.setDy(CHARACTER_SPEED);
+                this.setDx(ENEMY_SPEED);
+                this.setDy(ENEMY_SPEED);
             }
             else if (distanceY > 0){ // if he goes up and got stuck
-                this.setDy(CHARACTER_SPEED);
-                this.setDx(CHARACTER_SPEED);
+                this.setDy(ENEMY_SPEED);
+                this.setDx(ENEMY_SPEED);
             }else if (distanceY < 0){ // if he goes down and got stuck
-                this.setDy(-CHARACTER_SPEED);
-                this.setDx(CHARACTER_SPEED);
+                this.setDy(-ENEMY_SPEED);
+                this.setDx(ENEMY_SPEED);
             }
             if(this.getY() >= this.getLOWER_BOUNDARY_Y() / 2){
-                this.setDy(-CHARACTER_SPEED);
+                this.setDy(-ENEMY_SPEED);
             }
             this.move();
         }
@@ -154,10 +165,13 @@ public class Enemy extends Character {
     public boolean canMove(){
         boolean checkCollisionOk = true;
         int yPosition = this.getY() + this.getDy();
+
         Rectangle CollisionHitBox = new Rectangle((int) this.getHitBox().getX(),
                 (int) this.getHitBox().getY() + 105, (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight()/2);
+
         boolean yPositionOk = yPosition <= this.getLOWER_BOUNDARY_Y() && yPosition >= this.getUPPER_BOUNDARY_Y();
         this.getHitBox().setLocation((int) (this.getHitBox().getX() + this.getDx()), (int) (this.getHitBox().getY() + this.getDy()));
+
         for (Rectangle obstacle : this.getObstacles()){
             if (CollisionHitBox.intersects(obstacle)){
                 System.out.println("Hit");
@@ -166,7 +180,6 @@ public class Enemy extends Character {
         }
         return yPositionOk && checkCollisionOk;
     }
-
 
     public void move(){
         this.setX(this.getX() + this.getDx());

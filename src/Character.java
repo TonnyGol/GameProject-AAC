@@ -73,6 +73,7 @@ public abstract class Character {
         this.isCharacterMovingLeft = false;
     }
 
+
     public int getCHARACTER_WIDTH() {
         return CHARACTER_WIDTH;
     }

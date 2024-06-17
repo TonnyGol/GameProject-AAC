@@ -3,13 +3,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class GameKeyListener implements KeyListener {
-    GamePanel gamePanel;
-    Player player;
-    boolean wPressed, sPressed, aPressed, dPressed, spacePressed;
+    private GamePanel gamePanel;
+    private Player player;
+    private WindowFrame windowFrame;
+    private boolean wPressed, sPressed, aPressed, dPressed, spacePressed;
 
-    public GameKeyListener(GamePanel gamePanel, Player player){
+    public GameKeyListener(GamePanel gamePanel, Player player, WindowFrame windowFrame){
         this.gamePanel = gamePanel;
         this.player = player;
+        this.windowFrame = windowFrame;
         this.wPressed = false;
         this.sPressed = false;
         this.aPressed = false;
@@ -25,45 +27,49 @@ public class GameKeyListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         this.player.setCharacterStanding(false);
+
         if (keyCode == KeyEvent.VK_ESCAPE) {
-            WindowFrame.panelChoice = 0;
-            WindowFrame.switchPanels = true;
+            this.windowFrame.setPanelChoice(0);
+            this.windowFrame.setSwitchPanels(true);
         }
         if(!this.player.isCharacterReloading() && this.player.isAlive()){
-            if (keyCode == KeyEvent.VK_W){
-                this.wPressed = true;
-                this.player.setCharacterMovingRight(true);
-                this.makeRunOnSandSound();
-                this.player.setDy(-this.player.getCHARACTER_SPEED());
-            }
-            if (keyCode == KeyEvent.VK_S){
-                this.sPressed = true;
-                this.player.setCharacterMovingRight(true);
-                this.makeRunOnSandSound();
-                this.player.setDy(this.player.getCHARACTER_SPEED());
-            }
-            if (keyCode == KeyEvent.VK_D){
-                this.dPressed = true;
-                this.player.setCharacterMovingRight(true);
-                this.player.setCharacterMovingLeft(false);
-                this.makeRunOnSandSound();
-                this.player.setDx(this.player.getCHARACTER_SPEED());
-            }
-            if (keyCode == KeyEvent.VK_A){
-                this.aPressed = true;
-                this.player.setCharacterMovingRight(true);
-                this.player.setCharacterMovingLeft(true);
-                this.makeRunOnSandSound();
-                this.player.setDx(-this.player.getCHARACTER_SPEED());
-            }
-            if (keyCode == KeyEvent.VK_SPACE){
-                this.spacePressed = true;
-                this.player.setCharacterAttacking(true);
-                if(player.isCharacterMovingLeft()){
-                    this.player.setDx(-this.player.getCHARACTER_SPEED());
-                }else{
-                    this.player.setDx(this.player.getCHARACTER_SPEED());
+            switch (keyCode){
+                case KeyEvent.VK_W ->{
+                    this.wPressed = true;
+                    this.player.setCharacterMovingRight(true);
+                    this.makeRunOnSandSound();
+                    this.player.setDy(-this.player.getPLAYER_SPEED());
                 }
+                case KeyEvent.VK_S ->{
+                    this.sPressed = true;
+                    this.player.setCharacterMovingRight(true);
+                    this.makeRunOnSandSound();
+                    this.player.setDy(this.player.getPLAYER_SPEED());
+                }
+                case KeyEvent.VK_D ->{
+                    this.dPressed = true;
+                    this.player.setCharacterMovingRight(true);
+                    this.player.setCharacterMovingLeft(false);
+                    this.makeRunOnSandSound();
+                    this.player.setDx(this.player.getPLAYER_SPEED());
+                }
+                case KeyEvent.VK_A ->{
+                    this.aPressed = true;
+                    this.player.setCharacterMovingRight(true);
+                    this.player.setCharacterMovingLeft(true);
+                    this.makeRunOnSandSound();
+                    this.player.setDx(-this.player.getPLAYER_SPEED());
+                }
+                case KeyEvent.VK_SPACE -> {
+                    this.spacePressed = true;
+                    this.player.setCharacterAttacking(true);
+                    if(player.isCharacterMovingLeft()){
+                        this.player.setDx(-this.player.getPLAYER_SPEED());
+                    }else{
+                        this.player.setDx(this.player.getPLAYER_SPEED());
+                    }
+                }
+                default -> System.out.println("A Key pressed " + e.getKeyChar());
             }
         }
 
@@ -77,13 +83,14 @@ public class GameKeyListener implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e){
         int keyCode = e.getKeyCode();
+
         switch (keyCode){
             case KeyEvent.VK_W -> this.wPressed = false;
             case KeyEvent.VK_S -> this.sPressed = false;
             case KeyEvent.VK_D -> this.dPressed = false;
             case KeyEvent.VK_A -> this.aPressed = false;
             case KeyEvent.VK_SPACE -> this.spacePressed = false;
-            default -> System.out.println("A key released");
+            default -> System.out.println("A key released " + e.getKeyChar());
         }
 
         if (!this.aPressed && !this.dPressed){

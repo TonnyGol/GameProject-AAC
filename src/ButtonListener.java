@@ -3,19 +3,29 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class ButtonListener implements MouseListener {
-    private final MusicPlayer musicPlayer;
+    private MusicPlayer musicPlayer;
+    private WindowFrame windowFrame;
     private GamePanel gamePanel;
     private SettingsPanel settingsPanel;
 
-    public ButtonListener(MusicPlayer musicPlayer){
-        this.musicPlayer = musicPlayer;
+    public ButtonListener(WindowFrame windowFrame){
+        this.windowFrame = windowFrame;
     }
-    public ButtonListener(MusicPlayer musicPlayer, GamePanel gamePanel){
+    public ButtonListener(WindowFrame windowFrame, GamePanel gamePanel){
         this.gamePanel = gamePanel;
+        this.windowFrame = windowFrame;
+    }
+    public ButtonListener(MusicPlayer musicPlayer, WindowFrame windowFrame){
+        this.windowFrame = windowFrame;
         this.musicPlayer = musicPlayer;
     }
     public ButtonListener(MusicPlayer musicPlayer, SettingsPanel settingsPanel){
         this.musicPlayer = musicPlayer;
+        this.settingsPanel = settingsPanel;
+    }
+    public ButtonListener(MusicPlayer musicPlayer, SettingsPanel settingsPanel, WindowFrame windowFrame){
+        this.musicPlayer = musicPlayer;
+        this.windowFrame = windowFrame;
         this.settingsPanel = settingsPanel;
     }
 
@@ -25,19 +35,23 @@ public class ButtonListener implements MouseListener {
         String command = label.getName();
         switch (command){
             case "Play":
-                WindowFrame.panelChoice = 1;
-                WindowFrame.switchPanels = true;
+                this.windowFrame.setPanelChoice(1);
+                this.windowFrame.setSwitchPanels(true);
                 break;
             case "Instructions":
-                WindowFrame.panelChoice = 2;
-                WindowFrame.switchPanels = true;
+                this.windowFrame.setPanelChoice(2);
+                this.windowFrame.setSwitchPanels(true);
                 break;
             case "Settings":
-                WindowFrame.panelChoice = 3;
-                WindowFrame.switchPanels = true;
+                this.windowFrame.setPanelChoice(3);
+                this.windowFrame.setSwitchPanels(true);
                 break;
             case "Quit":
                 System.exit(0);
+                break;
+            case "Back":
+                this.windowFrame.setPanelChoice(0);
+                this.windowFrame.setSwitchPanels(true);
                 break;
             case "Volume_ON", "Volume_OFF":
                 this.settingsPanel.setSwitchMusicVolume(true);
@@ -56,10 +70,6 @@ public class ButtonListener implements MouseListener {
                     this.musicPlayer.setVolumeSoundFx(0.7f);
                     this.settingsPanel.setSoundFxVolumeChanged(true);
                 }
-                break;
-            case "Back":
-                WindowFrame.panelChoice = 0;
-                WindowFrame.switchPanels = true;
                 break;
             case "RaiseMusic":
                 this.musicPlayer.setVolumeBackgroundMusic(this.musicPlayer.getVolumeBackgroundMusic() + 0.10f);
@@ -84,8 +94,8 @@ public class ButtonListener implements MouseListener {
                 this.gamePanel.replay();
                 break;
             case "GiveUp":
-                WindowFrame.panelChoice = 0;
-                WindowFrame.switchPanels = true;
+                this.windowFrame.setPanelChoice(0);
+                this.windowFrame.setSwitchPanels(true);
                 this.gamePanel.getEnemies().clear();
                 this.gamePanel.setCountTimer(0);
                 this.gamePanel.getPlayer().setPoints(0);

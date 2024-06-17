@@ -32,8 +32,6 @@ public class GameMouseListener implements MouseListener {
                 this.player.setCharacterMovingLeft(
                         xMouseClick <= this.player.getX() + this.player.getCHARACTER_WIDTH() / 2);
             }
-
-
         }
     }
 

@@ -32,9 +32,9 @@ public class Main {
         return label;
     }
 
-    public static void sleep(long milisec){
+    public static void sleep(long millisecond){
         try {
-            Thread.sleep(milisec);
+            Thread.sleep(millisecond);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

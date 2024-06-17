@@ -4,6 +4,7 @@ public class Bullet extends Rectangle {
     private final int BULLET_SPEED = 100;
     private final int BULLET_WIDTH = 20;
     private final int BULLET_HEIGHT = 3;
+
     private int direction;
 
     public Bullet(int x, int y, int direction) {
