@@ -54,7 +54,10 @@ public class InstructionsPanel extends JPanel {
                 (int)(this.getHeight()/1.25), this.getWidth()/4, this.getHeight()/6);
         this.add(backLabel);
 
-        this.mainInstructionPanelLoop();
+        this.renderInstructionPanelLoop();
+        this.updateMovementAnimation();
+        this.updateShootAnimation();
+        this.updateAttackAnimation();
     }
 
     public void paintComponent(Graphics g) {
@@ -74,28 +77,46 @@ public class InstructionsPanel extends JPanel {
                 PLAYER_ANIMATION_WIDTH, PLAYER_ANIMATION_HEIGHT, this);
     }
 
-    private void update(){
-        this.movementFrameCount++;
-        this.shootFrameCount++;
-        this.attackFrameCount++;
-
-        if (this.movementFrameCount % this.movementFrames.size() == 0){
-            this.movementFrameCount = 0;
-        }
-        if (this.shootFrameCount % this.shootFrames.size() == 0){
-            this.shootFrameCount = 0;
-        }
-        if (this.attackFrameCount % this.attackFrames.size() == 0) {
-            this.attackFrameCount = 0;
-        }
+    private void updateMovementAnimation(){
+        new Thread(()->{
+            while (true){
+                this.movementFrameCount++;
+                if (this.movementFrameCount % this.movementFrames.size() == 0){
+                    this.movementFrameCount = 0;
+                }
+                Main.sleep(100);
+            }
+        }).start();
     }
 
-    private void mainInstructionPanelLoop(){
+    private void updateShootAnimation(){
+        new Thread(()->{
+            while (true){
+                this.shootFrameCount++;
+                if (this.shootFrameCount % this.shootFrames.size() == 0){
+                    this.shootFrameCount = 0;
+                }
+                Main.sleep(60);
+            }
+        }).start();
+    }
+
+    private void updateAttackAnimation(){
+        new Thread(()->{
+            while (true){
+                this.attackFrameCount++;
+                if (this.attackFrameCount % this.attackFrames.size() == 0) {
+                    this.attackFrameCount = 0;
+                }
+                Main.sleep(100);
+            }
+        }).start();
+    }
+
+    private void renderInstructionPanelLoop(){
         new Thread(() ->{
             while (true){
-                update();
                 repaint();
-                Main.sleep(60);
             }
         }).start();
     }

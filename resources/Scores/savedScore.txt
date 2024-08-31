@@ -1,7 +1,5 @@
-Time: 2 | Points: 0
-Time: 8 | Points: 30
-Time: 9 | Points: 60
-Time: 13 | Points: 90
+Time: 3 | Points: 0
+Time: 4 | Points: 20
 Time: 1 | Points: 0
-Time: 5 | Points: 30
-Time: 7 | Points: 20
+Time: 341 | Points: 3280
+Time: 16 | Points: 60
