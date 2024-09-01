@@ -32,18 +32,13 @@ public class Enemy extends Character {
         this.player = player;
     }
 
-    public void paint(Graphics g) {
-        g.drawImage(this.getCurrentFrame(),
-                this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-        this.loopBetweenFrames();
-    }
-
     public void update(){
         this.checkMovementDirection();
         this.checkIfAttacking();
         this.checkBulletCollision();
         this.checkPlayerCollision();
         this.checkAlive();
+        this.loopBetweenFrames();
     }
 
     private void checkMovementDirection(){
@@ -76,14 +71,20 @@ public class Enemy extends Character {
     }
 
     private void checkBulletCollision(){
-        for (Bullet bullet : this.player.getBullets()){
-            if (this.getHitBox().intersects(bullet)){
-                if (this.isAlive()){
-                    this.player.setPoints(this.player.getPoints() + 10);
+        if (GamePanel.bulletsResourceLock.tryLock()) {
+            try {
+                for (Bullet bullet : this.player.getBullets()){
+                    if (this.getHitBox().intersects(bullet)){
+                        if (this.isAlive()){
+                            this.player.setPoints(this.player.getPoints() + 10);
+                        }
+                        bullet.setBounds(0,0,0,0);
+                        this.setHitBox(new Rectangle(0,0,0,0));
+                        this.setAlive(false);
+                    }
                 }
-                bullet.setBounds(0,0,0,0);
-                this.setHitBox(new Rectangle(0,0,0,0));
-                this.setAlive(false);
+            } finally {
+                GamePanel.bulletsResourceLock.unlock();
             }
         }
     }

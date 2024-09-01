@@ -40,7 +40,6 @@ public abstract class Character {
     private boolean isCharacterMovingLeft;
     private boolean isCharacterAttacking;
 
-    public abstract void paint(Graphics g);
     public abstract void update();
     public abstract boolean canMove();
     public abstract void move();

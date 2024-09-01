@@ -37,6 +37,7 @@ public class Player extends Character {
     private int shootFrameIndex;
     private int reloadFrameIndex;
     private int points;
+    private boolean allBulletsGone;
 
     private List<Bullet> bullets;
     private Rectangle attackHitBox;
@@ -61,6 +62,7 @@ public class Player extends Character {
         this.setCurrentFrame(this.getDefaultFrameRight());
 
         this.points = 0;
+        this.allBulletsGone = false;
         this.shootFrameIndex = 0;
         this.reloadFrameIndex = 0;
 
@@ -76,17 +78,6 @@ public class Player extends Character {
         this.reloadRightFrames = Main.loadFrames(RELOAD_FRAME_COUNT, RELOAD_RIGHT_IMAGES_PATH);
         this.reloadLeftFrames = Main.loadFrames(RELOAD_FRAME_COUNT, RELOAD_LEFT_IMAGES_PATH);
 
-    }
-
-    public void paint(Graphics g){
-        g.drawImage(this.getCurrentFrame(),
-                this.getX(), this.getY(), this.getCHARACTER_WIDTH(), this.getCHARACTER_HEIGHT(),null);
-
-        for (Bullet bullet : this.bullets){
-            g.fillRect((int) bullet.getX(), (int) bullet.getY(), (int) bullet.getWidth(), (int) bullet.getHeight());
-        }
-
-        this.loopBetweenFrames();
     }
 
     public void update(){
@@ -107,19 +98,26 @@ public class Player extends Character {
             }else {
                 this.setCurrentFrame(this.reloadRightFrames.get(this.reloadFrameIndex));
             }
+            this.loopBetweenFrames();
         }
         if (this.bullets.size() == AMMO_CAPACITY){
             this.isCharacterReloading = true;
-            boolean allBulletsGone = true; // if all the bullets are out of bounds of window
-            for (Bullet bullet : this.bullets){
-                allBulletsGone = bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45;
-            }
-            if (allBulletsGone){
-                this.bullets.clear();
-            }
+            allBulletsGone = true; // if all the bullets are out of bounds of window
         }
-        for (Bullet bullet : this.bullets){
-            bullet.fly();
+        if (GamePanel.bulletsResourceLock.tryLock()) {
+            try {
+                for (Bullet bullet : this.bullets){
+                    allBulletsGone = bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45;
+                }
+                if (allBulletsGone){
+                    this.bullets.clear();
+                }
+                for (Bullet bullet : this.bullets){
+                    bullet.fly();
+                }
+            } finally {
+                GamePanel.bulletsResourceLock.unlock();
+            }
         }
     }
 
@@ -134,6 +132,7 @@ public class Player extends Character {
                     this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
                     this.setCurrentFrame(this.shootRightFrames.get(this.shootFrameIndex));
                 }
+                this.loopBetweenFrames();
             }
         }
     }
@@ -146,6 +145,7 @@ public class Player extends Character {
                 }else {
                     this.setCurrentFrame(this.getAttackRightFrames().get(this.getAttackFrameIndex()));
                 }
+                this.loopBetweenFrames();
             }
         }
     }
@@ -173,6 +173,7 @@ public class Player extends Character {
                         this.setCurrentFrame(this.getDefaultFrameRight());
                     }
                 }
+                this.loopBetweenFrames();
             }
         }
     }
@@ -187,6 +188,7 @@ public class Player extends Character {
                 else{
                     this.setCurrentFrame(this.getDefaultFrameRight());
                 }
+                this.loopBetweenFrames();
             }
         }
     }
@@ -198,13 +200,20 @@ public class Player extends Character {
             }else {
                 this.setCurrentFrame(this.getDeathRightFrames().get(this.getDeathFrameIndex()));
             }
+            this.loopBetweenFrames();
         }
     }
 
     private void createAndShootBullet(int xBullet, int yBullet, int direction) {
         if (!this.isCharacterReloading){
             Bullet newBullet = new Bullet(xBullet, yBullet, direction);
-            this.bullets.add(newBullet);
+            if (GamePanel.bulletsResourceLock.tryLock()) {
+                try {
+                    this.bullets.add(newBullet);
+                } finally {
+                    GamePanel.bulletsResourceLock.unlock();
+                }
+            }
         }
     }
 
@@ -224,7 +233,6 @@ public class Player extends Character {
 
         for (Rectangle obstacle : this.getObstacles()){
             if (this.getHitBox().intersects(obstacle)){
-                System.out.println("Hit");
                 return false;
             }
         }

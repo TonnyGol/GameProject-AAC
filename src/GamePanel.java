@@ -3,6 +3,8 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class GamePanel extends JPanel {
     private final String GAME_BG_FILE_PATH = "resources\\Images\\gameBackground.png";
@@ -19,10 +21,8 @@ public class GamePanel extends JPanel {
     private final int POINTS_X_POSITION = 250;
     private final int POINTS_Y_POSITION = 40;
 
-    private final int FPS = 25;
     private int countTimer; // (counter/25) = counter of seconds while the game is running
-    private long lastSpawnTime;
-    private final int SPAWN_INTERVAL = 1000; // 1000 = 1 sec between enemy spawn
+    private final int ENEMIES_SPAWN_INTERVAL = 2000; // 1000 = 1 sec between enemy spawn
 
     private boolean canSave;
     private File savedScores;
@@ -35,6 +35,10 @@ public class GamePanel extends JPanel {
     private MusicPlayer musicPlayer;
     private WindowFrame windowFrame;
 
+    private Lock enemyResourceLock;
+    private Lock playerResourceLock;
+    public static Lock bulletsResourceLock;
+
     private JLabel giveUpLabel;
     private JLabel replayLabel;
 
@@ -46,11 +50,14 @@ public class GamePanel extends JPanel {
 
         this.musicPlayer = musicPlayer;
 
+        this.enemyResourceLock = new ReentrantLock();
+        this.playerResourceLock = new ReentrantLock();
+        bulletsResourceLock = new ReentrantLock();
+
         this.canSave = true;
         this.savedScores = new File(SAVED_SCORES_FILE_PATH);
         this.savedScoreLines = loadSavedScore();
 
-        this.lastSpawnTime = 0;
         this.countTimer = 0;
 
         this.obstacles = createObstacles(3);
@@ -76,7 +83,12 @@ public class GamePanel extends JPanel {
 
         this.addKeyListener(new GameKeyListener(this, this.player, this.windowFrame));
         this.addMouseListener(new GameMouseListener(this, this.player));
-        this.mainGamePanelLoop();
+
+        //Threads of the game
+        this.renderGamePanelLoop();
+        this.spawnEnemies();
+        this.updatePlayer();
+        this.updateEnemies();
     }
     private HashSet<Rectangle> createObstacles(int count){
         HashSet<Rectangle> obstacles = new HashSet<>(count);
@@ -89,51 +101,114 @@ public class GamePanel extends JPanel {
         return obstacles;
     }
 
-    private void update(){
-        this.player.update();
-        for (Enemy enemy : this.enemies){
-            enemy.update();
-        }
-        if(!this.player.isAlive()) {
-            this.giveUpLabel.setFocusable(true);
-            this.giveUpLabel.setVisible(true);
-            this.replayLabel.setFocusable(true);
-            this.replayLabel.setVisible(true);
-            if (this.canSave){
-                this.saveScore();
-                this.canSave = false;
-            }
-        }
-    }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
 
-        this.player.paint(g);
+        if (playerResourceLock.tryLock()) {
+            try {
+                g.drawImage(this.player.getCurrentFrame(),
+                        this.player.getX(), this.player.getY(),
+                        this.player.getCHARACTER_WIDTH(), this.player.getCHARACTER_HEIGHT(),null);
+            } finally {
+                playerResourceLock.unlock();
+            }
+        }
 
-        for (Enemy enemy : this.enemies){
-            enemy.paint(g);
+        if (bulletsResourceLock.tryLock()) {
+            try {
+                for (Bullet bullet : this.player.getBullets()){
+                    g.fillRect((int) bullet.getX(), (int) bullet.getY(), (int) bullet.getWidth(), (int) bullet.getHeight());
+                }
+            } finally {
+                bulletsResourceLock.unlock();
+            }
+        }
+
+        if (enemyResourceLock.tryLock()) {
+            try {
+                for (Enemy enemy : this.enemies){
+                    g.drawImage(enemy.getCurrentFrame(),
+                            enemy.getX(), enemy.getY(),
+                            enemy.getCHARACTER_WIDTH(), enemy.getCHARACTER_HEIGHT(),null);
+                }
+            } finally {
+                enemyResourceLock.unlock();
+            }
         }
 
         g.setFont(new Font(null, Font.PLAIN, 30));
-        g.drawString("Time: " + this.countTimer / 25 + " sec", TIMER_X_POSITION, TIMER_Y_POSITION);
+        g.drawString("Time: " + this.countTimer / 1500000 + " sec", TIMER_X_POSITION, TIMER_Y_POSITION);
         g.drawString("Points: " + this.player.getPoints(), POINTS_X_POSITION, POINTS_Y_POSITION);
+
     }
 
-    private void spawnEnemy(long deltaTime){
+    private void updatePlayer(){
+        new Thread(()->{
+            while(true){
+                if (this.windowFrame.getPanelChoice() == 1){
+                    if (playerResourceLock.tryLock()) {
+                        try {
+                            this.player.update();
+                        } finally {
+                            playerResourceLock.unlock();
+                        }
+                    }
+                    Main.sleep(30);
+                }
+
+            }
+        }).start();
+    }
+
+    private void updateEnemies(){
+        new Thread(()->{
+            while (true){
+                if (this.windowFrame.getPanelChoice() == 1){
+                    if (enemyResourceLock.tryLock()) {
+                        try {
+                            for (Enemy enemy : this.enemies){
+                                enemy.update();
+                            }
+                        } finally {
+                            enemyResourceLock.unlock();
+                        }
+                    }
+                    Main.sleep(30);
+                }
+
+            }
+        }).start();
+
+    }
+
+    private void spawnEnemy(){
         int xStart = new Random().nextInt(this.windowFrame.getDEFAULT_POSITION() - 200, this.windowFrame.getDEFAULT_POSITION());
         int xStart2 = new Random().nextInt(this.getWidth() + 10, this.getWidth() + 200);
         int yStart = new Random().nextInt(this.player.getUPPER_BOUNDARY_Y(), this.player.getLOWER_BOUNDARY_Y());
         int xChosenStart = new Random().nextBoolean() ? xStart : xStart2;
-        this.lastSpawnTime += deltaTime;
-
-        if (this.lastSpawnTime >= SPAWN_INTERVAL) {
-            Enemy newEnemy = new Enemy(xChosenStart, yStart, this.player, this.obstacles);
-            this.enemies.removeIf(enemy -> !enemy.isAlive());
-            this.enemies.add(newEnemy);
-            this.lastSpawnTime = 0;
+        Enemy newEnemy = new Enemy(xChosenStart, yStart, this.player, this.obstacles);
+        if (enemyResourceLock.tryLock()) {
+            try {
+                this.enemies.removeIf(enemy -> !enemy.isAlive());
+                this.enemies.add(newEnemy);
+            } finally {
+                enemyResourceLock.unlock();
+            }
         }
+
+    }
+
+    private void spawnEnemies(){
+        new Thread(()->{
+            while (true){
+                if (this.windowFrame.getPanelChoice() == 1){
+                    this.spawnEnemy();
+                    Main.sleep(ENEMIES_SPAWN_INTERVAL);
+                }
+
+            }
+        }).start();
     }
 
     private List<String> loadSavedScore(){
@@ -158,7 +233,7 @@ public class GamePanel extends JPanel {
         try {
             FileWriter fileWriter = new FileWriter(this.savedScores);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            String newScore = "Time: "+this.countTimer/25+" | "+"Points: "+this.player.getPoints();
+            String newScore = "Time: "+this.countTimer/1500000+" | "+"Points: "+this.player.getPoints();
             this.savedScoreLines.add(newScore);
             String allScores = String.join("\n", this.savedScoreLines);
             bufferedWriter.write(allScores);
@@ -179,34 +254,27 @@ public class GamePanel extends JPanel {
         this.replayLabel.setVisible(false);
     }
 
-    private void mainGamePanelLoop(){
+    private void renderGamePanelLoop(){
         new Thread(() -> {
-            double drawInterval = (double) 1000000000 / FPS;
-            double delta = 0;
-            long lastTime = System.nanoTime();
-            long currentTimeNano;
-
-            long previousTime = System.currentTimeMillis();
             while (true) {
-                long currentTimeMillis = System.currentTimeMillis();
-                long deltaTime = currentTimeMillis - previousTime;
-                previousTime = currentTimeMillis;
-                if (this.windowFrame.getPanelChoice() == 1 && this.player.isAlive()){
-                    this.spawnEnemy(deltaTime); // spawns enemies only if you in the game window
-                }
-                currentTimeNano = System.nanoTime();
-                delta += (currentTimeNano - lastTime) / drawInterval;
-                lastTime = currentTimeNano;
-                if (delta >= 1) {
-                    if (this.windowFrame.getPanelChoice() == 1){ // timer goes up, update happens and repaint, only when you in the game window
-                        if (this.player.isAlive()){
-                            this.countTimer++;
-                        }
-                        update();
-                        repaint();
+                if (this.windowFrame.getPanelChoice() == 1){
+                    if (player.isAlive()){
+                        this.countTimer++;
                     }
-                    delta--;
                 }
+
+                if(!this.player.isAlive()) {
+                    this.giveUpLabel.setFocusable(true);
+                    this.giveUpLabel.setVisible(true);
+                    this.replayLabel.setFocusable(true);
+                    this.replayLabel.setVisible(true);
+                    if (this.canSave){
+                        this.saveScore();
+                        this.canSave = false;
+                    }
+                }
+                Main.sleep(30);
+                repaint();
             }
         }).start();
     }
