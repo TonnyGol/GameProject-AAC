@@ -24,9 +24,11 @@ Time: 245341 | Points: 0
 Time: 349705 | Points: 0
 Time: 1455317 | Points: 340
 Time: 0 | Points: 0
-Time: 1951432 | Points: 380
-Time: 648836 | Points: 60
 Time: 11 | Points: 60
 Time: 19 | Points: 130
 Time: 0 | Points: 60
 Time: 0 | Points: 0
+Time: 74 | Points: 130
+Time: 8 sec | Points: 0
+Time: 10 sec | Points: 0
+Time: 7 sec | Points: 0

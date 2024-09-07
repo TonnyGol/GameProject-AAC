@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
     private final int POINTS_Y_POSITION = 40;
 
     private int countTimer; // (counter/25) = counter of seconds while the game is running
-    private final int ENEMIES_SPAWN_INTERVAL = 2000; // 1000 = 1 sec between enemy spawn
+    private final int ENEMIES_SPAWN_INTERVAL = 2000; // 2000 = 2 sec between enemy spawn
 
     private boolean canSave;
     private File savedScores;
@@ -36,7 +36,7 @@ public class GamePanel extends JPanel {
     private WindowFrame windowFrame;
 
     private Lock enemyResourceLock;
-    private Lock playerResourceLock;
+    public static Lock playerResourceLock;
     public static Lock bulletsResourceLock;
 
     private JLabel giveUpLabel;
@@ -141,22 +141,23 @@ public class GamePanel extends JPanel {
         g.drawString("Time: " + this.countTimer / 1500000 + " sec", TIMER_X_POSITION, TIMER_Y_POSITION);
         g.drawString("Points: " + this.player.getPoints(), POINTS_X_POSITION, POINTS_Y_POSITION);
 
+        Main.sleep(30);
+
     }
 
     private void updatePlayer(){
         new Thread(()->{
             while(true){
                 if (this.windowFrame.getPanelChoice() == 1){
-                    if (playerResourceLock.tryLock()) {
-                        try {
-                            this.player.update();
-                        } finally {
-                            playerResourceLock.unlock();
-                        }
-                    }
-                    Main.sleep(30);
+                    this.player.update();
+//                    if (playerResourceLock.tryLock()) {
+//                        try {
+//
+//                        } finally {
+//                            playerResourceLock.unlock();
+//                        }
+//                    }
                 }
-
             }
         }).start();
     }
@@ -233,7 +234,7 @@ public class GamePanel extends JPanel {
         try {
             FileWriter fileWriter = new FileWriter(this.savedScores);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            String newScore = "Time: "+this.countTimer/1500000+" | "+"Points: "+this.player.getPoints();
+            String newScore = "Time: "+this.countTimer/1500000+" sec | "+"Points: "+this.player.getPoints();
             this.savedScoreLines.add(newScore);
             String allScores = String.join("\n", this.savedScoreLines);
             bufferedWriter.write(allScores);
@@ -273,7 +274,6 @@ public class GamePanel extends JPanel {
                         this.canSave = false;
                     }
                 }
-                Main.sleep(30);
                 repaint();
             }
         }).start();

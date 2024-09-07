@@ -83,6 +83,7 @@ public class Player extends Character {
     public void update(){
         this.checkIfAlive();
         if (this.isAlive()){
+            this.checkBulletsMovement();
             this.checkIfReloading();
             this.checkIfShooting();
             this.checkIfAttacking();
@@ -91,15 +92,7 @@ public class Player extends Character {
         }
     }
 
-    private void checkIfReloading(){
-        if(this.isCharacterReloading){
-            if (this.isCharacterMovingLeft()){
-                this.setCurrentFrame(this.reloadLeftFrames.get(this.reloadFrameIndex));
-            }else {
-                this.setCurrentFrame(this.reloadRightFrames.get(this.reloadFrameIndex));
-            }
-            this.loopBetweenFrames();
-        }
+    private void checkBulletsMovement(){
         if (this.bullets.size() == AMMO_CAPACITY){
             this.isCharacterReloading = true;
             allBulletsGone = true; // if all the bullets are out of bounds of window
@@ -118,6 +111,17 @@ public class Player extends Character {
             } finally {
                 GamePanel.bulletsResourceLock.unlock();
             }
+        }
+    }
+
+    private void checkIfReloading(){
+        if(this.isCharacterReloading){
+            if (this.isCharacterMovingLeft()){
+                this.setCurrentFrame(this.reloadLeftFrames.get(this.reloadFrameIndex));
+            }else {
+                this.setCurrentFrame(this.reloadRightFrames.get(this.reloadFrameIndex));
+            }
+            this.loopBetweenFrames();
         }
     }
 
@@ -245,18 +249,21 @@ public class Player extends Character {
             if (this.getRunFrameIndex() % this.getRunRightFrames().size() == 0){
                 this.setRunFrameIndex(0);
             }
+            Main.sleep(40);
         }
         if (this.isCharacterShooting){
             this.setShootFrameIndex(this.getShootFrameIndex() + 1);
             if (this.getShootFrameIndex() % this.shootRightFrames.size() == 0){
                 this.setShootFrameIndex(0);
             }
+            Main.sleep(60);
         }
         if (this.isCharacterAttacking()){
             this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
             if (this.getAttackFrameIndex() % this.getAttackRightFrames().size() == 0){
                 this.setAttackFrameIndex(0);
             }
+            Main.sleep(100);
         }
         if (this.isCharacterReloading){
             this.setReloadFrameIndex(this.getReloadFrameIndex() + 1);
