@@ -13,6 +13,9 @@ public class Enemy extends Character {
     private final int RUN_FRAME_COUNT = 11;
     private final int ATTACK_FRAME_COUNT = 4;
     private final int DEATH_FRAME_COUNT = 2;
+    private final int HP = 2;
+
+    private int enemyHealth;
 
     private Player player;
 
@@ -28,6 +31,7 @@ public class Enemy extends Character {
         this.setDeathRightFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_RIGHT_IMAGES_PATH));
         this.setDeathLeftFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_LEFT_IMAGES_PATH));
         this.setCurrentFrame(this.getDefaultFrameRight());
+        this.enemyHealth = HP;
 
         this.player = player;
     }
@@ -75,12 +79,15 @@ public class Enemy extends Character {
             try {
                 for (Bullet bullet : this.player.getBullets()){
                     if (this.getHitBox().intersects(bullet)){
-                        if (this.isAlive()){
+                        if (this.enemyHealth == 0){
                             this.player.setPoints(this.player.getPoints() + 10);
+                            this.setHitBox(new Rectangle(0,0,0,0));
+                            this.setAlive(false);
+                        }else {
+                            this.enemyHealth--;
                         }
                         bullet.setBounds(0,0,0,0);
-                        this.setHitBox(new Rectangle(0,0,0,0));
-                        this.setAlive(false);
+
                     }
                 }
             } finally {
@@ -92,8 +99,14 @@ public class Enemy extends Character {
     private void checkPlayerCollision(){
         if (this.getHitBox().intersects(this.player.getAttackHitBox())){
             if (this.player.isCharacterAttacking()){
-                this.setHitBox(new Rectangle(0,0,0,0));
-                this.setAlive(false);
+                if (this.enemyHealth == 0){
+                    this.player.setPoints(this.player.getPoints() + 10);
+                    this.setHitBox(new Rectangle(0,0,0,0));
+                    this.setAlive(false);
+                }else {
+                    this.enemyHealth--;
+                }
+
             }
         }
     }

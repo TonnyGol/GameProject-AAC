@@ -2,8 +2,9 @@ import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class GameMouseListener implements MouseListener {
+public class GameMouseListener implements MouseListener, MouseMotionListener{
     Player player;
     GamePanel gamePanel;
 
@@ -57,6 +58,16 @@ public class GameMouseListener implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent mouseEvent) {
 
     }
 }

@@ -51,7 +51,7 @@ public class GamePanel extends JPanel {
         this.musicPlayer = musicPlayer;
 
         this.enemyResourceLock = new ReentrantLock();
-        this.playerResourceLock = new ReentrantLock();
+        playerResourceLock = new ReentrantLock();
         bulletsResourceLock = new ReentrantLock();
 
         this.canSave = true;
@@ -161,6 +161,7 @@ public class GamePanel extends JPanel {
             }
         }).start();
     }
+
 
     private void updateEnemies(){
         new Thread(()->{

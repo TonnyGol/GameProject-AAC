@@ -32,3 +32,15 @@ Time: 74 | Points: 130
 Time: 8 sec | Points: 0
 Time: 10 sec | Points: 0
 Time: 7 sec | Points: 0
+Time: 41 sec | Points: 200
+Time: 2 sec | Points: 0
+Time: 2 sec | Points: 0
+Time: 38 sec | Points: 110
+Time: 3 sec | Points: 0
+Time: 9 sec | Points: 0
+Time: 2 sec | Points: 0
+Time: 1 sec | Points: 0
+Time: 4 sec | Points: 0
+Time: 2 sec | Points: 0
+Time: 3 sec | Points: 0
+Time: 13 sec | Points: 20

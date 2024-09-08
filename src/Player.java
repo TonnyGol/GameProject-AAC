@@ -83,35 +83,33 @@ public class Player extends Character {
     public void update(){
         this.checkIfAlive();
         if (this.isAlive()){
-            this.checkBulletsMovement();
-            this.checkIfReloading();
             this.checkIfShooting();
+            this.checkBulletsMovementAndAmmo();
+            this.checkIfReloading();
             this.checkIfAttacking();
-            this.checkMovementDirection();
+
             this.checkIfStanding();
+            this.checkMovementDirection();
         }
     }
 
-    private void checkBulletsMovement(){
+    private void checkBulletsMovementAndAmmo(){
         if (this.bullets.size() == AMMO_CAPACITY){
             this.isCharacterReloading = true;
-            allBulletsGone = true; // if all the bullets are out of bounds of window
+            //allBulletsGone = true; // if all the bullets are out of bounds of window
         }
         if (GamePanel.bulletsResourceLock.tryLock()) {
             try {
-                for (Bullet bullet : this.bullets){
-                    allBulletsGone = bullet.getX() > RIGHT_BOUNDARY_X + 180 || bullet.getX() < LEFT_BOUNDARY_X + 45;
-                }
-                if (allBulletsGone){
-                    this.bullets.clear();
-                }
-                for (Bullet bullet : this.bullets){
+                for (Bullet bullet : bullets){
                     bullet.fly();
                 }
+                this.bullets.removeIf(bullet ->
+                        bullet.getX() > 1740 + 180 || bullet.getX() < 0);
             } finally {
                 GamePanel.bulletsResourceLock.unlock();
             }
         }
+
     }
 
     private void checkIfReloading(){
@@ -133,7 +131,7 @@ public class Player extends Character {
                     this.setCurrentFrame(this.shootLeftFrames.get(this.shootFrameIndex));
                 }
                 else {
-                    this.createAndShootBullet(this.getX() + 105, this.getY() + 105, 1);
+                    this.createAndShootBullet(this.getX() + 110, this.getY() + 105, 1);
                     this.setCurrentFrame(this.shootRightFrames.get(this.shootFrameIndex));
                 }
                 this.loopBetweenFrames();
@@ -210,9 +208,9 @@ public class Player extends Character {
 
     private void createAndShootBullet(int xBullet, int yBullet, int direction) {
         if (!this.isCharacterReloading){
-            Bullet newBullet = new Bullet(xBullet, yBullet, direction);
             if (GamePanel.bulletsResourceLock.tryLock()) {
                 try {
+                    Bullet newBullet = new Bullet(xBullet, yBullet, direction);
                     this.bullets.add(newBullet);
                 } finally {
                     GamePanel.bulletsResourceLock.unlock();
@@ -249,14 +247,14 @@ public class Player extends Character {
             if (this.getRunFrameIndex() % this.getRunRightFrames().size() == 0){
                 this.setRunFrameIndex(0);
             }
-            Main.sleep(40);
+            Main.sleep(35);
         }
         if (this.isCharacterShooting){
             this.setShootFrameIndex(this.getShootFrameIndex() + 1);
             if (this.getShootFrameIndex() % this.shootRightFrames.size() == 0){
                 this.setShootFrameIndex(0);
             }
-            Main.sleep(60);
+            Main.sleep(40);
         }
         if (this.isCharacterAttacking()){
             this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
@@ -277,6 +275,7 @@ public class Player extends Character {
             if (this.getDeathFrameIndex() % this.getDeathRightFrames().size() == 0){
                 this.setDeathFrameIndex(this.getDeathRightFrames().size() - 1);
             }
+            Main.sleep(50);
         }
     }
 
