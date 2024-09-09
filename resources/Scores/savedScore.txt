@@ -3,44 +3,8 @@ Time: 8 | Points: 30
 Time: 9 | Points: 60
 Time: 13 | Points: 90
 Time: 1 | Points: 0
-Time: 5 | Points: 30
-Time: 7 | Points: 20
-Time: 1 | Points: 0
-Time: 1 | Points: 0
-Time: 1 | Points: 0
-Time: 1 | Points: 0
-Time: 0 | Points: 0
-Time: 1 | Points: 0
-Time: 1 | Points: 0
-Time: 1 | Points: 0
-Time: 1 | Points: 0
-Time: 0 | Points: 0
-Time: 0 | Points: 0
-Time: 530337 | Points: 0
-Time: 0 | Points: 0
-Time: 0 | Points: 0
-Time: 0 | Points: 0
-Time: 245341 | Points: 0
-Time: 349705 | Points: 0
-Time: 1455317 | Points: 340
-Time: 0 | Points: 0
-Time: 11 | Points: 60
-Time: 19 | Points: 130
-Time: 0 | Points: 60
-Time: 0 | Points: 0
-Time: 74 | Points: 130
-Time: 8 sec | Points: 0
-Time: 10 sec | Points: 0
-Time: 7 sec | Points: 0
-Time: 41 sec | Points: 200
-Time: 2 sec | Points: 0
-Time: 2 sec | Points: 0
-Time: 38 sec | Points: 110
-Time: 3 sec | Points: 0
-Time: 9 sec | Points: 0
-Time: 2 sec | Points: 0
-Time: 1 sec | Points: 0
-Time: 4 sec | Points: 0
-Time: 2 sec | Points: 0
-Time: 3 sec | Points: 0
-Time: 13 sec | Points: 20
+Time: 40 sec | Points: 240
+Time: 31 sec | Points: 60
+Time: 37 sec | Points: 130
+Time: 50 sec | Points: 160
+Time: 6 sec | Points: 0

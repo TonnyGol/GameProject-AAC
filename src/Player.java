@@ -20,6 +20,7 @@ public class Player extends Character {
 
     private final int PLAYER_SPEED = 15;
     private final int AMMO_CAPACITY = 3;
+    private final int PLAYER_HP = 1000;
 
     private final int RIGHT_BOUNDARY_X = 1740;
     private final int LEFT_BOUNDARY_X = -45;
@@ -37,7 +38,7 @@ public class Player extends Character {
     private int shootFrameIndex;
     private int reloadFrameIndex;
     private int points;
-    private boolean allBulletsGone;
+    private int playerHealth;
 
     private List<Bullet> bullets;
     private Rectangle attackHitBox;
@@ -62,9 +63,9 @@ public class Player extends Character {
         this.setCurrentFrame(this.getDefaultFrameRight());
 
         this.points = 0;
-        this.allBulletsGone = false;
         this.shootFrameIndex = 0;
         this.reloadFrameIndex = 0;
+        this.playerHealth = PLAYER_HP;
 
         this.isCharacterStanding = true;
         this.isCharacterShooting = false;
@@ -83,20 +84,19 @@ public class Player extends Character {
     public void update(){
         this.checkIfAlive();
         if (this.isAlive()){
+            this.checkIfReloading();
             this.checkIfShooting();
             this.checkBulletsMovementAndAmmo();
-            this.checkIfReloading();
             this.checkIfAttacking();
-
             this.checkIfStanding();
             this.checkMovementDirection();
+            this.loopBetweenFrames();
         }
     }
 
     private void checkBulletsMovementAndAmmo(){
-        if (this.bullets.size() == AMMO_CAPACITY){
+        if (this.bullets.size() > AMMO_CAPACITY - 1){
             this.isCharacterReloading = true;
-            //allBulletsGone = true; // if all the bullets are out of bounds of window
         }
         if (GamePanel.bulletsResourceLock.tryLock()) {
             try {
@@ -119,7 +119,6 @@ public class Player extends Character {
             }else {
                 this.setCurrentFrame(this.reloadRightFrames.get(this.reloadFrameIndex));
             }
-            this.loopBetweenFrames();
         }
     }
 
@@ -134,8 +133,8 @@ public class Player extends Character {
                     this.createAndShootBullet(this.getX() + 110, this.getY() + 105, 1);
                     this.setCurrentFrame(this.shootRightFrames.get(this.shootFrameIndex));
                 }
-                this.loopBetweenFrames();
             }
+
         }
     }
 
@@ -147,7 +146,6 @@ public class Player extends Character {
                 }else {
                     this.setCurrentFrame(this.getAttackRightFrames().get(this.getAttackFrameIndex()));
                 }
-                this.loopBetweenFrames();
             }
         }
     }
@@ -175,7 +173,6 @@ public class Player extends Character {
                         this.setCurrentFrame(this.getDefaultFrameRight());
                     }
                 }
-                this.loopBetweenFrames();
             }
         }
     }
@@ -190,7 +187,6 @@ public class Player extends Character {
                 else{
                     this.setCurrentFrame(this.getDefaultFrameRight());
                 }
-                this.loopBetweenFrames();
             }
         }
     }
@@ -202,7 +198,6 @@ public class Player extends Character {
             }else {
                 this.setCurrentFrame(this.getDeathRightFrames().get(this.getDeathFrameIndex()));
             }
-            this.loopBetweenFrames();
         }
     }
 
@@ -244,35 +239,40 @@ public class Player extends Character {
     private void loopBetweenFrames(){
         if (this.isCharacterMovingRight()){
             this.setRunFrameIndex(this.getRunFrameIndex() + 1);
-            if (this.getRunFrameIndex() % this.getRunRightFrames().size() == 0){
+            if (this.getRunFrameIndex() % this.getRunRightFrames().size() == 0 ||
+                    this.getRunFrameIndex() % this.getRunLeftFrames().size() == 0){
                 this.setRunFrameIndex(0);
             }
             Main.sleep(35);
         }
         if (this.isCharacterShooting){
             this.setShootFrameIndex(this.getShootFrameIndex() + 1);
-            if (this.getShootFrameIndex() % this.shootRightFrames.size() == 0){
+            if (this.getShootFrameIndex() % this.shootRightFrames.size() == 0 ||
+                    this.getShootFrameIndex() % this.shootLeftFrames.size() == 0){
                 this.setShootFrameIndex(0);
             }
             Main.sleep(40);
         }
         if (this.isCharacterAttacking()){
             this.setAttackFrameIndex(this.getAttackFrameIndex() + 1);
-            if (this.getAttackFrameIndex() % this.getAttackRightFrames().size() == 0){
+            if (this.getAttackFrameIndex() % this.getAttackRightFrames().size() == 0 ||
+                    this.getAttackFrameIndex() % this.getAttackLeftFrames().size() == 0){
                 this.setAttackFrameIndex(0);
             }
             Main.sleep(100);
         }
         if (this.isCharacterReloading){
             this.setReloadFrameIndex(this.getReloadFrameIndex() + 1);
-            if (this.getReloadFrameIndex() % this.reloadRightFrames.size() == 0){
+            if (this.getReloadFrameIndex() % this.reloadRightFrames.size() == 0 ||
+                    this.getReloadFrameIndex() % this.reloadLeftFrames.size() == 0){
                 this.isCharacterReloading = false;
                 this.setReloadFrameIndex(0);
             }
         }
         if (!this.isAlive() && this.getDeathFrameIndex() != this.getDeathRightFrames().size() - 1){
             this.setDeathFrameIndex(this.getDeathFrameIndex() + 1);
-            if (this.getDeathFrameIndex() % this.getDeathRightFrames().size() == 0){
+            if (this.getDeathFrameIndex() % this.getDeathRightFrames().size() == 0 ||
+                    this.getDeathFrameIndex() % this.getDeathLeftFrames().size() == 0){
                 this.setDeathFrameIndex(this.getDeathRightFrames().size() - 1);
             }
             Main.sleep(50);
@@ -305,6 +305,14 @@ public class Player extends Character {
 
     public int getShootFrameIndex() {
         return shootFrameIndex;
+    }
+
+    public int getPlayerHealth() {
+        return playerHealth;
+    }
+
+    public void setPlayerHealth(int playerHealth) {
+        this.playerHealth = playerHealth;
     }
 
     public void setCharacterStanding(boolean characterStanding) {

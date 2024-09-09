@@ -13,7 +13,7 @@ public class Enemy extends Character {
     private final int RUN_FRAME_COUNT = 11;
     private final int ATTACK_FRAME_COUNT = 4;
     private final int DEATH_FRAME_COUNT = 2;
-    private final int HP = 2;
+    private final int ENEMY_HP = 5;
 
     private int enemyHealth;
 
@@ -31,7 +31,7 @@ public class Enemy extends Character {
         this.setDeathRightFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_RIGHT_IMAGES_PATH));
         this.setDeathLeftFrames(Main.loadFrames(DEATH_FRAME_COUNT, DIE_LEFT_IMAGES_PATH));
         this.setCurrentFrame(this.getDefaultFrameRight());
-        this.enemyHealth = HP;
+        this.enemyHealth = ENEMY_HP;
 
         this.player = player;
     }
@@ -68,7 +68,11 @@ public class Enemy extends Character {
             } else {
                 this.setCurrentFrame(this.getAttackRightFrames().get(this.getAttackFrameIndex()));
             }
-            this.player.setAlive(false);
+            if (this.player.getPlayerHealth() == 0){
+                this.player.setAlive(false);
+            }else {
+                this.player.setPlayerHealth(this.player.getPlayerHealth() - 2);
+            }
         } else {
             this.setCharacterAttacking(false);
         }

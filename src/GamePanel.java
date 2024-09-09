@@ -103,6 +103,7 @@ public class GamePanel extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.setFont(new Font(null, Font.PLAIN, 30));
         g.drawImage(this.gameBackgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
 
         if (playerResourceLock.tryLock()) {
@@ -110,6 +111,7 @@ public class GamePanel extends JPanel {
                 g.drawImage(this.player.getCurrentFrame(),
                         this.player.getX(), this.player.getY(),
                         this.player.getCHARACTER_WIDTH(), this.player.getCHARACTER_HEIGHT(),null);
+                //g.drawString("Health: " + this.player.getPlayerHealth() / 10, POINTS_X_POSITION + 230, POINTS_Y_POSITION);
             } finally {
                 playerResourceLock.unlock();
             }
@@ -120,6 +122,7 @@ public class GamePanel extends JPanel {
                 for (Bullet bullet : this.player.getBullets()){
                     g.fillRect((int) bullet.getX(), (int) bullet.getY(), (int) bullet.getWidth(), (int) bullet.getHeight());
                 }
+                System.out.println(this.player.getBullets().size());
             } finally {
                 bulletsResourceLock.unlock();
             }
@@ -137,9 +140,10 @@ public class GamePanel extends JPanel {
             }
         }
 
-        g.setFont(new Font(null, Font.PLAIN, 30));
+
         g.drawString("Time: " + this.countTimer / 1500000 + " sec", TIMER_X_POSITION, TIMER_Y_POSITION);
         g.drawString("Points: " + this.player.getPoints(), POINTS_X_POSITION, POINTS_Y_POSITION);
+        g.drawString("Health: " + this.player.getPlayerHealth() / 10, POINTS_X_POSITION + 230, POINTS_Y_POSITION);
 
         Main.sleep(30);
 
@@ -249,6 +253,7 @@ public class GamePanel extends JPanel {
         this.player.setX(DEFAULT_PLAYER_SPAWN_X);
         this.player.setY(DEFAULT_PLAYER_SPAWN_Y);
         this.player.setAlive(true);
+        this.player.setPlayerHealth(1000);
         this.canSave = true;
         this.giveUpLabel.setFocusable(false);
         this.giveUpLabel.setVisible(false);
@@ -262,20 +267,18 @@ public class GamePanel extends JPanel {
                 if (this.windowFrame.getPanelChoice() == 1){
                     if (player.isAlive()){
                         this.countTimer++;
+                    }else {
+                        this.giveUpLabel.setFocusable(true);
+                        this.giveUpLabel.setVisible(true);
+                        this.replayLabel.setFocusable(true);
+                        this.replayLabel.setVisible(true);
+                        if (this.canSave){
+                            this.saveScore();
+                            this.canSave = false;
+                        }
                     }
+                    repaint();
                 }
-
-                if(!this.player.isAlive()) {
-                    this.giveUpLabel.setFocusable(true);
-                    this.giveUpLabel.setVisible(true);
-                    this.replayLabel.setFocusable(true);
-                    this.replayLabel.setVisible(true);
-                    if (this.canSave){
-                        this.saveScore();
-                        this.canSave = false;
-                    }
-                }
-                repaint();
             }
         }).start();
     }
