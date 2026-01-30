@@ -19,8 +19,6 @@ The game includes graphics, game logic, and assets, showcasing skills in Java pr
 - Asset management: images / sprites / other resources loaded from the `resources/` folder  
 - Modular, object-oriented Java code structure (under `src/`)  
 
-> ⚠️ *If you want — here you can mention specific features or mechanics, e.g., “multiple levels,” “enemy AI,” “player health system,” “sound effects,” etc.*  
-
 ## 📁 Repository Structure
 
 / — Root directory
